@@ -5,208 +5,227 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Travel With Ankur</title>
 
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-body {
-    background: #f5f7fa;
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins;}
+
+body{background:#f5f7fa;overflow-x:hidden;}
+
+/* PAGE SYSTEM */
+.page{
+  position:absolute;
+  width:100%;
+  min-height:100vh;
+  left:100%;
+  top:0;
+  background:#f5f7fa;
+  transition:0.5s;
 }
+.active{left:0;}
 
 /* HEADER */
-header {
-    background: linear-gradient(45deg, #1e3c72, #2a5298);
-    color: white;
-    text-align: center;
-    padding: 20px;
-}
-
-/* SEARCH */
-.search-box {
-    text-align: center;
-    margin: 20px;
-}
-
-.search-box input {
-    width: 80%;
-    padding: 10px;
-    border-radius: 20px;
-    border: none;
-    outline: none;
+header{
+  background:linear-gradient(135deg,#00c6ff,#0072ff);
+  color:white;
+  padding:20px;
+  text-align:center;
 }
 
 /* GRID */
-.container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    padding: 20px;
+.container{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+  padding:20px;
 }
 
 /* CARD */
-.card {
-    background: white;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
-    transition: 0.3s;
+.card{
+  background:white;
+  border-radius:15px;
+  overflow:hidden;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+.card img{width:100%;height:200px;object-fit:cover;}
+.card-content{padding:15px;}
+.btn{
+  display:inline-block;
+  margin-top:10px;
+  padding:8px 12px;
+  background:#0072ff;
+  color:white;
+  border-radius:8px;
+  cursor:pointer;
 }
 
-.card:hover {
-    transform: scale(1.03);
-}
-
-.card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-}
-
-.card-content {
-    padding: 15px;
-}
-
-h2 {
-    margin-bottom: 10px;
-}
-
-.btn {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 8px 12px;
-    background: #3498db;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-}
-
-.btn:hover {
-    background: #2980b9;
-}
-
-/* DETAILS */
-.details {
-    display: none;
-    padding: 10px;
-    background: #fafafa;
-}
-
-iframe {
-    width: 100%;
-    height: 200px;
-    border-radius: 10px;
-    margin-top: 10px;
-}
-
-/* FOOTER */
-footer {
-    text-align: center;
-    padding: 15px;
-    background: #2c3e50;
-    color: white;
+/* BACK */
+.back{
+  margin:10px;
+  display:inline-block;
+  color:#0072ff;
+  cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
+<!-- HOME -->
+<div id="home" class="page active">
+
 <header>
-    <h1>🌍 Travel With Ankur</h1>
-    <p>Explore Best Tourist Places</p>
+<h1>🌍 Travel With Ankur</h1>
+<p>Explore Best Places</p>
 </header>
 
-<div class="search-box">
-    <input type="text" id="search" placeholder="Search places..." onkeyup="searchPlaces()">
+<div class="container">
+
+<div class="card">
+<img src="https://image2url.com/r2/default/images/1774727323903-1783ba6e-b91f-4119-9d8f-64af497cad5e.jpg">
+<div class="card-content">
+<h2>Rishikesh</h2>
+<div class="btn" onclick="openPage('rishikesh')">View Details</div>
+</div>
 </div>
 
-<div class="container" id="places">
-
-    <!-- RISHIKESH -->
-    <div class="card">
-        <img src="https://image2url.com/r2/default/images/1774727323903-1783ba6e-b91f-4119-9d8f-64af497cad5e.jpg" alt="image" />
-        <div class="card-content">
-            <h2>Rishikesh</h2>
-            <p>Yoga capital & adventure hub.</p>
-            <button class="btn" onclick="toggleDetails(this)">View Details</button>
-
-            <div class="details">
-                <p><b>Things to Do:</b> Rafting, Bungee, Ganga Aarti</p>
-                <p><b>Stay:</b> Hostels, Resorts</p>
-                <p><b>Food:</b> Cafes & street food</p>
-                <p><b>How to Reach:</b> Via Dehradun</p>
-
-                <iframe src="https://maps.google.com/maps?q=Rishikesh&output=embed"></iframe>
-
-                <a class="btn" href="https://www.google.com/maps?q=Rishikesh" target="_blank">Open Map</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- MANALI -->
-    <div class="card">
-        <img src="https://image2url.com/r2/default/images/1774727231220-ae00ef34-fde1-41a4-80b4-fa4ff2e40bfa.jfif" alt="image" />
-        <div class="card-content">
-            <h2>Manali</h2>
-            <p>Snow & adventure paradise.</p>
-            <button class="btn" onclick="toggleDetails(this)">View Details</button>
-
-            <div class="details">
-                <p><b>Things to Do:</b> Snow sports, Solang Valley</p>
-                <p><b>Stay:</b> Hotels & cottages</p>
-                <p><b>Food:</b> Local cafes</p>
-                <p><b>How to Reach:</b> Via Bhuntar</p>
-
-                <iframe src="https://maps.google.com/maps?q=Manali&output=embed"></iframe>
-
-                <a class="btn" href="https://www.google.com/maps?q=Manali" target="_blank">Open Map</a>
-            </div>
-        </div>
-    </div>
-	  <!-- SHIMLA -->
-    <div class="card">
-        <img src="https://image2url.com/r2/default/images/1774727094251-c65f7679-fafb-4192-953c-9d4534b3e1d3.jpg" alt="image" />
-        <div class="card-content">
-            <h2>Shimla</h2>
-            <p>Beautiful hill station.</p>
-            <button class="btn" onclick="toggleDetails(this)">View Details</button>
-
-            <div class="details">
-                <p><b>Things to Do:</b> Mall Road, Kufri</p>
-                <p><b>Stay:</b> Hotels & homestays</p>
-                <p><b>Food:</b> Himachali cuisine</p>
-                <p><b>How to Reach:</b> Road/train</p>
-
-                <iframe src="https://maps.google.com/maps?q=Shimla&output=embed"></iframe>
-
-                <a class="btn" href="https://www.google.com/maps?q=Shimla" target="_blank">Open Map</a>
-            </div>
-        </div>
-    </div>
-
+<div class="card">
+<img src="https://image2url.com/r2/default/images/1774727231220-ae00ef34-fde1-41a4-80b4-fa4ff2e40bfa.jfif">
+<div class="card-content">
+<h2>Manali</h2>
+<div class="btn" onclick="openPage('manali')">View Details</div>
+</div>
 </div>
 
-<footer>
-    <p>© 2026 Travel With Ankur</p>
-</footer>
+<div class="card">
+<img src="https://image2url.com/r2/default/images/1774727094251-c65f7679-fafb-4192-953c-9d4534b3e1d3.jpg">
+<div class="card-content">
+<h2>Shimla</h2>
+<div class="btn" onclick="openPage('shimla')">View Details</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ✅ RISHIKESH (YOUR ORIGINAL CODE - SAME) -->
+<div id="rishikesh" class="page">
+
+<div class="back" onclick="goBack()">⬅ Back</div>
+
+<header>
+  <h1>🌄 Rishikesh Guide</h1>
+</header>
+
+<div style="padding:15px">
+
+<h2>📍 Route Planner</h2>
+<div class="card">
+  <input id="from" placeholder="Enter your location" style="width:100%;padding:8px"><br><br>
+  <button onclick="getRoute()">Get Directions</button>
+</div>
+
+<h2>🌄 MAIN PLACES INSIDE RISHIKESH</h2>
+
+<div class="card">
+<h3>🌉 Lakshman Jhula</h3>
+<img src="https://image2url.com/r2/default/images/1774727323903-1783ba6e-b91f-4119-9d8f-64af497cad5e.jpg">
+<p>📍 Distance: ~5 km from main city / Tapovan</p>
+<p>🙏 Famous suspension bridge with mythological importance</p>
+<p>✨ Scenic Ganga walk & sunset views, Café hopping</p>
+<p>🚗 Best Travel: Scooty / auto</p>
+<p>🚌 Public Transport: Shared auto available</p>
+<a href="https://www.google.com/maps/search/Lakshman+Jhula+Rishikesh">Map</a>
+</div>
+
+<div class="card">
+<h3>🌉 Ram Jhula</h3>
+<img src="https://image2url.com/r2/default/images/1774727323903-1783ba6e-b91f-4119-9d8f-64af497cad5e.jpg">
+<p>📍 Distance: ~3 km</p>
+<p>✨ Peaceful river walk, Ashram visits</p>
+<p>🚗 Best Travel: Walk / scooty</p>
+<a href="https://www.google.com/maps/search/Ram+Jhula+Rishikesh">Map</a>
+</div>
+
+<div class="card">
+<h3>🛕 Triveni Ghat</h3>
+<p>📍 Distance: 1–2 km</p>
+<p>🙏 Spiritual center of Rishikesh</p>
+<p>✨ Evening Ganga Aarti 🔥</p>
+<a href="https://www.google.com/maps/search/Triveni+Ghat+Rishikesh">Map</a>
+</div>
+
+<div class="card">
+<h3>🧘 Parmarth Niketan</h3>
+<p>📍 Near Ram Jhula</p>
+<p>✨ Yoga, meditation & peaceful vibes</p>
+<a href="https://www.google.com/maps/search/Parmarth+Niketan+Rishikesh">Map</a>
+</div>
+
+<div class="card">
+<h3>🌳 Beatles Ashram</h3>
+<p>📍 Distance: ~3 km</p>
+<p>✨ Wall art, graffiti & photography</p>
+<a href="https://www.google.com/maps/search/Beatles+Ashram+Rishikesh">Map</a>
+</div>
+
+<h2>🌊 ADVENTURE ACTIVITIES</h2>
+
+<div class="card">
+<h3>🚣 River Rafting (Shivpuri)</h3>
+<p>📍 Distance: 16–19 km</p>
+<p>✨ White water rafting 🌊</p>
+<p>🚗 Best Travel: Bike / cab</p>
+<a href="https://www.google.com/maps/search/Shivpuri+Rishikesh">Map</a>
+</div>
+
+<div class="card">
+<h3>🪂 Bungee Jumping</h3>
+<p>📍 Distance: ~25 km</p>
+<p>✨ India’s highest bungee jump</p>
+<p>🚗 Best Travel: Bike / taxi</p>
+<a href="https://www.google.com/maps/search/Jumpin+Heights+Rishikesh">Map</a>
+</div>
+
+</div>
+</div>
+
+<!-- MANALI -->
+<div id="manali" class="page">
+<div class="back" onclick="goBack()">⬅ Back</div>
+<header><h2>🏔️ Manali Guide</h2></header>
+
+<div style="padding:15px">
+<div class="card"><h3>Solang Valley</h3><p>Snow & adventure</p></div>
+<div class="card"><h3>Rohtang Pass</h3><p>Snow mountains</p></div>
+</div>
+</div>
+
+<!-- SHIMLA -->
+<div id="shimla" class="page">
+<div class="back" onclick="goBack()">⬅ Back</div>
+<header><h2>🌄 Shimla Guide</h2></header>
+
+<div style="padding:15px">
+<div class="card"><h3>Mall Road</h3><p>Shopping</p></div>
+<div class="card"><h3>Kufri</h3><p>Snow place</p></div>
+</div>
+</div>
 
 <script>
-function toggleDetails(button) {
-    let details = button.nextElementSibling;
-    details.style.display = details.style.display === "block" ? "none" : "block";
+function openPage(id){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
 }
 
-function searchPlaces() {
-    let input = document.getElementById("search").value.toLowerCase();
-    let cards = document.querySelectorAll(".card");
+function goBack(){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById("home").classList.add("active");
+}
 
-    cards.forEach(card => {
-        let title = card.querySelector("h2").innerText.toLowerCase();
-        card.style.display = title.includes(input) ? "block" : "none";
-    });
+function getRoute(){
+  var from=document.getElementById('from').value;
+  window.open("https://www.google.com/maps/dir/"+from+"/Rishikesh");
 }
 </script>
 
