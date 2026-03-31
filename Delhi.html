@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delhi Explorer Ultimate</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Poppins';background:#eaf4ff}
+header{background:#007bff;color:#fff;padding:15px;text-align:center;font-weight:600}
+.search{padding:10px;background:#fff;position:sticky;top:0}
+.search input,select{width:100%;padding:10px;border-radius:10px;border:1px solid #ccc;margin-top:6px}
+.container{padding:10px}
+.card{background:#fff;border-radius:12px;padding:12px;margin-bottom:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);transition:.3s}
+.card:hover{transform:scale(1.03)}
+.title{font-weight:600}
+.thumb{width:100%;height:180px;border-radius:10px;background-size:cover;background-position:center;margin:6px 0}
+.meta{font-size:13px;margin:4px 0}
+.desc{font-size:13px}
+.rating{color:#f39c12}
+.btn{display:inline-block;margin-top:6px;background:#007bff;color:#fff;padding:6px 10px;border-radius:8px;text-decoration:none;font-size:12px}
+.fav{float:right;cursor:pointer}
+.navbar{position:fixed;bottom:0;width:100%;background:#fff;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #ccc}
+</style>
+</head>
+<body>
+<header>Delhi Explorer Ultimate</header>
+
+<div class="search">
+<input id="search" placeholder="Search places...">
+<select id="filter">
+<option value="all">All</option>
+<option value="near">Nearest</option>
+<option value="high">Top Rated</option>
+</select>
+<select id="category">
+<option value="all">All Categories</option>
+<option value="Historical">Historical</option>
+<option value="Nature">Nature</option>
+<option value="Food">Food</option>
+</select>
+</div>
+
+<div class="container" id="list"></div>
+
+<div class="navbar">
+<div onclick="showAll()">🏠 Home</div>
+<div onclick="showFav()">❤️ Favorites</div>
+<div onclick="getLocation()">📍 Nearby</div>
+</div>
+
+<script>
+
+const places=[
+{name:"India Gate",cp:3,metro:"Central Secretariat",rating:4.7,cat:"Historical",img:"https://image2url.com/r2/default/images/1774967033018-fd26773d-198e-4d87-81b2-a8b0793bf8bb.jfif",desc:"War memorial"},
+{name:"Red Fort",cp:5,metro:"Jama Masjid",rating:4.6,cat:"Historical",img:"https://image2url.com/r2/default/images/1774967033018-fd26773d-198e-4d87-81b2-a8b0793bf8bb.jfif",desc:"Mughal fort"},
+{name:"Qutub Minar",cp:14,metro:"Qutub Minar",rating:4.7,cat:"Historical",img:"https://source.unsplash.com/600x400/?qutub%20minar",desc:"Tall minaret"},
+{name:"Lotus Temple",cp:12,metro:"Kalkaji",rating:4.8,cat:"Nature",img:"https://source.unsplash.com/600x400/?lotus%20temple%20delhi",desc:"Peaceful temple"},
+{name:"Akshardham",cp:10,metro:"Akshardham",rating:4.9,cat:"Historical",img:"https://source.unsplash.com/600x400/?akshardham",desc:"Grand temple"},
+{name:"Humayun Tomb",cp:6,metro:"JLN Stadium",rating:4.7,cat:"Historical",img:"https://source.unsplash.com/600x400/?humayun%20tomb",desc:"Historic tomb"},
+{name:"Chandni Chowk",cp:4,metro:"Chandni Chowk",rating:4.5,cat:"Food",img:"https://source.unsplash.com/600x400/?chandni%20chowk",desc:"Street food hub"},
+{name:"Lodhi Garden",cp:5,metro:"Jor Bagh",rating:4.6,cat:"Nature",img:"https://source.unsplash.com/600x400/?lodhi%20garden",desc:"Green park"},
+{name:"Connaught Place",cp:0,metro:"Rajiv Chowk",rating:4.7,cat:"Food",img:"https://source.unsplash.com/600x400/?connaught%20place",desc:"City center"},
+{name:"Bangla Sahib",cp:2,metro:"Rajiv Chowk",rating:4.8,cat:"Historical",img:"https://source.unsplash.com/600x400/?bangla%20sahib",desc:"Gurudwara"},
+{name:"Jama Masjid",cp:5,metro:"Jama Masjid",rating:4.6,cat:"Historical",img:"https://source.unsplash.com/600x400/?jama%20masjid%20delhi",desc:"Mosque"},
+{name:"Raj Ghat",cp:6,metro:"ITO",rating:4.5,cat:"Historical",img:"https://source.unsplash.com/600x400/?raj%20ghat",desc:"Memorial"},
+{name:"Purana Qila",cp:7,metro:"Pragati Maidan",rating:4.5,cat:"Historical",img:"https://source.unsplash.com/600x400/?purana%20qila",desc:"Old fort"},
+{name:"Garden of Five Senses",cp:15,metro:"Saket",rating:4.4,cat:"Nature",img:"https://source.unsplash.com/600x400/?garden%20park",desc:"Theme park"},
+{name:"Dilli Haat",cp:7,metro:"INA",rating:4.5,cat:"Food",img:"https://source.unsplash.com/600x400/?dilli%20haat",desc:"Cultural market"},
+{name:"Hauz Khas",cp:11,metro:"Hauz Khas",rating:4.6,cat:"Food",img:"https://source.unsplash.com/600x400/?hauz%20khas",desc:"Cafe hub"},
+{name:"Safdarjung Tomb",cp:7,metro:"Jor Bagh",rating:4.5,cat:"Historical",img:"https://source.unsplash.com/600x400/?safdarjung%20tomb",desc:"Mughal tomb"},
+{name:"Agrasen Baoli",cp:1,metro:"Barakhamba",rating:4.6,cat:"Historical",img:"https://source.unsplash.com/600x400/?agrasen%20baoli",desc:"Stepwell"},
+{name:"ISKCON Temple",cp:11,metro:"Kalkaji",rating:4.7,cat:"Historical",img:"https://source.unsplash.com/600x400/?iskcon%20temple",desc:"Temple"},
+{name:"National Museum",cp:3,metro:"Udyog Bhawan",rating:4.5,cat:"Historical",img:"https://source.unsplash.com/600x400/?museum",desc:"Artifacts"},
+{name:"Delhi Zoo",cp:6,metro:"Pragati Maidan",rating:4.4,cat:"Nature",img:"https://source.unsplash.com/600x400/?zoo",desc:"Wildlife"},
+{name:"Jantar Mantar",cp:1,metro:"Patel Chowk",rating:4.4,cat:"Historical",img:"https://source.unsplash.com/600x400/?jantar%20mantar",desc:"Observatory"},
+{name:"Rashtrapati Bhavan",cp:3,metro:"Central Secretariat",rating:4.7,cat:"Historical",img:"https://source.unsplash.com/600x400/?rashtrapati%20bhavan",desc:"President house"},
+{name:"Khan Market",cp:3,metro:"Khan Market",rating:4.6,cat:"Food",img:"https://source.unsplash.com/600x400/?khan%20market",desc:"Shopping"},
+{name:"Sarojini Nagar",cp:10,metro:"Sarojini Nagar",rating:4.5,cat:"Food",img:"https://source.unsplash.com/600x400/?market",desc:"Budget shopping"},
+{name:"Lajpat Nagar",cp:9,metro:"Lajpat Nagar",rating:4.5,cat:"Food",img:"https://source.unsplash.com/600x400/?shopping%20market",desc:"Shopping hub"},
+{name:"Janpath",cp:1,metro:"Rajiv Chowk",rating:4.5,cat:"Food",img:"https://source.unsplash.com/600x400/?street%20market",desc:"Street shopping"},
+{name:"Karol Bagh",cp:4,metro:"Karol Bagh",rating:4.4,cat:"Food",img:"https://source.unsplash.com/600x400/?karol%20bagh",desc:"Market"},
+{name:"Majnu Ka Tila",cp:10,metro:"Vishwavidyalaya",rating:4.6,cat:"Food",img:"https://source.unsplash.com/600x400/?tibetan%20market",desc:"Cafe area"},
+{name:"Okhla Bird Sanctuary",cp:14,metro:"Okhla",rating:4.4,cat:"Nature",img:"https://source.unsplash.com/600x400/?bird%20sanctuary",desc:"Bird watching"},
+{name:"Sunder Nursery",cp:6,metro:"JLN Stadium",rating:4.7,cat:"Nature",img:"https://source.unsplash.com/600x400/?garden",desc:"Heritage park"},
+{name:"Feroz Shah Kotla",cp:3,metro:"ITO",rating:4.3,cat:"Historical",img:"https://source.unsplash.com/600x400/?fort%20ruins",desc:"Historic ruins"}
+];
+
+let favs=JSON.parse(localStorage.getItem('favs')||"[]");
+
+function toggleFav(name){
+if(favs.includes(name)) favs=favs.filter(f=>f!==name);
+else favs.push(name);
+localStorage.setItem('favs',JSON.stringify(favs));
+render();
+}
+
+function render(list=places){
+let q=document.getElementById('search').value.toLowerCase();
+let filter=document.getElementById('filter').value;
+let cat=document.getElementById('category').value;
+
+let filtered=list.filter(p=>p.name.toLowerCase().includes(q));
+if(cat!="all") filtered=filtered.filter(p=>p.cat===cat);
+
+if(filter==="near") filtered.sort((a,b)=>a.cp-b.cp);
+if(filter==="high") filtered.sort((a,b)=>b.rating-a.rating);
+
+let html='';
+filtered.forEach(p=>{
+let map=`https://maps.google.com/?q=${p.name}`;
+let heart=favs.includes(p.name)?"❤️":"🤍";
+
+html+=`<div class="card">
+<div class="title">${p.name}<span class="fav" onclick="toggleFav('${p.name}')">${heart}</span></div>
+<div class="thumb" style="background-image:url('${p.img}')"></div>
+<div class="meta">📍 ${p.cp} km from CP</div>
+<div class="meta">🚇 ${p.metro}</div>
+<div class="rating">⭐ ${p.rating}</div>
+<div class="desc">${p.desc}</div>
+<a href="${map}" target="_blank" class="btn">Map</a>
+</div>`;
+});
+
+document.getElementById('list').innerHTML=html;
+}
+
+function showFav(){render(places.filter(p=>favs.includes(p.name)));}
+function showAll(){render();}
+
+function getLocation(){alert("GPS Ready (Next upgrade: real distance)");}
+
+
+document.getElementById('search').addEventListener('input',()=>render());
+document.getElementById('filter').addEventListener('change',()=>render());
+document.getElementById('category').addEventListener('change',()=>render());
+
+render();
+
+</script>
+</body>
+</html>
