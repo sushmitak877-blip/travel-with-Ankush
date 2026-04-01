@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Manali Smart Tourist Guide</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+body { margin:0; font-family: Arial; background:#f5f5f5; }
+header { background:#2c3e50; color:white; text-align:center; padding:15px; }
+.controls { text-align:center; background:white; padding:10px; }
+input, select { padding:10px; margin:5px; width:90%; max-width:250px; }
+#map { height:350px; }
+.cards { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:15px; padding:15px; }
+.card { background:white; border-radius:10px; overflow:hidden; box-shadow:0 2px 5px rgba(0,0,0,0.2); }
+.card img { width:100%; height:160px; object-fit:cover; }
+.card-content { padding:10px; }
+button { padding:5px 10px; margin:3px; cursor:pointer; }
+</style>
+</head>
+
+<body>
+
+<div style="padding:10px;">
+<span style="cursor:pointer;color:#007bff;font-weight:600;" onclick="goBack()">⬅ Back</span>
+</div>
+
+<header>
+<h1>Manali Smart Tourist Guide</h1>
+</header>
+
+<div class="controls">
+<input type="text" id="search" placeholder="Search place...">
+<select id="filter">
+<option value="all">All Distances</option>
+<option value="5">Within 5 km</option>
+<option value="15">Within 15 km</option>
+<option value="30">Within 30 km</option>
+<option value="50">Within 50 km</option>
+</select>
+<button onclick="getLocation()">📍 My Location</button>
+</div>
+
+<div id="map"></div>
+<div class="cards" id="cards"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+function goBack(){ window.location.href = 'index.html'; }
+
+const mainPoint = {lat:32.2690, lng:77.1887};
+
+const places = [
+{
+name:"Mall Road",
+lat:32.2690, lng:77.1887, distance:0,
+img:"https://upload.wikimedia.org/wikipedia/commons/8/8b/Mall_Road_Manali.jpg",
+desc:"The main commercial street in Manali, full of shops, cafes, and local markets. A perfect place to start exploring and experience the local vibe.",
+bestTime:"All year",
+timing:"Open all day",
+fee:"Free"
+},
+{
+name:"Hadimba Devi Temple",
+lat:32.2599, lng:77.1834, distance:2,
+img:"https://upload.wikimedia.org/wikipedia/commons/0/09/Hidimba_Temple%2C_Manali.jpg",
+desc:"A serene wooden temple surrounded by cedar forests, dedicated to Hadimba Devi. Known for its unique architecture and peaceful surroundings.",
+bestTime:"All year",
+timing:"8 AM – 6 PM",
+fee:"₹50"
+},
+{
+name:"Manu Temple",
+lat:32.2718, lng:77.1896, distance:1,
+img:"https://upload.wikimedia.org/wikipedia/commons/3/32/Manu_Temple_Manali.jpg",
+desc:"This temple is dedicated to Sage Manu, believed to be the creator of mankind. Located in Old Manali, it is an important spiritual spot.",
+bestTime:"All year",
+timing:"8 AM – 6 PM",
+fee:"Free"
+},
+{
+name:"Vashisht Hot Springs",
+lat:32.2680, lng:77.2050, distance:3,
+img:"https://upload.wikimedia.org/wikipedia/commons/f/f9/Vashisht_Hot_Springs.jpg",
+desc:"Natural sulphur hot springs offering warm baths in a peaceful village setting. The nearby Vashisht Temple adds cultural charm to the visit.",
+bestTime:"All year",
+timing:"Open all day",
+fee:"Free"
+},
+{
+name:"Jogini Waterfall",
+lat:32.2620, lng:77.2035, distance:4,
+img:"https://upload.wikimedia.org/wikipedia/commons/2/26/Jogini_Falls_Manali.jpg",
+desc:"A scenic waterfall reached by a short trek from Vashisht village. Ideal for nature lovers and photography enthusiasts.",
+bestTime:"Spring–Autumn",
+timing:"Open all day",
+fee:"Free"
+},
+{
+name:"Old Manali",
+lat:32.2570, lng:77.1890, distance:3,
+img:"https://upload.wikimedia.org/wikipedia/commons/6/66/Old_Manali.jpg",
+desc:"Charming historic area with cobbled streets, cafes, boutique shops, and apple orchards. Perfect for leisure walks.",
+bestTime:"All year",
+timing:"Open all day",
+fee:"Free"
+},
+{
+name:"Solang Valley",
+lat:32.5021, lng:77.1900, distance:14,
+img:"https://upload.wikimedia.org/wikipedia/commons/9/93/Solang_Valley_Manali.jpg",
+desc:"A picturesque valley offering adventure sports such as skiing, paragliding, and zorbing. Popular for snow activities in winter.",
+bestTime:"All year",
+timing:"Open all day",
+fee:"Free"
+},
+{
+name:"Rohtang Pass",
+lat:32.3426, lng:77.1660, distance:51,
+img:"https://upload.wikimedia.org/wikipedia/commons/9/9b/Rohtang_Pass.jpg",
+desc:"A high mountain pass offering breathtaking views of snow-capped peaks. Accessible in summer months with a permit.",
+bestTime:"Summer months",
+timing:"Depends on road access",
+fee:"Toll"
+},
+{
+name:"Rehala Falls",
+lat:32.2800, lng:77.2000, distance:16,
+img:"https://upload.wikimedia.org/wikipedia/commons/d/dc/Rehala_Falls.jpg",
+desc:"Beautiful cascading waterfall along the way to Rohtang Pass. Ideal for photography and short nature walks.",
+bestTime:"Spring–Autumn",
+timing:"Open all day",
+fee:"Free"
+},
+{
+name:"Van Vihar",
+lat:32.2675, lng:77.1820, distance:1,
+img:"https://upload.wikimedia.org/wikipedia/commons/1/15/Van_Vihar_Manali.jpg",
+desc:"A forested park along the Beas River, offering boating, picnic spots, and peaceful walks surrounded by nature.",
+bestTime:"All year",
+timing:"8 AM – 6 PM",
+fee:"₹50"
+},
+{
+name:"Nehru Kund",
+lat:32.2702, lng:77.1865, distance:1,
+img:"https://upload.wikimedia.org/wikipedia/commons/b/b1/Nehru_Kund_Manali.jpg",
+desc:"A cold mineral water spring named after Jawaharlal Nehru, offering fresh water and scenic surroundings.",
+bestTime:"All year",
+timing:"Open all day",
+fee:"Free"
+},
+{
+name:"Beas River Viewpoint",
+lat:32.2750, lng:77.1850, distance:5,
+img:"https://upload.wikimedia.org/wikipedia/commons/3/3f/Beas_River_Manali.jpg",
+desc:"A viewpoint offering stunning views of the Beas River flowing through the valley. Ideal for sunrise and sunset views.",
+bestTime:"All year",
+timing:"Open all day",
+fee:"Free"
+},
+{
+name:"Naggar Castle",
+lat:32.2330, lng:77.1650, distance:22,
+img:"https://upload.wikimedia.org/wikipedia/commons/3/36/Naggar_Castle.jpg",
+desc:"Historic castle with panoramic views of the Kullu Valley. Features art galleries and traditional architecture.",
+bestTime:"All year",
+timing:"10 AM – 5 PM",
+fee:"₹20"
+},
+{
+name:"Hamta Valley",
+lat:32.3990, lng:77.1530, distance:32,
+img:"https://images.pexels.com/photos/6337491/pexels-photo-6337491.jpeg",
+desc:"A scenic offbeat valley ideal for trekking, camping, and exploring alpine meadows surrounded by mountains.",
+bestTime:"Summer–Autumn",
+timing:"Open all day",
+fee:"Free"
+},
+{
+name:"Prini Village",
+lat:32.2770, lng:77.1990, distance:6,
+img:"https://images.pexels.com/photos/4603862/pexels-photo-4603862.jpeg",
+desc:"A quaint village known for apple orchards, traditional houses, and cultural experiences. Great for a peaceful walk.",
+bestTime:"All year",
+timing:"Open all day",
+fee:"Free"
+},
+{
+name:"Jagatsukh Village",
+lat:32.2575, lng:77.1780, distance:3,
+img:"https://images.pexels.com/photos/3421900/pexels-photo-3421900.jpeg",
+desc:"Historic village with ancient temples and traditional Himachali culture. Offbeat destination for culture enthusiasts.",
+bestTime:"All year",
+timing:"Open all day",
+fee:"Free"
+},
+{
+name:"Himalayan Museum",
+lat:32.2688, lng:77.1802, distance:1,
+img:"https://upload.wikimedia.org/wikipedia/commons/2/2f/Himachal_Museum.jpg",
+desc:"Museum showcasing Himachal Pradesh’s folk culture, handicrafts, and traditional costumes.",
+bestTime:"All year",
+timing:"10 AM – 5 PM",
+fee:"₹30"
+},
+{
+name:"Gadhan Theertham (Manali Gompa)",
+lat:32.3050, lng:77.1750, distance:4,
+img:"https://upload.wikimedia.org/wikipedia/commons/9/90/Manali_Gompa.jpg",
+desc:"Peaceful Buddhist monastery offering meditation, prayer, and stunning views of surrounding mountains.",
+bestTime:"All year",
+timing:"8 AM – 5 PM",
+fee:"Free"
+}
+];
+
+// Favorites storage
+let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+let userMarker;
+
+const map = L.map('map').setView([mainPoint.lat,mainPoint.lng],12);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+let markers = [];
+
+function updateMap(filtered){
+ markers.forEach(m => map.removeLayer(m));
+ markers = [];
+ filtered.forEach(p=>{
+ let m= L.marker([p.lat,p.lng]).addTo(map).bindPopup(p.name);
+ markers.push(m);
+ });
+}
+
+function getLocation(){
+ navigator.geolocation.getCurrentPosition(pos => {
+   let lat = pos.coords.latitude, lng = pos.coords.longitude;
+   if(userMarker) map.removeLayer(userMarker);
+   userMarker = L.marker([lat,lng]).addTo(map).bindPopup("📍 You are here").openPopup();
+   map.setView([lat,lng],13);
+ });
+}
+
+function render(){
+ const cards = document.getElementById("cards");
+ cards.innerHTML="";
+ let search = document.getElementById("search").value.toLowerCase();
+ let filter = document.getElementById("filter").value;
+ let filtered = places.filter(p =>
+   p.name.toLowerCase().includes(search) &&
+   (filter==="all" || p.distance <= filter)
+ );
+ filtered.forEach(p=>{
+   cards.innerHTML+=`
+   <div class="card">
+     <img src="${p.img}">
+     <div class="card-content">
+       <h3>${p.name}</h3>
+       <p><b>Distance:</b> ${p.distance} km</p>
+       <p><b>Description:</b> ${p.desc}</p>
+       <p>🕒 ${p.bestTime}</p>
+       <p>⏰ ${p.timing}</p>
+       <p>🎟️ ${p.fee}</p>
+       <button onclick="toggleFav('${p.name}')">${favorites.includes(p.name)? '❤️':'🤍'}</button>
+       <button onclick="navigateTo(${p.lat},${p.lng})">🧭 Route</button>
+       <button onclick="window.open('https://www.google.com/maps/search/hotels+near+'+encodeURIComponent('${p.name}, Manali'))">🏨 Nearby Hotels</button>
+     </div>
+   </div>`;
+ });
+ updateMap(filtered);
+}
+
+function toggleFav(name){
+ favorites = favorites.includes(name)? favorites.filter(f=>f!==name): [...favorites,name];
+ localStorage.setItem("favorites",JSON.stringify(favorites));
+ render();
+}
+
+function navigateTo(lat,lng){
+ window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`);
+}
+
+document.getElementById("search").addEventListener("input",render);
+document.getElementById("filter").addEventListener("change",render);
+
+render();
+</script>
+
+</body>
+</html>
