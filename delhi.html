@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Delhi Smart Guide Ultimate</title>
+<title>Delhi Smart Guide PRO MAX</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -23,17 +23,11 @@ position:sticky;top:10px;z-index:999;
 background:white;margin:10px;padding:12px;
 border-radius:15px;
 box-shadow:0 5px 20px rgba(0,0,0,0.2);
-display:flex;flex-wrap:wrap;gap:10px;
+display:flex;gap:10px;
 }
 
 input,select{
 padding:10px;border-radius:10px;border:1px solid #ccc;
-}
-
-button{
-padding:8px 10px;border:none;
-background:#2a5298;color:white;
-border-radius:8px;cursor:pointer;
 }
 
 #map{height:280px;margin:10px;border-radius:15px;}
@@ -49,45 +43,74 @@ background:white;border-radius:15px;overflow:hidden;
 box-shadow:0 10px 25px rgba(0,0,0,0.1);
 transition:0.3s;
 }
-.card:hover{transform:translateY(-8px) scale(1.02);}
+.card:hover{transform:translateY(-6px) scale(1.02);}
 
 .card img{width:100%;height:170px;object-fit:cover;}
-
 .card-content{padding:12px;}
 
-.desc{
-font-size:15px;
-line-height:1.6;
-color:#444;
+.desc{font-size:15px;margin-top:8px;color:#444;line-height:1.6;}
+
+.metro{
+margin-top:5px;
+font-size:13px;
+color:#007bff;
+font-weight:600;
+}
+
+/* ⭐ RATING */
+.stars{
 margin-top:8px;
 }
+.star{
+font-size:18px;
+cursor:pointer;
+color:#ccc;
+}
+.star.active{color:gold;}
+
+/* BUTTONS */
+.btn-group{
+display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;
+}
+
+.btn{
+flex:1 1 calc(50% - 10px);
+padding:12px;border:none;border-radius:12px;
+color:white;font-weight:600;
+cursor:pointer;
+transition:0.3s;
+}
+
+.btn.hotel{background:linear-gradient(135deg,#ff7e5f,#feb47b);}
+.btn.food{background:linear-gradient(135deg,#43cea2,#185a9d);}
+.btn.cafe{background:linear-gradient(135deg,#c471f5,#fa71cd);}
+.btn.direction{background:linear-gradient(135deg,#36d1dc,#5b86e5);}
+
+.btn:hover{transform:scale(1.05);}
 
 .bottom-nav{
 position:fixed;bottom:0;width:100%;
 background:white;display:flex;justify-content:space-around;
-padding:12px;
-box-shadow:0 -2px 15px rgba(0,0,0,0.2);
+padding:12px;box-shadow:0 -2px 10px rgba(0,0,0,0.2);
 }
-.bottom-nav button{background:none;color:#2a5298;font-weight:bold;}
 </style>
 </head>
 
 <body>
 
 <header>
-<h1>Delhi Smart Tourist Guide</h1>
-<p id="topDistance">📍 Detecting location...</p>
+<h2>Delhi Smart Guide 🚀</h2>
+<p id="status">📍 Detecting location...</p>
 </header>
 
 <div class="searchbar">
-<input type="text" id="search" placeholder="Search place...">
+<input type="text" id="search" placeholder="Search...">
 <select id="filter">
 <option value="all">All</option>
 <option value="tourist">Tourist</option>
-<option value="restaurant">Restaurant</option>
+<option value="restaurant">Food</option>
 <option value="cafe">Cafe</option>
 </select>
-<button onclick="getLocation()">📍</button>
 </div>
 
 <div id="map"></div>
@@ -102,102 +125,114 @@ box-shadow:0 -2px 15px rgba(0,0,0,0.2);
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-let userLat=null,userLng=null,userMetro=null;
+let userLat=null,userLng=null,userMarker=null;
 
-// 🚇 METRO
 const metros=[
 {name:"Rajiv Chowk",lat:28.6330,lng:77.2197,line:"Blue/Yellow"},
-{name:"Central Secretariat",lat:28.6143,lng:77.2119,line:"Yellow/Violet"},
 {name:"Kashmere Gate",lat:28.6675,lng:77.2280,line:"Red/Yellow/Violet"},
-{name:"Lal Qila",lat:28.6561,lng:77.2408,line:"Violet"},
-{name:"Qutub Minar",lat:28.5129,lng:77.1863,line:"Yellow"}
+{name:"Central Secretariat",lat:28.6143,lng:77.2119,line:"Yellow/Violet"}
 ];
 
-// 📍 50+ PLACES (SHORT SAMPLE — YOU CAN KEEP ADDING SAME FORMAT)
 const places=[
-{name:"India Gate",lat:28.6129,lng:77.2295,img:"https://upload.wikimedia.org/wikipedia/commons/d/da/India_Gate_in_New_Delhi_03-2016.jpg",desc:"Iconic war memorial surrounded by lush gardens, perfect for evening walks and photography.",type:"tourist"},
-{name:"Red Fort",lat:28.6562,lng:77.2410,img:"https://upload.wikimedia.org/wikipedia/commons/4/47/Red_Fort_in_New_Delhi_03-2016.jpg",desc:"Historic Mughal fort showcasing India's rich heritage and architectural brilliance.",type:"tourist"},
-{name:"Lotus Temple",lat:28.5535,lng:77.2588,img:"https://upload.wikimedia.org/wikipedia/commons/f/fc/LotusDelhi.jpg",desc:"A serene white marble temple shaped like a lotus, open to all religions for meditation.",type:"tourist"},
-
-{name:"Indian Accent",lat:28.6000,lng:77.2300,img:"https://source.unsplash.com/400x300/?restaurant",desc:"Luxury fine dining restaurant known for modern Indian cuisine and world-class service.",type:"restaurant"},
-{name:"Karim's",lat:28.6500,lng:77.2330,img:"https://source.unsplash.com/400x300/?food",desc:"Legendary Mughlai restaurant near Jama Masjid famous for kebabs and curries.",type:"restaurant"},
-
-{name:"Blue Tokai Cafe",lat:28.5500,lng:77.2000,img:"https://source.unsplash.com/400x300/?cafe",desc:"Popular modern cafe known for specialty coffee, cozy vibes, and great ambience.",type:"cafe"},
-{name:"Cafe Lota",lat:28.5930,lng:77.2200,img:"https://source.unsplash.com/400x300/?coffee",desc:"Cultural cafe serving regional Indian dishes with artistic presentation.",type:"cafe"}
+{name:"India Gate",lat:28.6129,lng:77.2295,img:"https://upload.wikimedia.org/wikipedia/commons/d/da/India_Gate_in_New_Delhi_03-2016.jpg",desc:"Historic war memorial surrounded by gardens.",type:"tourist"},
+{name:"Red Fort",lat:28.6562,lng:77.2410,img:"https://upload.wikimedia.org/wikipedia/commons/4/47/Red_Fort_in_New_Delhi_03-2016.jpg",desc:"UNESCO heritage Mughal fort.",type:"tourist"},
+{name:"Lotus Temple",lat:28.5535,lng:77.2588,img:"https://upload.wikimedia.org/wikipedia/commons/f/fc/LotusDelhi.jpg",desc:"Peaceful lotus-shaped temple.",type:"tourist"},
+{name:"Farzi Cafe",lat:28.6320,lng:77.2200,img:"https://source.unsplash.com/400x300/?fusion-food",desc:"Modern Indian fusion cuisine.",type:"restaurant",metro:"Rajiv Chowk"},
+{name:"India Gate",lat:28.6129,lng:77.2295,img:"https://upload.wikimedia.org/wikipedia/commons/d/da/India_Gate_in_New_Delhi_03-2016.jpg",desc:"War memorial surrounded by lush gardens.",type:"tourist",metro:"Central Secretariat (Yellow/Violet)"},
+{name:"Qutub Minar",lat:28.5245,lng:77.1855,img:"https://upload.wikimedia.org/wikipedia/commons/3/3c/Qutb_Minar_2011.jpg",desc:"Tallest brick minaret in the world.",type:"tourist",metro:"Qutub Minar (Yellow)"},
+{name:"Humayun Tomb",lat:28.5933,lng:77.2507,img:"https://upload.wikimedia.org/wikipedia/commons/3/3f/Humayun%27s_Tomb%2C_Delhi.jpg",desc:"Mughal emperor tomb, Taj inspiration.",type:"tourist",metro:"JLN Stadium (Violet)"},
+{name:"Akshardham Temple",lat:28.6127,lng:77.2773,img:"https://upload.wikimedia.org/wikipedia/commons/5/5c/Akshardham_Temple.jpg",desc:"Grand temple with exhibitions and shows.",type:"tourist",metro:"Akshardham (Blue)"},
+{name:"Jama Masjid",lat:28.6507,lng:77.2334,img:"https://upload.wikimedia.org/wikipedia/commons/0/0e/Jama_Masjid_%28Delhi%29.jpg",desc:"India’s largest mosque.",type:"tourist",metro:"Jama Masjid (Violet)"},
+{name:"Rashtrapati Bhavan",lat:28.6143,lng:77.1996,img:"https://upload.wikimedia.org/wikipedia/commons/3/3e/Rashtrapati_Bhavan.jpg",desc:"Official residence of President.",type:"tourist",metro:"Central Secretariat"},
+{name:"Lodhi Garden",lat:28.5931,lng:77.2197,img:"https://upload.wikimedia.org/wikipedia/commons/6/6c/Lodhi_Garden.jpg",desc:"Historic garden with tombs.",type:"tourist",metro:"Jor Bagh"},
+{name:"Connaught Place",lat:28.6315,lng:77.2167,img:"https://upload.wikimedia.org/wikipedia/commons/5/5d/Connaught_Place.jpg",desc:"Shopping and nightlife hub.",type:"tourist",metro:"Rajiv Chowk"},
+{name:"Karim's",lat:28.6500,lng:77.2330,img:"https://source.unsplash.com/400x300/?mughlai-food",desc:"Legendary Mughlai cuisine.",type:"restaurant",metro:"Jama Masjid"},
+{name:"Indian Accent",lat:28.6000,lng:77.2300,img:"https://source.unsplash.com/400x300/?fine-dining",desc:"Premium modern Indian dining.",type:"restaurant",metro:"Lodhi Colony"},
+{name:"Bukhara",lat:28.5973,lng:77.2197,img:"https://source.unsplash.com/400x300/?tandoori",desc:"Famous for kebabs.",type:"restaurant",metro:"INA"},
+{name:"Saravana Bhavan",lat:28.6328,lng:77.2197,img:"https://source.unsplash.com/400x300/?south-indian-food",desc:"Authentic South Indian food.",type:"restaurant",metro:"Rajiv Chowk"},
+{name:"Moti Mahal",lat:28.6460,lng:77.2170,img:"https://source.unsplash.com/400x300/?butter-chicken",desc:"Birthplace of butter chicken.",type:"restaurant",metro:"Daryaganj"},
+{name:"Kake Da Hotel",lat:28.6304,lng:77.2177,img:"https://source.unsplash.com/400x300/?indian-thali",desc:"Classic North Indian meals.",type:"restaurant",metro:"Rajiv Chowk"},
+{name:"Paranthe Wali Gali",lat:28.6560,lng:77.2300,img:"https://source.unsplash.com/400x300/?paratha",desc:"Famous street food lane.",type:"restaurant",metro:"Chandni Chowk"},
+{name:"Rajinder Da Dhaba",lat:28.5710,lng:77.1900,img:"https://source.unsplash.com/400x300/?dhaba-food",desc:"Street-style North Indian food.",type:"restaurant",metro:"INA"},
+{name:"Cafe Delhi Heights",lat:28.6300,lng:77.2200,img:"https://source.unsplash.com/400x300/?burger",desc:"Trendy cafe restaurant.",type:"restaurant",metro:"Rajiv Chowk"},
+{name:"Farzi Cafe",lat:28.6320,lng:77.2200,img:"https://source.unsplash.com/400x300/?fusion-food",desc:"Modern Indian fusion cuisine.",type:"restaurant",metro:"Rajiv Chowk"},
+{name:"Blue Tokai",lat:28.5500,lng:77.2000,img:"https://source.unsplash.com/400x300/?coffee",desc:"Specialty coffee roasters.",type:"cafe",metro:"Saket"},
+{name:"Cafe Lota",lat:28.5930,lng:77.2200,img:"https://source.unsplash.com/400x300/?cafe",desc:"Art museum cafe.",type:"cafe",metro:"Pragati Maidan"},
+{name:"Diggin Cafe",lat:28.5870,lng:77.2200,img:"https://source.unsplash.com/400x300/?cafe-interior",desc:"Instagram-famous cafe.",type:"cafe",metro:"Jor Bagh"},
+{name:"Jugmug Thela",lat:28.6150,lng:77.2300,img:"https://source.unsplash.com/400x300/?dessert",desc:"Desserts & drinks spot.",type:"cafe",metro:"ITO"},
+{name:"AMA Cafe",lat:28.7041,lng:77.1025,img:"https://source.unsplash.com/400x300/?bakery",desc:"Tibetan bakery cafe.",type:"cafe",metro:"Majnu ka Tila"},
+{name:"The Big Chill",lat:28.6300,lng:77.2200,img:"https://source.unsplash.com/400x300/?pasta",desc:"Italian cafe vibe.",type:"cafe",metro:"Rajiv Chowk"},
+{name:"Rose Cafe",lat:28.5600,lng:77.2100,img:"https://source.unsplash.com/400x300/?pink-cafe",desc:"Cute themed cafe.",type:"cafe",metro:"Saket"},
+{name:"Social",lat:28.6300,lng:77.2200,img:"https://source.unsplash.com/400x300/?workspace-cafe",desc:"Work + cafe space.",type:"cafe",metro:"Rajiv Chowk"},
+{name:"Perch Wine Cafe",lat:28.5500,lng:77.2100,img:"https://source.unsplash.com/400x300/?wine-cafe",desc:"Chill premium cafe.",type:"cafe",metro:"Khan Market"},
+{name:"Cha Bar",lat:28.6280,lng:77.2180,img:"https://source.unsplash.com/400x300/?tea",desc:"Tea lounge inside Oxford bookstore.",type:"cafe",metro:"Rajiv Chowk"},
+{name:"Chandni Chowk",lat:28.6562,lng:77.2300,img:"https://source.unsplash.com/400x300/?market",desc:"Historic bustling market.",type:"tourist",metro:"Chandni Chowk"},
+{name:"Sarojini Nagar",lat:28.5750,lng:77.1950,img:"https://source.unsplash.com/400x300/?shopping",desc:"Budget shopping paradise.",type:"tourist",metro:"Sarojini Nagar"},
+{name:"Lajpat Nagar Market",lat:28.5700,lng:77.2400,img:"https://source.unsplash.com/400x300/?bazaar",desc:"Popular shopping hub.",type:"tourist",metro:"Lajpat Nagar"},
+{name:"Dilli Haat",lat:28.5730,lng:77.2200,img:"https://source.unsplash.com/400x300/?handicraft",desc:"Cultural market & food.",type:"tourist",metro:"INA"},
+{name:"Janpath Market",lat:28.6310,lng:77.2160,img:"https://source.unsplash.com/400x300/?street-shopping",desc:"Street shopping area.",type:"tourist",metro:"Rajiv Chowk"},
+{name:"Khan Market",lat:28.6000,lng:77.2300,img:"https://source.unsplash.com/400x300/?luxury-shopping",desc:"Upscale shopping zone.",type:"tourist",metro:"Khan Market"},
+{name:"Karol Bagh",lat:28.6500,lng:77.1900,img:"https://source.unsplash.com/400x300/?market-street",desc:"Clothes & electronics.",type:"tourist",metro:"Karol Bagh"},
+{name:"Palika Bazaar",lat:28.6315,lng:77.2167,img:"https://source.unsplash.com/400x300/?underground-market",desc:"Underground shopping.",type:"tourist",metro:"Rajiv Chowk"},
+{name:"Select Citywalk",lat:28.5280,lng:77.2190,img:"https://source.unsplash.com/400x300/?mall",desc:"Modern mall.",type:"tourist",metro:"Saket"},
+{name:"Ambience Mall",lat:28.5050,lng:77.0950,img:"https://source.unsplash.com/400x300/?shopping-mall",desc:"Luxury mall.",type:"tourist",metro:"Vasant Vihar"},
 ];
 
-// 🧠 DISTANCE
-function getDistance(a,b,c,d){
-const R=6371;
+function distance(a,b,c,d){
+let R=6371;
 let dLat=(c-a)*Math.PI/180;
 let dLon=(d-b)*Math.PI/180;
 let x=Math.sin(dLat/2)**2 + Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dLon/2)**2;
 return R*(2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x)));
 }
 
-// 🚇 METRO
-function findNearestMetro(lat,lng){
-let nearest=null,min=Infinity;
+function nearestMetro(lat,lng){
+let min=Infinity,station=null;
 metros.forEach(m=>{
-let d=getDistance(lat,lng,m.lat,m.lng);
-if(d<min){min=d;nearest={...m,dist:d};}
+let d=distance(lat,lng,m.lat,m.lng);
+if(d<min){min=d;station={...m,dist:d};}
 });
-return nearest;
+return station;
 }
 
-// 🚇 ROUTE DESCRIPTION (IMPROVED)
-function getMetroRoute(from,to){
-if(!from||!to) return "...";
-if(from.name===to.name) return `Direct metro from ${from.name}`;
-if(from.line===to.line) return `Take ${from.line} line directly from ${from.name} to ${to.name}`;
-return `Take metro from ${from.name} → change at Rajiv Chowk → reach ${to.name}`;
-}
-
-// 📍 LOCATION
+/* 📍 LIVE LOCATION TRACK */
 function getLocation(){
-navigator.geolocation.getCurrentPosition(pos=>{
+navigator.geolocation.watchPosition(pos=>{
 userLat=pos.coords.latitude;
 userLng=pos.coords.longitude;
-userMetro=findNearestMetro(userLat,userLng);
-document.getElementById("topDistance").innerText="📍 Location detected";
+
+document.getElementById("status").innerText="📍 Live location active";
+
+if(userMarker){map.removeLayer(userMarker);}
+userMarker=L.marker([userLat,userLng]).addTo(map)
+.bindPopup("You are here").openPopup();
+
+map.setView([userLat,userLng],13);
+
 render();
+
 });
 }
-window.onload=getLocation;
 
-// MAP
+/* MAP */
 const map=L.map('map').setView([28.61,77.20],11);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-let markers=[];
 
-// RENDER
 function render(){
 let cards=document.getElementById("cards");
 cards.innerHTML="";
-markers.forEach(m=>map.removeLayer(m));
-markers=[];
 
 let search=document.getElementById("search").value.toLowerCase();
 let filter=document.getElementById("filter").value;
 
 places.filter(p=>{
-let matchName=p.name.toLowerCase().includes(search);
-let matchType=(filter==="all"||p.type===filter);
-return matchName&&matchType;
-})
-.forEach(p=>{
+return p.name.toLowerCase().includes(search) && (filter==="all"||p.type===filter);
+}).forEach((p,i)=>{
 
-let dist=userLat?getDistance(userLat,userLng,p.lat,p.lng):null;
-let metro=findNearestMetro(p.lat,p.lng);
-let route=userMetro?getMetroRoute(userMetro,metro):"...";
+let dist=userLat?distance(userLat,userLng,p.lat,p.lng).toFixed(1):"...";
+let metro=userLat?nearestMetro(p.lat,p.lng):null;
 
-let hotelLink=`https://www.google.com/search?q=hotels+near+${p.name}`;
-let restaurantLink=`https://www.google.com/search?q=restaurants+near+${p.name}`;
-let cafeLink=`https://www.google.com/search?q=cafes+near+${p.name}`;
-let directionLink=`https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`;
-
-let m=L.marker([p.lat,p.lng]).addTo(map);
-markers.push(m);
+let rating=localStorage.getItem(p.name)||0;
 
 cards.innerHTML+=`
 <div class="card">
@@ -205,32 +240,39 @@ cards.innerHTML+=`
 <div class="card-content">
 
 <h3>${p.name}</h3>
-<p><b>${dist?dist.toFixed(1)+' km away':'...'}</b></p>
+<p><b>${dist} km away</b></p>
 
-<p>🚇 ${metro.name} (${metro.dist.toFixed(1)} km)</p>
-<p>🧭 ${route}</p>
+${metro?`<div class="metro">🚇 Nearest: ${metro.name} (${metro.line})</div>`:""}
 
 <p class="desc">${p.desc}</p>
 
-<button onclick="window.open('${hotelLink}')">🏨 Hotels</button>
-<button onclick="window.open('${restaurantLink}')">🍽️ Food</button>
-<button onclick="window.open('${cafeLink}')">☕ Cafe</button>
-<button onclick="window.open('${directionLink}')">🧭 Directions</button>
+<div class="stars" id="stars-${i}">
+${[1,2,3,4,5].map(n=>`<span class="star ${n<=rating?'active':''}" onclick="rate('${p.name}',${n})">★</span>`).join("")}
+</div>
+
+<div class="btn-group">
+<button class="btn hotel" onclick="window.open('https://www.google.com/search?q=hotels+near+${p.name}')">🏨</button>
+<button class="btn food" onclick="window.open('https://www.google.com/search?q=restaurants+near+${p.name}')">🍽️</button>
+<button class="btn cafe" onclick="window.open('https://www.google.com/search?q=cafes+near+${p.name}')">☕</button>
+<button class="btn direction" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}')">🧭</button>
+</div>
 
 </div>
-</div>`;
+</div>
+`;
 });
+}
+
+/* ⭐ SAVE RATING */
+function rate(place,val){
+localStorage.setItem(place,val);
+render();
 }
 
 document.getElementById("search").addEventListener("input",render);
 document.getElementById("filter").addEventListener("change",render);
 
-// HEADER SHRINK
-window.addEventListener("scroll",()=>{
-const header=document.querySelector("header");
-if(window.scrollY>50){header.classList.add("shrink");}
-else{header.classList.remove("shrink");}
-});
+getLocation();
 </script>
 
 </body>
