@@ -73,8 +73,11 @@ header{
 <div id="home" class="page active">
 
 <header>
-<h1>🌍 Travel With Ankur</h1>
+<h1>🌍 Eat With Travel </h1>
 <p>Explore Best Places</p>
+<!-- SEARCH BOX -->
+<input type="text" id="searchInput" placeholder="🔍 Search places..." style="width:90%;padding:8px;margin-top:10px;border-radius:8px;border:1px solid #ccc;" onkeyup="filterPlaces()">
+<p>📌 Guide: Distances shown from main city / Rishikesh, Shimla, Delhi, etc.</p>
 </header>
 
 <div class="container">
@@ -95,12 +98,11 @@ header{
 </div>
 </div>
 
-<!-- SHIMLA -->
-  <div class="card">
-    <img src="https://image2url.com/r2/default/images/1774727094251-c65f7679-fafb-4192-953c-9d4534b3e1d3.jpg">
-    <div class="card-content">
-      <h2>Shimla</h2>
-      <div class="btn" onclick="window.location.href='shimla.html'">View Details</div>
+<div class="card">
+<img src="https://image2url.com/r2/default/images/1774727094251-c65f7679-fafb-4192-953c-9d4534b3e1d3.jpg">
+<div class="card-content">
+<h2>Shimla</h2>
+<div class="btn" onclick="window.location.href='shimla.html'">View Details</div>
 </div>
 </div>
 
@@ -115,7 +117,7 @@ header{
 </div>
 </div>
 
-<!-- ✅ RISHIKESH (YOUR ORIGINAL CODE - SAME) -->
+<!-- ✅ RISHIKESH PAGE -->
 <div id="rishikesh" class="page">
 
 <div class="back" onclick="goBack()">⬅ Back</div>
@@ -124,7 +126,13 @@ header{
   <h1>🌄 Rishikesh Guide</h1>
 </header>
 
-<div style="padding:15px">
+<div style="padding:15px;">
+  <!-- SEARCH BOX -->
+  <input type="text" id="rishikeshSearch" placeholder="🔍 Search Rishikesh places..." 
+         style="width:95%;padding:8px;margin-bottom:15px;border-radius:8px;border:1px solid #ccc;" 
+         onkeyup="filterRishikeshPlaces()">
+  <p>📌 Guide: All distances are from main Rishikesh city center.</p>
+</div>
 
 <h2>📍 Route Planner</h2>
 <div class="card">
@@ -136,75 +144,16 @@ header{
 
 <div class="card">
 <h3>🌉 Lakshman Jhula</h3>
-
 <img src="https://image2url.com/r2/default/images/1774962705783-39793311-9126-4a66-abeb-3ff1bff63e5b.jfif" alt="image" />
-
-<header>
-    <h1>🌉 Lakshman Jhula</h1>
-    <p>Rishikesh, Uttarakhand</p>
-</header>
-
-<div class="container">
-
-    <div class="card">
-        <h2>About</h2>
-        <p>
-            Lakshman Jhula is a famous suspension bridge built over the 
-            <span class="highlight">Ganges River</span> in Rishikesh. 
-            It is around <span class="highlight">450 feet long</span> 
-            and offers a beautiful scenic view.
-        </p>
-        <img src="https://image2url.com/r2/default/images/1774962705783-39793311-9126-4a66-abeb-3ff1bff63e5b.jfif" alt="image" />
-    </div>
-
-    <div class="card">
-        <h2>Key Highlights</h2>
-        <ul>
-            <li>450 feet long suspension bridge at Lakshman Jhula</li>
-            <li>Stunning panoramic views of the Ganges River</li>
-            <li>One of the most famous landmarks in Rishikesh</li>
-            <li>Surrounded by temples, ashrams, and vibrant cafes</li>
-			<li>Ideal spot for photography, especially during sunrise and sunset</li>
-			<li>A peaceful spiritual atmosphere attracting pilgrims and tourists</li>
-			<li>Walking across the bridge offers a unique and thrilling experience</li>
-
-
-        </ul>
-    </div>
-
-    <div class="card">
-        <h2>Mythological Significance</h2>
-        <p>
-            It is believed that Lakshmana, the younger brother of Lord Rama, crossed the sacred Ganges River at this spot using a simple rope bridge during the time of the Ramayana.
-
-Because of this legendary event, the place came to be known as Lakshman Jhula. Even today, it is considered a spiritually significant site, attracting devotees and tourists who wish to connect with this ancient story and its divine importance.
-        </p>
-    </div>
-
-    <div class="card">
-        <h2>Current Status</h2>
-        <p>
-            The bridge is currently closed due to safety concerns. 
-            Tourists use nearby bridges like Ram Jhula.
-        </p>
-    </div>
-	    <div class="card">
-        <h2>📍 Distance Guide</h2>
-        <ul>
-            <li>📍 Distance: ~5 km from <span>Tapovan</span> / <span>Rishikesh</span></li>
-            <li>📍 Distance: ~25 km from <span>Haridwar</span></li>
-            <li>📍 Distance: ~3 km from <span>Triveni Ghat</span></li>
-            <li>📍 Distance: ~240 km from <span>Delhi</span></li>
-			
-
-        </ul>
-    </div> 
-
-<p>🙏 Famous suspension bridge with mythological importance</p>
-<p>✨ Scenic Ganga walk & sunset views, Café hopping</p>
-<p>🚗 Best Travel: Scooty / auto</p>
-<p>🚌 Public Transport: Shared auto available</p>
-<a href="https://www.google.com/maps/search/Lakshman+Jhula+Rishikesh">Map</a>
+<div class="card-content">
+  <h2>About</h2>
+  <p>
+    Lakshman Jhula is a famous suspension bridge built over the 
+    <span class="highlight">Ganges River</span> in Rishikesh. 
+    It is around <span class="highlight">450 feet long</span> 
+    and offers a beautiful scenic view.
+  </p>
+</div>
 </div>
 
 <div class="card">
@@ -257,9 +206,9 @@ Because of this legendary event, the place came to be known as Lakshman Jhula. E
 </div>
 
 </div>
-</div>
 
 <script>
+// HOME PAGE FUNCTIONS
 function openPage(id){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.getElementById(id).classList.add("active");
@@ -274,6 +223,66 @@ function getRoute(){
   var from=document.getElementById('from').value;
   window.open("https://www.google.com/maps/dir/"+from+"/Rishikesh");
 }
+
+// HOME PAGE SEARCH
+function filterPlaces(){
+  var input = document.getElementById('searchInput').value.toLowerCase();
+  document.querySelectorAll('#home .card').forEach(card=>{
+    var name = card.querySelector('h2').innerText.toLowerCase();
+    if(name.includes(input)) card.style.display='block';
+    else card.style.display='none';
+  });
+}
+
+// FAVORITES HOME PAGE
+document.querySelectorAll('#home .card').forEach(card=>{
+  let favBtn = document.createElement('span');
+  favBtn.innerHTML = '⭐';
+  favBtn.style.cssText = 'float:right;cursor:pointer;font-size:18px;margin-top:-35px;margin-right:10px;';
+  let name = card.querySelector('h2') ? card.querySelector('h2').innerText : '';
+  if(localStorage.getItem('fav_'+name)) favBtn.style.color='gold';
+  else favBtn.style.color='#ccc';
+  favBtn.onclick = ()=>{
+    if(localStorage.getItem('fav_'+name)){
+      localStorage.removeItem('fav_'+name); favBtn.style.color='#ccc';
+    } else {
+      localStorage.setItem('fav_'+name,true); favBtn.style.color='gold';
+    }
+  }
+  if(card.querySelector('h2')) card.querySelector('.card-content').appendChild(favBtn);
+});
+
+// RISHIKESH PAGE SEARCH
+function filterRishikeshPlaces(){
+  var input = document.getElementById('rishikeshSearch').value.toLowerCase();
+  document.querySelectorAll('#rishikesh .card').forEach(card=>{
+    var name = '';
+    if(card.querySelector('h3')) name = card.querySelector('h3').innerText.toLowerCase();
+    else if(card.querySelector('h2')) name = card.querySelector('h2').innerText.toLowerCase();
+    if(name.includes(input)) card.style.display='block';
+    else card.style.display='none';
+  });
+}
+
+// FAVORITES RISHIKESH PAGE
+document.querySelectorAll('#rishikesh .card').forEach(card=>{
+  let favBtn = document.createElement('span');
+  favBtn.innerHTML = '⭐';
+  favBtn.style.cssText = 'float:right;cursor:pointer;font-size:18px;margin-top:-35px;margin-right:10px;';
+  let name = '';
+  if(card.querySelector('h3')) name = card.querySelector('h3').innerText;
+  else if(card.querySelector('h2')) name = card.querySelector('h2').innerText;
+  if(localStorage.getItem('fav_'+name)) favBtn.style.color='gold';
+  else favBtn.style.color='#ccc';
+  favBtn.onclick = ()=>{
+    if(localStorage.getItem('fav_'+name)){
+      localStorage.removeItem('fav_'+name); favBtn.style.color='#ccc';
+    } else {
+      localStorage.setItem('fav_'+name,true); favBtn.style.color='gold';
+    }
+  }
+  if(card.querySelector('h3') || card.querySelector('h2')) card.appendChild(favBtn);
+});
 </script>
 
 </body>
