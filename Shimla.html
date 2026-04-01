@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<div style="padding:10px;">
+<span style="cursor:pointer;color:#007bff;font-weight:600;" onclick="goBack()">⬅ Back</span>
+</div>
+<script>
+function goBack(){
+  window.location.href = 'index.html';
+}
+</script>
+<meta charset="UTF-8">
+<title>Shimla Smart Tourist Guide</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+body { margin:0; font-family: Arial; background:#f5f5f5; }
+
+header {
+    background:#2c3e50;
+    color:white;
+    text-align:center;
+    padding:15px;
+}
+
+.controls {
+    text-align:center;
+    background:white;
+    padding:10px;
+}
+
+input, select {
+    padding:10px;
+    margin:5px;
+    width:90%;
+    max-width:250px;
+}
+
+#map { height:350px; }
+
+.cards {
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
+    gap:15px;
+    padding:15px;
+}
+
+.card {
+    background:white;
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 2px 5px rgba(0,0,0,0.2);
+}
+
+.card img {
+    width:100%;
+    height:160px;
+    object-fit:cover;
+}
+
+.card-content { padding:10px; }
+
+button {
+    padding:5px 10px;
+    margin:3px;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Shimla Smart Tourist Guide</h1>
+</header>
+
+<div class="controls">
+<input type="text" id="search" placeholder="Search place...">
+<select id="filter">
+<option value="all">All Distances</option>
+<option value="5">Within 5 km</option>
+<option value="20">Within 20 km</option>
+<option value="50">Within 50 km</option>
+</select>
+<button onclick="getLocation()">📍 My Location</button>
+</div>
+
+<div id="map"></div>
+<div class="cards" id="cards"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+
+/* ✅ ADD DIFFERENT IMAGES HERE */
+const places = [
+{
+name:"The Ridge",
+lat:31.1048, lng:77.1734, distance:0,
+img:"https://image2url.com/r2/default/images/1775024660182-93c5a783-010d-4780-8e46-7756eca68533.jpg",
+desc:"The Ridge is the main open space in Shimla with panoramic mountain views and cultural activities.",
+bestTime:"March to June, December (snow)",
+timing:"Open all day",
+fee:"Free"
+},
+{
+name:"Mall Road",
+lat:31.1045, lng:77.1730, distance:0.2,
+img:"https://image2url.com/r2/default/images/1775023823076-60997872-dfdc-4d32-80c5-f00204cf0f1c.jpg",
+desc:"Mall Road is the busiest street with shops, cafes, and colonial buildings.",
+bestTime:"All year",
+timing:"9 AM – 9 PM",
+fee:"Free"
+},
+{
+name:"Jakhoo Temple",
+lat:31.1060, lng:77.1840, distance:2,
+img:"https://image2url.com/r2/default/images/1775026175724-36db17c5-7777-49b8-8ae1-c415d4a831c5.jpeg",
+desc:"Temple dedicated to Lord Hanuman located on the highest peak of Shimla.",
+bestTime:"All year",
+timing:"5 AM – 9 PM",
+fee:"Free"
+},
+{
+name:"Kufri",
+lat:31.0978, lng:77.2670, distance:16,
+img:"https://image2url.com/r2/default/images/1775027266535-451e6ae2-ad01-4c79-9e41-6de0d08d573c.jpg",
+desc:"Kufri is famous for snow activities and skiing.",
+bestTime:"December to February",
+timing:"9 AM – 6 PM",
+fee:"₹20–₹50"
+},
+{
+name:"Mashobra",
+lat:31.1260, lng:77.2300, distance:12,
+img:"https://image2url.com/r2/default/images/1775027829872-e9bba73a-c575-4c90-952c-8c87ad3bf345.jpg",
+desc:"Mashobra is peaceful and surrounded by forests.",
+bestTime:"March to June",
+timing:"Open all day",
+fee:"Free"
+},
+{
+name:"Chail",
+lat:30.9719, lng:77.1960, distance:45,
+img:"https://image2url.com/r2/default/images/1775027892787-7576d179-901a-47ea-8310-671ad761023f.jpg",
+desc:"Chail has the world’s highest cricket ground.",
+bestTime:"March to June",
+timing:"8 AM – 6 PM",
+fee:"₹100"
+},
+{
+name:"Naldehra",
+lat:31.1070, lng:77.1830, distance:22,
+img:"https://image2url.com/r2/default/images/1775027966237-657cacea-a70f-4bef-b7e8-d0a4e0ac440a.jpg",
+desc:"Naldehra is known for its golf course and greenery.",
+bestTime:"All year",
+timing:"8 AM – 5 PM",
+fee:"₹50–₹100"
+},
+{
+name:"Chadwick Falls",
+lat:31.0910, lng:77.1600, distance:7,
+img:"https://image2url.com/r2/default/images/1775028057548-0b098c08-08d8-486c-9336-600d2d71532f.jpg",
+desc:"Beautiful waterfall surrounded by dense forest.",
+bestTime:"July to September",
+timing:"6 AM – 6 PM",
+fee:"Free"
+}
+];
+
+let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+let reviews = JSON.parse(localStorage.getItem("reviews")) || {};
+let userMarker;
+
+/* ---------- MAP ---------- */
+const map = L.map('map').setView([31.1048,77.1734],11);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+let markers = [];
+
+function updateMap(filtered) {
+    markers.forEach(m => map.removeLayer(m));
+    markers = [];
+
+    filtered.forEach(p => {
+        let marker = L.marker([p.lat,p.lng])
+        .addTo(map)
+        .bindPopup(`<b>${p.name}</b>`);
+        markers.push(marker);
+    });
+}
+
+/* ---------- LOCATION ---------- */
+function getLocation() {
+    navigator.geolocation.getCurrentPosition(pos => {
+        let lat = pos.coords.latitude;
+        let lng = pos.coords.longitude;
+
+        if (userMarker) map.removeLayer(userMarker);
+
+        userMarker = L.marker([lat,lng])
+        .addTo(map)
+        .bindPopup("📍 You are here")
+        .openPopup();
+
+        map.setView([lat,lng],13);
+    });
+}
+
+/* ---------- RENDER ---------- */
+const cards = document.getElementById("cards");
+
+function render() {
+    cards.innerHTML = "";
+
+    let search = document.getElementById("search").value.toLowerCase();
+    let filter = document.getElementById("filter").value;
+
+    let filtered = places.filter(p =>
+        p.name.toLowerCase().includes(search) &&
+        (filter==="all" || p.distance <= filter)
+    );
+
+    filtered.forEach(p => {
+        cards.innerHTML += `
+        <div class="card">
+            <img src="${p.img}">
+            <div class="card-content">
+                <h3>${p.name}</h3>
+
+                <p><b>Distance:</b> ${p.distance} km</p>
+                <p><b>Description:</b> ${p.desc}</p>
+
+                <p>🕒 ${p.bestTime}</p>
+                <p>⏰ ${p.timing}</p>
+                <p>🎟️ ${p.fee}</p>
+
+                <button onclick="toggleFav('${p.name}')">
+                    ${favorites.includes(p.name) ? "❤️" : "🤍"}
+                </button>
+
+                <button onclick="navigateTo(${p.lat},${p.lng})">
+                    🧭 Route
+                </button>
+
+                <br><br>
+
+                ⭐ ${reviews[p.name]?.rating || "No rating"}<br>
+
+                <input placeholder="Rate" id="rate-${p.name}">
+                <input placeholder="Review" id="review-${p.name}">
+                <button onclick="saveReview('${p.name}')">Save</button>
+
+                <p>${reviews[p.name]?.text || ""}</p>
+            </div>
+        </div>`;
+    });
+
+    updateMap(filtered);
+}
+
+/* ---------- FUNCTIONS ---------- */
+function toggleFav(name) {
+    favorites = favorites.includes(name)
+        ? favorites.filter(f => f !== name)
+        : [...favorites, name];
+
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+    render();
+}
+
+function navigateTo(lat,lng) {
+    window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`);
+}
+
+function saveReview(name) {
+    let rating = document.getElementById(`rate-${name}`).value;
+    let text = document.getElementById(`review-${name}`).value;
+
+    reviews[name] = {rating,text};
+    localStorage.setItem("reviews", JSON.stringify(reviews));
+    render();
+}
+
+/* ---------- EVENTS ---------- */
+document.getElementById("search").addEventListener("input", render);
+document.getElementById("filter").addEventListener("change", render);
+
+render();
+
+</script>
+
+</body>
+</html>
