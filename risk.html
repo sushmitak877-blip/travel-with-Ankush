@@ -14,9 +14,7 @@ body{background:#f4f6f9;padding-bottom:90px;}
 header{
 background:linear-gradient(135deg,#11998e,#38ef7d);
 color:white;text-align:center;padding:18px;
-transition:0.3s;
 }
-header.shrink{padding:10px;}
 
 .searchbar{
 position:sticky;top:10px;z-index:999;
@@ -48,11 +46,9 @@ transition:0.3s;
 .card:hover{transform:translateY(-10px) scale(1.03);}
 
 .card img{width:100%;height:170px;object-fit:cover;}
-
 .card-content{padding:12px;}
 
 .desc{font-size:14px;color:#444;margin-top:6px;}
-
 .info{font-size:13px;margin-top:6px;color:#333;}
 
 .favorite{
@@ -60,7 +56,6 @@ position:absolute;top:10px;right:12px;
 font-size:22px;cursor:pointer;
 }
 
-/* ⭐ rating */
 .star{cursor:pointer;color:#ccc;font-size:18px;}
 .star.active{color:gold;}
 
@@ -74,15 +69,12 @@ flex:1 1 calc(50% - 10px);
 padding:12px;border:none;border-radius:12px;
 color:white;font-weight:600;
 cursor:pointer;
-transition:0.3s;
 }
 
 .btn.hotel{background:linear-gradient(135deg,#ff7e5f,#feb47b);}
 .btn.food{background:linear-gradient(135deg,#43cea2,#185a9d);}
 .btn.cafe{background:linear-gradient(135deg,#c471f5,#fa71cd);}
 .btn.direction{background:linear-gradient(135deg,#36d1dc,#5b86e5);}
-
-.btn:hover{transform:scale(1.05);}
 
 .bottom-nav{
 position:fixed;bottom:0;width:100%;
@@ -104,16 +96,15 @@ box-shadow:0 -2px 15px rgba(0,0,0,0.2);
 <input type="text" id="search" placeholder="Search place...">
 <select id="filter">
 <option value="all">All</option>
-<option value="tourist">Tourist</option>
+<option value="temple">Temple</option>
 <option value="cafe">Cafe</option>
-<option value="restaurant">Food</option>
+<option value="nature">Nature</option>
+<option value="adventure">Adventure</option>
 </select>
 </div>
 
 <div id="map"></div>
-
 <div id="tripBox" style="padding:10px;"></div>
-
 <div class="cards" id="cards"></div>
 
 <div class="bottom-nav">
@@ -127,20 +118,94 @@ box-shadow:0 -2px 15px rgba(0,0,0,0.2);
 <script>
 let userLat=null,userLng=null,userMarker=null;
 
+/* DISTANCE FUNCTION */
+function getDistance(lat1, lon1, lat2, lon2){
+const R=6371;
+const dLat=(lat2-lat1)*Math.PI/180;
+const dLon=(lon2-lon1)*Math.PI/180;
+
+const a=Math.sin(dLat/2)**2 +
+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*
+Math.sin(dLon/2)**2;
+
+const c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+return (R*c).toFixed(1);
+}
+
+/* PLACES DATA (COMBINED) */
 const places=[
-{name:"Laxman Jhula",lat:30.0869,lng:78.2676,img:"https://source.unsplash.com/400x300/?bridge",desc:"Famous suspension bridge.",fare:"Free",travel:"Auto ₹50 / Cab ₹150",type:"tourist"},
-{name:"Ram Jhula",lat:30.0860,lng:78.2680,img:"https://source.unsplash.com/400x300/?river-bridge",desc:"Iconic bridge.",fare:"Free",travel:"Auto ₹50",type:"tourist"},
-{name:"Triveni Ghat",lat:30.1034,lng:78.2940,img:"https://source.unsplash.com/400x300/?ganga",desc:"Ganga Aarti spot.",fare:"Free",travel:"Auto ₹80",type:"tourist"},
-{name:"Neer Waterfall",lat:30.1080,lng:78.2670,img:"https://source.unsplash.com/400x300/?waterfall",desc:"Beautiful waterfall.",fare:"₹30",travel:"Cab ₹300",type:"tourist"},
-{name:"Little Buddha Cafe",lat:30.0870,lng:78.2670,img:"https://source.unsplash.com/400x300/?cafe",desc:"Riverside cafe.",fare:"₹300 avg",travel:"Walk",type:"cafe"},
-{name:"Cafe Freedom",lat:30.0875,lng:78.2675,img:"https://source.unsplash.com/400x300/?restaurant",desc:"Healthy cafe.",fare:"₹400 avg",travel:"Walk",type:"cafe"}
+
+{name:"Neelkanth Mahadev Temple",lat:30.1105,lng:78.3510,img:"https://image2url.com/r2/default/images/1775145527054-b9fe3a72-47ec-4c9d-a6e1-cc5fd9c1240f.jfif",desc:"Sacred Shiva temple located in the hills, surrounded by dense forest and spiritual energy.",fare:"Free",travel:"1 hr drive",type:"temple"},
+
+{name:"Shivpuri",lat:30.1290,lng:78.3470,img:"https://image2url.com/r2/default/images/1775145611302-16d35c33-e3d3-4c20-80f1-5061a4678d63.jfif",desc:"Adventure hub famous for river rafting, camping and riverside views.",fare:"₹1000 avg",travel:"30 min drive",type:"adventure"},
+
+{name:"Kunjapuri Temple",lat:30.2275,lng:78.3433,img:"https://image2url.com/r2/default/images/1775145707158-9b2554f4-c75d-4722-b89b-7590b38f0493.jfif",desc:"One of the best sunrise viewpoints offering Himalayan panoramic views.",fare:"Free",travel:"1 hr drive",type:"viewpoint"},
+
+{name:"Rajaji National Park",lat:30.0500,lng:78.2000,img:"https://image2url.com/r2/default/images/1775145810181-0b5f74bb-bdba-4fc0-935e-9536f031e794.jpg",desc:"Famous wildlife sanctuary known for elephants, tigers, and jungle safaris.",fare:"₹150",travel:"20 min drive",type:"wildlife"},
+
+{name:"Vashishta Cave",lat:30.1690,lng:78.3730,img:"https://image2url.com/r2/default/images/1775145932187-c4d8707b-8854-48c6-bf80-3185cf7abf06.jpg",desc:"Ancient meditation cave beside Ganga, peaceful and spiritual.",fare:"Free",travel:"45 min drive",type:"spiritual"},
+
+{name:"Byasi",lat:30.1520,lng:78.3600,img:"https://source.unsplash.com/400x300/?riverside",desc:"Quiet riverside destination ideal for camping and rafting stopovers.",fare:"₹800 avg",travel:"40 min drive",type:"nature"},
+
+{name:"Haridwar",lat:29.9457,lng:78.1642,img:"https://source.unsplash.com/400x300/?ganga-aarti",desc:"Holy city famous for Ganga Aarti at Har Ki Pauri.",fare:"Free",travel:"45 min drive",type:"city"},
+
+{name:"Patna Waterfall",lat:30.1000,lng:78.3300,img:"https://source.unsplash.com/400x300/?waterfall",desc:"Beautiful hidden waterfall surrounded by jungle trails.",fare:"₹50",travel:"25 min drive",type:"nature"},
+
+{name:"Garud Chatti Waterfall",lat:30.0930,lng:78.3180,img:"https://source.unsplash.com/400x300/?waterfall-forest",desc:"Short trek leads to a peaceful waterfall near Lakshman Jhula.",fare:"Free",travel:"15 min drive",type:"nature"},
+
+{name:"Narendranagar",lat:30.1570,lng:78.2870,img:"https://source.unsplash.com/400x300/?mountain-town",desc:"Hill town with scenic views and luxury retreats.",fare:"Free",travel:"30 min drive",type:"hill"},
+
+{name:"Kaudiyala",lat:30.1880,lng:78.3840,img:"https://source.unsplash.com/400x300/?rafting",desc:"Popular rafting base and scenic river stretch.",fare:"₹1200 avg",travel:"1 hr drive",type:"adventure"},
+
+{name:"Triveni Ghat",lat:30.1087,lng:78.2947,img:"https://source.unsplash.com/400x300/?ganga-ghat",desc:"Main ghat for evening Ganga Aarti and spiritual vibe.",fare:"Free",travel:"10 min drive",type:"spiritual"},
+
+{name:"Ram Jhula",lat:30.1210,lng:78.3180,img:"https://source.unsplash.com/400x300/?bridge",desc:"Iconic suspension bridge connecting ashrams.",fare:"Free",travel:"10 min drive",type:"landmark"},
+
+{name:"Lakshman Jhula",lat:30.1240,lng:78.3300,img:"https://source.unsplash.com/400x300/?jhula-bridge",desc:"Famous bridge with mythological significance.",fare:"Free",travel:"15 min drive",type:"landmark"},
+
+{name:"Beatles Ashram",lat:30.1245,lng:78.3160,img:"https://source.unsplash.com/400x300/?graffiti",desc:"Historic ashram where Beatles stayed, now art-filled ruins.",fare:"₹150",travel:"15 min drive",type:"heritage"},
+
+{name:"Parmarth Niketan",lat:30.1230,lng:78.3165,img:"https://source.unsplash.com/400x300/?ashram",desc:"Largest ashram with daily Ganga Aarti.",fare:"Free",travel:"10 min drive",type:"spiritual"},
+
+{name:"Swarg Ashram",lat:30.1235,lng:78.3200,img:"https://source.unsplash.com/400x300/?ashram-india",desc:"Peaceful spiritual complex along Ganga.",fare:"Free",travel:"10 min drive",type:"spiritual"},
+
+{name:"Phool Chatti Ashram",lat:30.1390,lng:78.3430,img:"https://source.unsplash.com/400x300/?meditation",desc:"Yoga and meditation retreat in nature.",fare:"₹1000 avg",travel:"30 min drive",type:"wellness"},
+
+{name:"Neer Garh Waterfall",lat:30.1050,lng:78.3200,img:"https://source.unsplash.com/400x300/?waterfall-nature",desc:"Multi-level waterfall with easy trekking path.",fare:"₹30",travel:"20 min drive",type:"nature"},
+
+{name:"Marine Drive Rishikesh",lat:30.1850,lng:78.3820,img:"https://source.unsplash.com/400x300/?river-road",desc:"Scenic road stretch along Ganga, great for stops.",fare:"Free",travel:"1 hr drive",type:"scenic"},
+
+// continue same pattern…
+
+{name:"Lachhiwala Nature Park",lat:30.1930,lng:78.1230,img:"https://source.unsplash.com/400x300/?nature-park",desc:"Picnic spot with water pools and forest.",fare:"₹60",travel:"1 hr drive",type:"nature"},
+
+{name:"Sahastradhara",lat:30.3872,lng:78.1311,img:"https://source.unsplash.com/400x300/?mountain-springs",desc:"Famous sulfur springs and waterfalls.",fare:"₹100",travel:"1.5 hr drive",type:"nature"},
+
+{name:"Goa Beach Rishikesh",lat:30.1400,lng:78.3500,img:"https://source.unsplash.com/400x300/?river-beach",desc:"Popular sandy riverbank hangout spot.",fare:"Free",travel:"35 min drive",type:"beach"},
+
+{name:"Neem Beach",lat:30.1350,lng:78.3450,img:"https://source.unsplash.com/400x300/?hidden-beach",desc:"Hidden calm riverside spot for relaxing.",fare:"Free",travel:"30 min drive",type:"hidden"},
+
+{name:"Maldevta",lat:30.3570,lng:78.1400,img:"https://source.unsplash.com/400x300/?valley",desc:"Quiet valley destination with river views.",fare:"Free",travel:"1.5 hr drive",type:"nature"},
+
+{name:"Kodia Jungle Gate",lat:30.1100,lng:78.2800,img:"https://source.unsplash.com/400x300/?jungle-road",desc:"Forest entry point known for wildlife spotting.",fare:"₹50",travel:"20 min drive",type:"wildlife"},
+
+{name:"Ratta Pani Forest",lat:30.0600,lng:78.2500,img:"https://source.unsplash.com/400x300/?forest",desc:"Dense forest area ideal for nature lovers.",fare:"Free",travel:"30 min drive",type:"nature"},
+
+{name:"Village Walk Garhwal",lat:30.1500,lng:78.3500,img:"https://source.unsplash.com/400x300/?village",desc:"Experience local Garhwali culture and lifestyle.",fare:"Free",travel:"40 min drive",type:"culture"},
+
+{name:"Cafe Freedom",lat:30.0875,lng:78.2675,img:"https://source.unsplash.com/400x300/?cafe",desc:"Healthy cafe with relaxing vibe and organic food.",fare:"₹400 avg",travel:"Walk",type:"cafe"},
+
+{name:"Little Buddha Cafe",lat:30.1245,lng:78.3305,img:"https://source.unsplash.com/400x300/?cafe-view",desc:"Famous cafe with river view and chill vibe.",fare:"₹500 avg",travel:"15 min",type:"cafe"},
+
+{name:"Ganga Beach Shivpuri",lat:30.1400,lng:78.3500,img:"https://source.unsplash.com/400x300/?camping",desc:"Camping and riverside relaxation zone.",fare:"₹800",travel:"35 min",type:"camping"}
+
 ];
 
 /* MAP */
 const map=L.map('map').setView([30.09,78.26],12);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-/* 📍 LIVE LOCATION */
+/* LOCATION */
 function getLocation(){
 navigator.geolocation.watchPosition(pos=>{
 userLat=pos.coords.latitude;
@@ -149,21 +214,17 @@ userLng=pos.coords.longitude;
 document.getElementById("status").innerText="📍 Live Location Active";
 
 if(userMarker){map.removeLayer(userMarker);}
-userMarker=L.circleMarker([userLat,userLng],{
-radius:8,color:"blue",fillOpacity:0.8
-}).addTo(map);
+userMarker=L.circleMarker([userLat,userLng],{radius:8,color:"blue"}).addTo(map);
 
 map.setView([userLat,userLng],13);
 render();
 });
 }
 
-/* ❤️ FAVORITES */
+/* FAVORITES */
 function toggleFav(name){
 let favs=JSON.parse(localStorage.getItem("favs"))||[];
-if(favs.includes(name)){
-favs=favs.filter(f=>f!==name);
-}else{favs.push(name);}
+if(favs.includes(name)){favs=favs.filter(f=>f!==name);}else{favs.push(name);}
 localStorage.setItem("favs",JSON.stringify(favs));
 render();
 }
@@ -172,13 +233,13 @@ let favs=JSON.parse(localStorage.getItem("favs"))||[];
 return favs.includes(name);
 }
 
-/* ⭐ RATING */
+/* RATING */
 function rate(name,val){
 localStorage.setItem(name,val);
 render();
 }
 
-/* 🧭 TRIP */
+/* TRIP */
 function addToTrip(name){
 let trip=JSON.parse(localStorage.getItem("trip"))||[];
 trip.push(name);
@@ -188,8 +249,7 @@ alert("Added to Trip");
 
 function showTrip(){
 let trip=JSON.parse(localStorage.getItem("trip"))||[];
-document.getElementById("tripBox").innerHTML=
-"<h3>🧭 Trip Plan</h3>"+trip.map(t=>"<p>"+t+"</p>").join("");
+document.getElementById("tripBox").innerHTML="<h3>🧭 Trip Plan</h3>"+trip.map(t=>"<p>"+t+"</p>").join("");
 }
 
 /* RENDER */
@@ -205,6 +265,7 @@ return p.name.toLowerCase().includes(search) && (filter==="all"||p.type===filter
 }).forEach(p=>{
 
 let rating=localStorage.getItem(p.name)||0;
+let distance=(userLat&&userLng)?getDistance(userLat,userLng,p.lat,p.lng):null;
 
 cards.innerHTML+=`
 <div class="card">
@@ -217,12 +278,12 @@ ${isFav(p.name)?"❤️":"🤍"}
 
 <div class="card-content">
 <h3>${p.name}</h3>
-
 <p class="desc">${p.desc}</p>
 
 <div class="info">
-💸 Entry: ${p.fare}<br>
-🚕 Travel: ${p.travel}
+📍 ${distance ? distance+" km from you" : "Detecting..."}<br>
+💸 ${p.fare}<br>
+🚕 ${p.travel}
 </div>
 
 <div>
@@ -239,8 +300,7 @@ ${[1,2,3,4,5].map(n=>`<span class="star ${n<=rating?'active':''}" onclick="rate(
 </div>
 
 </div>
-</div>
-`;
+</div>`;
 });
 }
 
@@ -251,4 +311,4 @@ getLocation();
 </script>
 
 </body>
-</html> 
+</html>
