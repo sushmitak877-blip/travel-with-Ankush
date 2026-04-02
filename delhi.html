@@ -1,15 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-05534KYTQJ"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-05534KYTQJ');
-</script>
 <meta charset="UTF-8">
 <title>Delhi Smart Guide PRO MAX</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -143,17 +134,16 @@ const metros=[
 ];
 
 const places=[
-{name:"India Gate",lat:28.6129,lng:77.2295,img:"https://upload.wikimedia.org/wikipedia/commons/d/da/India_Gate_in_New_Delhi_03-2016.jpg",desc:"Historic war memorial surrounded by gardens.",type:"tourist"},
-{name:"Red Fort",lat:28.6562,lng:77.2410,img:"https://upload.wikimedia.org/wikipedia/commons/4/47/Red_Fort_in_New_Delhi_03-2016.jpg",desc:"UNESCO heritage Mughal fort.",type:"tourist"},
+{name:"India Gate",lat:28.6129,lng:77.2295,img:"https://image2url.com/r2/default/images/1775147216916-03856603-7123-4a25-8326-bc487f9c69c3.jfif",desc:"Historic war memorial surrounded by gardens.",type:"tourist"},
+{name:"Red Fort",lat:28.6562,lng:77.2410,img:"https://image2url.com/r2/default/images/1775147264983-4c4f906e-73ac-45f2-84cb-e96587a15af6.jfif",desc:"UNESCO heritage Mughal fort.",type:"tourist"},
 {name:"Lotus Temple",lat:28.5535,lng:77.2588,img:"https://upload.wikimedia.org/wikipedia/commons/f/fc/LotusDelhi.jpg",desc:"Peaceful lotus-shaped temple.",type:"tourist"},
-{name:"Farzi Cafe",lat:28.6320,lng:77.2200,img:"https://source.unsplash.com/400x300/?fusion-food",desc:"Modern Indian fusion cuisine.",type:"restaurant",metro:"Rajiv Chowk"},
-{name:"India Gate",lat:28.6129,lng:77.2295,img:"https://upload.wikimedia.org/wikipedia/commons/d/da/India_Gate_in_New_Delhi_03-2016.jpg",desc:"War memorial surrounded by lush gardens.",type:"tourist",metro:"Central Secretariat (Yellow/Violet)"},
-{name:"Qutub Minar",lat:28.5245,lng:77.1855,img:"https://upload.wikimedia.org/wikipedia/commons/3/3c/Qutb_Minar_2011.jpg",desc:"Tallest brick minaret in the world.",type:"tourist",metro:"Qutub Minar (Yellow)"},
-{name:"Humayun Tomb",lat:28.5933,lng:77.2507,img:"https://upload.wikimedia.org/wikipedia/commons/3/3f/Humayun%27s_Tomb%2C_Delhi.jpg",desc:"Mughal emperor tomb, Taj inspiration.",type:"tourist",metro:"JLN Stadium (Violet)"},
-{name:"Akshardham Temple",lat:28.6127,lng:77.2773,img:"https://upload.wikimedia.org/wikipedia/commons/5/5c/Akshardham_Temple.jpg",desc:"Grand temple with exhibitions and shows.",type:"tourist",metro:"Akshardham (Blue)"},
-{name:"Jama Masjid",lat:28.6507,lng:77.2334,img:"https://upload.wikimedia.org/wikipedia/commons/0/0e/Jama_Masjid_%28Delhi%29.jpg",desc:"India’s largest mosque.",type:"tourist",metro:"Jama Masjid (Violet)"},
-{name:"Rashtrapati Bhavan",lat:28.6143,lng:77.1996,img:"https://upload.wikimedia.org/wikipedia/commons/3/3e/Rashtrapati_Bhavan.jpg",desc:"Official residence of President.",type:"tourist",metro:"Central Secretariat"},
-{name:"Lodhi Garden",lat:28.5931,lng:77.2197,img:"https://upload.wikimedia.org/wikipedia/commons/6/6c/Lodhi_Garden.jpg",desc:"Historic garden with tombs.",type:"tourist",metro:"Jor Bagh"},
+{name:"Farzi Cafe",lat:28.6320,lng:77.2200,img:"https://image2url.com/r2/default/images/1775147395030-ec38a9f0-85cc-4128-a4e6-951c285a5e74.jpg",desc:"Modern Indian fusion cuisine.",type:"restaurant",metro:"Rajiv Chowk"},
+{name:"Qutub Minar",lat:28.5245,lng:77.1855,img:"https://image2url.com/r2/default/images/1775147541492-95f22002-63f6-4508-a7ec-6c3a12766ee9.jfif",desc:"Tallest brick minaret in the world.",type:"tourist",metro:"Qutub Minar (Yellow)"},
+{name:"Humayun Tomb",lat:28.5933,lng:77.2507,img:"https://image2url.com/r2/default/images/1775147608978-43a466ee-24c2-4749-a9b9-ac143031c31d.jfif",desc:"Mughal emperor tomb, Taj inspiration.",type:"tourist",metro:"JLN Stadium (Violet)"},
+{name:"Akshardham Temple",lat:28.6127,lng:77.2773,img:"https://image2url.com/r2/default/images/1775147703081-2d3459fe-b4f8-48c2-83e9-bbd6837a4b00.jpg",desc:"Grand temple with exhibitions and shows.",type:"tourist",metro:"Akshardham (Blue)"},
+{name:"Jama Masjid",lat:28.6507,lng:77.2334,img:"https://image2url.com/r2/default/images/1775147808994-a3e3c727-26b7-419f-8898-6d675fd6b838.jfif",desc:"India’s largest mosque.",type:"tourist",metro:"Jama Masjid (Violet)"},
+{name:"Rashtrapati Bhavan",lat:28.6143,lng:77.1996,img:"https://image2url.com/r2/default/images/1775147897403-f58e4e43-fa8f-477f-b64d-0d8f838f49c8.png",desc:"Official residence of President.",type:"tourist",metro:"Central Secretariat"},
+{name:"Lodhi Garden",lat:28.5931,lng:77.2197,img:"https://image2url.com/r2/default/images/1775147964212-d8b0b709-39b0-4df3-8469-e18d6f388b2a.jfif",desc:"Historic garden with tombs.",type:"tourist",metro:"Jor Bagh"},
 {name:"Connaught Place",lat:28.6315,lng:77.2167,img:"https://upload.wikimedia.org/wikipedia/commons/5/5d/Connaught_Place.jpg",desc:"Shopping and nightlife hub.",type:"tourist",metro:"Rajiv Chowk"},
 {name:"Karim's",lat:28.6500,lng:77.2330,img:"https://source.unsplash.com/400x300/?mughlai-food",desc:"Legendary Mughlai cuisine.",type:"restaurant",metro:"Jama Masjid"},
 {name:"Indian Accent",lat:28.6000,lng:77.2300,img:"https://source.unsplash.com/400x300/?fine-dining",desc:"Premium modern Indian dining.",type:"restaurant",metro:"Lodhi Colony"},
