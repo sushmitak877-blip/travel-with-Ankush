@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Braj Region Travel App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins;}
+body{background:#f4f6f9;padding-bottom:90px;}
+
+header{
+background:linear-gradient(135deg,#ff9966,#ff5e62);
+color:white;text-align:center;padding:18px;
+transition:0.3s;
+}
+header.shrink{padding:10px;}
+
+.searchbar{
+position:sticky;top:10px;z-index:999;
+background:white;margin:10px;padding:12px;
+border-radius:15px;
+box-shadow:0 5px 20px rgba(0,0,0,0.2);
+display:flex;gap:10px;
+}
+
+input,select{
+padding:10px;border-radius:10px;border:1px solid #ccc;
+}
+
+#map{height:280px;margin:10px;border-radius:15px;}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:15px;padding:15px;
+}
+
+.card{
+position:relative;
+background:white;border-radius:20px;
+overflow:hidden;
+box-shadow:0 15px 35px rgba(0,0,0,0.15);
+transition:0.3s;
+}
+.card:hover{transform:translateY(-10px) scale(1.03);}
+
+.card img{width:100%;height:170px;object-fit:cover;}
+
+.card-content{padding:12px;}
+
+.desc{font-size:14px;color:#444;margin-top:6px;}
+
+.info{font-size:13px;margin-top:6px;color:#333;}
+
+.favorite{
+position:absolute;top:10px;right:12px;
+font-size:22px;cursor:pointer;
+}
+
+/* ⭐ rating */
+.star{cursor:pointer;color:#ccc;font-size:18px;}
+.star.active{color:gold;}
+
+.btn-group{
+display:flex;flex-wrap:wrap;
+gap:10px;margin-top:12px;
+}
+
+.btn{
+flex:1 1 calc(50% - 10px);
+padding:12px;border:none;border-radius:12px;
+color:white;font-weight:600;
+cursor:pointer;
+transition:0.3s;
+}
+
+.btn.hotel{background:linear-gradient(135deg,#ff7e5f,#feb47b);}
+.btn.food{background:linear-gradient(135deg,#43cea2,#185a9d);}
+.btn.direction{background:linear-gradient(135deg,#36d1dc,#5b86e5);}
+
+.btn:hover{transform:scale(1.05);}
+
+.bottom-nav{
+position:fixed;bottom:0;width:100%;
+background:white;display:flex;justify-content:space-around;
+padding:12px;
+box-shadow:0 -2px 15px rgba(0,0,0,0.2);
+}
+</style>
+</head>
+
+<body>
+
+<div style="padding:10px;">
+<span style="cursor:pointer;color:#007bff;font-weight:600;" onclick="goBack()">⬅ Back</span>
+</div>
+
+<body>
+
+<header>
+<h2>Braj Region Travel App 🌸</h2>
+<p id="status">📍 Detecting location...</p>
+</header>
+
+<div class="searchbar">
+<input type="text" id="search" placeholder="Search place...">
+<select id="filter">
+<option value="all">All</option>
+<option value="temple">Temple</option>
+<option value="restaurant">Food</option>
+</select>
+</div>
+
+<div id="map"></div>
+
+<div id="tripBox" style="padding:10px;"></div>
+
+<div class="cards" id="cards"></div>
+
+<div class="bottom-nav">
+<button onclick="render()">🏠</button>
+<button onclick="showTrip()">🧭</button>
+<button onclick="getLocation()">📍</button>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+let userLat=null,userLng=null,userMarker=null;
+
+const places=[
+/* ========== Vrindavan Temples ========== */
+{name:"Banke Bihari Temple",town:"Vrindavan",lat:27.5728,lng:77.6788,img:"https://source.unsplash.com/400x300/?temple,krishna",desc:"Famous Krishna temple in Vrindavan.",fare:"Free",travel:"Auto ₹30 / Cab ₹150",type:"temple",timing:"06:00 AM - 09:00 PM"},
+{name:"ISKCON Temple",town:"Vrindavan",lat:27.5715,lng:77.6820,img:"https://source.unsplash.com/400x300/?iskcon",desc:"International Krishna Consciousness temple.",fare:"Free",travel:"Auto ₹40 / Cab ₹150",type:"temple",timing:"05:30 AM - 08:30 PM"},
+{name:"Prem Mandir",town:"Vrindavan",lat:27.5800,lng:77.6850,img:"https://source.unsplash.com/400x300/?premmandir",desc:"Beautiful marble temple dedicated to Radha Krishna.",fare:"Free",travel:"Auto ₹50 / Cab ₹150",type:"temple",timing:"07:00 AM - 09:30 PM"},
+{name:"Radha Raman Temple",town:"Vrindavan",lat:27.5735,lng:77.6775,img:"https://source.unsplash.com/400x300/?radharaman",desc:"Historical temple of Radha Krishna.",fare:"Free",travel:"Auto ₹30",type:"temple",timing:"06:00 AM - 09:00 PM"},
+{name:"Nidhivan Temple",town:"Vrindavan",lat:27.5690,lng:77.6780,img:"https://source.unsplash.com/400x300/?nidhivan",desc:"Sacred forest temple.",fare:"Free",travel:"Auto ₹40",type:"temple",timing:"05:30 AM - 08:30 PM"},
+
+/* ========== Mathura Temples ========== */
+{name:"Shri Krishna Janmabhoomi",town:"Mathura",lat:27.4920,lng:77.6737,img:"https://source.unsplash.com/400x300/?mathura,temple",desc:"Birthplace of Lord Krishna.",fare:"Free",travel:"Auto ₹50",type:"temple",timing:"04:30 AM - 08:00 PM"},
+{name:"Dwarkadhish Temple",town:"Mathura",lat:27.4940,lng:77.6720,img:"https://source.unsplash.com/400x300/?dwarkadhish",desc:"Famous temple dedicated to Krishna.",fare:"Free",travel:"Auto ₹50",type:"temple",timing:"05:00 AM - 08:30 PM"},
+{name:"Vishram Ghat",town:"Mathura",lat:27.4924,lng:77.6737,img:"https://source.unsplash.com/400x300/?ganga,ghat",desc:"Pilgrimage ghat on Ganga.",fare:"Free",travel:"Walk / Auto ₹30",type:"temple",timing:"05:00 AM - 08:00 PM"},
+{name:"Radha Kund",town:"Mathura",lat:27.4980,lng:77.6750,img:"https://source.unsplash.com/400x300/?radhakund",desc:"Sacred kund for devotees.",fare:"Free",travel:"Auto ₹50",type:"temple",timing:"05:00 AM - 07:00 PM"},
+
+/* ========== Govardhan Temples ========== */
+{name:"Govardhan Hill & Temple",town:"Govardhan",lat:27.6370,lng:77.6930,img:"https://source.unsplash.com/400x300/?govardhan,temple",desc:"Sacred hill of Lord Krishna.",fare:"Free",travel:"Auto ₹80",type:"temple",timing:"05:00 AM - 07:30 PM"},
+{name:"Radha Kund Govardhan",town:"Govardhan",lat:27.6380,lng:77.6940,img:"https://source.unsplash.com/400x300/?govardhan,radhakund",desc:"Sacred pond near Govardhan.",fare:"Free",travel:"Walk / Auto ₹40",type:"temple",timing:"05:30 AM - 08:00 PM"},
+
+/* ========== Barsana Temples ========== */
+{name:"Barsana Radha Rani Temple",town:"Barsana",lat:27.6660,lng:77.7040,img:"https://source.unsplash.com/400x300/?barsana,temple",desc:"Temple dedicated to Radha.",fare:"Free",travel:"Auto ₹70",type:"temple",timing:"06:00 AM - 08:00 PM"},
+{name:"Chaturbhuj Temple",town:"Barsana",lat:27.6670,lng:77.7050,img:"https://source.unsplash.com/400x300/?chaturbhuj,barsana",desc:"Famous temple in Barsana.",fare:"Free",travel:"Auto ₹70",type:"temple",timing:"06:00 AM - 08:30 PM"},
+
+/* ========== Food / Restaurants ========== */
+{name:"Local Restaurant, Vrindavan",town:"Vrindavan",lat:27.5720,lng:77.6800,img:"https://source.unsplash.com/400x300/?food",desc:"Local food spot.",fare:"₹250 avg",travel:"Walk",type:"restaurant",timing:"10:00 AM - 10:00 PM"},
+{name:"Mathura Food Court",town:"Mathura",lat:27.4950,lng:77.6750,img:"https://source.unsplash.com/400x300/?food,mathura",desc:"Popular local food spot.",fare:"₹300 avg",travel:"Walk / Auto ₹20",type:"restaurant",timing:"10:00 AM - 10:30 PM"},
+{name:"Govardhan Restaurant",town:"Govardhan",lat:27.6385,lng:77.6950,img:"https://source.unsplash.com/400x300/?restaurant,govardhan",desc:"Tasty food near temple.",fare:"₹350 avg",travel:"Walk / Auto ₹30",type:"restaurant",timing:"09:00 AM - 09:00 PM"},
+{name:"Barsana Food Point",town:"Barsana",lat:27.6675,lng:77.7060,img:"https://source.unsplash.com/400x300/?restaurant,barsana",desc:"Local vegetarian food.",fare:"₹250 avg",travel:"Walk / Auto ₹30",type:"restaurant",timing:"09:00 AM - 09:30 PM"},
+
+/* Add more temples / ghats / restaurants to reach 50+ entries (you can expand similarly) */
+];
+
+const map=L.map('map').setView([27.57,77.68],13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+/* 📍 LIVE LOCATION */
+function getLocation(){
+navigator.geolocation.watchPosition(pos=>{
+userLat=pos.coords.latitude;
+userLng=pos.coords.longitude;
+
+document.getElementById("status").innerText="📍 Live Location Active";
+
+if(userMarker){map.removeLayer(userMarker);}
+userMarker=L.circleMarker([userLat,userLng],{
+radius:8,color:"blue",fillOpacity:0.8
+}).addTo(map);
+
+map.setView([userLat,userLng],13);
+render();
+});
+}
+
+/* 🌐 DISTANCE CALCULATION */
+function getDistance(lat1, lng1, lat2, lng2){
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLng/2) * Math.sin(dLng/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return (R * c).toFixed(2);
+}
+
+/* ❤️ FAVORITES */
+function toggleFav(name){
+let favs=JSON.parse(localStorage.getItem("favs"))||[];
+if(favs.includes(name)){
+favs=favs.filter(f=>f!==name);
+}else{favs.push(name);}
+localStorage.setItem("favs",JSON.stringify(favs));
+render();
+}
+function isFav(name){
+let favs=JSON.parse(localStorage.getItem("favs"))||[];
+return favs.includes(name);
+}
+
+/* ⭐ RATING */
+function rate(name,val){
+localStorage.setItem(name,val);
+render();
+}
+
+/* 🧭 TRIP */
+function addToTrip(name){
+let trip=JSON.parse(localStorage.getItem("trip"))||[];
+trip.push(name);
+localStorage.setItem("trip",JSON.stringify(trip));
+alert("Added to Trip");
+}
+
+function showTrip(){
+let trip=JSON.parse(localStorage.getItem("trip"))||[];
+document.getElementById("tripBox").innerHTML=
+"<h3>🧭 Trip Plan</h3>"+trip.map(t=>"<p>"+t+"</p>").join("");
+}
+
+/* RENDER */
+function render(){
+let cards=document.getElementById("cards");
+cards.innerHTML="";
+
+let search=document.getElementById("search").value.toLowerCase();
+let filter=document.getElementById("filter").value;
+
+places.filter(p=>{
+return p.name.toLowerCase().includes(search) && (filter==="all"||p.type===filter);
+}).forEach(p=>{
+
+let rating=localStorage.getItem(p.name)||0;
+
+cards.innerHTML+=`
+<div class="card">
+
+<div class="favorite" onclick="toggleFav('${p.name}')">
+${isFav(p.name)?"❤️":"🤍"}
+</div>
+
+<img src="${p.img}">
+
+<div class="card-content">
+<h3>${p.name} <small>(${p.town})</small></h3>
+
+<p class="desc">${p.desc}</p>
+
+<div class="info">
+💸 Entry: ${p.fare}<br>
+🚕 Travel: ${p.travel}<br>
+⏰ Timing: ${p.timing}<br>
+${userLat && userLng ? "📍 Distance: " + getDistance(userLat,userLng,p.lat,p.lng) + " km" : ""}
+</div>
+
+<div>
+${[1,2,3,4,5].map(n=>`<span class="star ${n<=rating?'active':''}" onclick="rate('${p.name}',${n})">★</span>`).join("")}
+</div>
+
+<button onclick="addToTrip('${p.name}')">➕ Plan</button>
+
+<div class="btn-group">
+<button class="btn hotel" onclick="window.open('https://www.google.com/search?q=hotels+near+${p.name}')">🏨</button>
+<button class="btn food" onclick="window.open('https://www.google.com/search?q=restaurants+near+${p.name}')">🍽️</button>
+<button class="btn direction" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}')">🗺️</button>
+</div>
+
+</div>
+</div>
+`;
+});
+}
+
+document.getElementById("search").addEventListener("input",render);
+document.getElementById("filter").addEventListener("change",render);
+
+getLocation();
+render();
+</script>
+
+</body>
+</html>
