@@ -12,7 +12,7 @@ body { margin:0; font-family: Arial; background:#f5f5f5; }
 header { background:#2c3e50; color:white; text-align:center; padding:15px; }
 .controls { text-align:center; background:white; padding:10px; }
 input, select { padding:10px; margin:5px; width:90%; max-width:250px; }
-#map { height:350px; }
+#map { height:400px; margin:10px 0; }
 .cards { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:15px; padding:15px; }
 .card { background:white; border-radius:10px; overflow:hidden; box-shadow:0 2px 5px rgba(0,0,0,0.2); }
 .card img { width:100%; height:160px; object-fit:cover; }
@@ -48,11 +48,11 @@ button { padding:5px 10px; margin:3px; cursor:pointer; }
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+// Back button
 function goBack(){ window.location.href = 'index.html'; }
 
+// ---------- PLACES ----------
 const places = [
-/* ------------------- 50 places ------------------- */
-/* Example for first 8, remaining 42 are placeholders to be replaced with actual data */
 {
 name:"The Ridge",
 lat:31.1048, lng:77.1734, distance:0,
@@ -61,7 +61,7 @@ desc:"The Ridge is the main open space in Shimla with panoramic mountain views a
 bestTime:"March to June, December (snow)",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Mall Road",
@@ -71,7 +71,7 @@ desc:"Mall Road is the busiest street with shops, cafes, and colonial buildings.
 bestTime:"All year",
 timing:"9 AM – 9 PM",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Jakhoo Temple",
@@ -81,7 +81,7 @@ desc:"Temple dedicated to Lord Hanuman located on the highest peak of Shimla.",
 bestTime:"All year",
 timing:"5 AM – 9 PM",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Kufri",
@@ -91,7 +91,7 @@ desc:"Kufri is famous for snow activities and skiing.",
 bestTime:"December to February",
 timing:"9 AM – 6 PM",
 fee:"₹20–₹50",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Mashobra",
@@ -101,7 +101,7 @@ desc:"Mashobra is peaceful and surrounded by forests.",
 bestTime:"March to June",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Chail",
@@ -111,7 +111,7 @@ desc:"Chail has the world’s highest cricket ground.",
 bestTime:"March to June",
 timing:"8 AM – 6 PM",
 fee:"₹100",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Naldehra",
@@ -121,7 +121,7 @@ desc:"Naldehra is known for its golf course and greenery.",
 bestTime:"All year",
 timing:"8 AM – 5 PM",
 fee:"₹50–₹100",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 
 {
@@ -132,7 +132,7 @@ desc:"Beautiful waterfall surrounded by dense forest.",
 bestTime:"July to September",
 timing:"6 AM – 6 PM",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 
 {
@@ -143,7 +143,7 @@ desc:"Popular viewpoint and meeting spot in Shimla.",
 bestTime:"All year",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Christ Church",
@@ -153,7 +153,7 @@ desc:"Iconic neo-Gothic church on The Ridge in Shimla.",
 bestTime:"All year",
 timing:"9 AM – 6 PM",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Indian Institute of Advanced Study",
@@ -163,7 +163,7 @@ desc:"Historic colonial building with gardens & tours.",
 bestTime:"All year",
 timing:"10 AM – 5 PM",
 fee:"₹60",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Lakkar Bazaar",
@@ -173,7 +173,7 @@ desc:"Famous market for wooden crafts and souvenirs.",
 bestTime:"All year",
 timing:"9 AM – 7 PM",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Himalayan Bird Park",
@@ -183,7 +183,7 @@ desc:"Bird watching park with Himalayan species.",
 bestTime:"Spring–Autumn",
 timing:"8 AM – 5 PM",
 fee:"₹50",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Toy Train (Kalka–Shimla Railway)",
@@ -193,7 +193,7 @@ desc:"Heritage narrow‑gauge railway with scenic views.",
 bestTime:"All year",
 timing:"Depends on schedule",
 fee:"Variable",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Tara Devi Temple",
@@ -203,7 +203,7 @@ desc:"Temple on Tara Hill with views of Shimla.",
 bestTime:"All year",
 timing:"6 AM – 6 PM",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Water Catchment Wildlife Sanctuary",
@@ -213,7 +213,7 @@ desc:"Sanctuary with diverse flora & fauna.",
 bestTime:"Spring–Autumn",
 timing:"10 AM – 4 PM",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Green Valley (on Kufri route)",
@@ -223,7 +223,7 @@ desc:"Scenic valley popular for photography.",
 bestTime:"All year",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Hip Hip Hurray Amusement Park",
@@ -233,7 +233,7 @@ desc:"Adventure park with rides & activities.",
 bestTime:"All year",
 timing:"8:30 AM – 7:30 PM",
 fee:"₹100+",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Shoghi",
@@ -243,7 +243,7 @@ desc:"Peaceful hill village with temples & forests.",
 bestTime:"All year",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Fagu",
@@ -253,7 +253,7 @@ desc:"Scenic village with apple orchards & views.",
 bestTime:"Summer–Autumn",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Craignano Nature Park",
@@ -263,7 +263,7 @@ desc:"Heritage garden area with paths & lawns.",
 bestTime:"Spring–Autumn",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Summer Hill",
@@ -273,7 +273,7 @@ desc:"Lush vantage point & quiet suburb.",
 bestTime:"All year",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Hatu Peak (near Narkanda)",
@@ -283,7 +283,7 @@ desc:"High peak with Himalayan vistas.",
 bestTime:"Summer–Autumn",
 timing:"Sunrise–Sunset",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Fagu Point View",
@@ -293,7 +293,7 @@ desc:"Scenic viewpoint over hills.",
 bestTime:"All year",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Mahasu Devta Temple (Mashobra)",
@@ -303,7 +303,7 @@ desc:"Historic temple in Mashobra forests.",
 bestTime:"All year",
 timing:"6 AM – 6 PM",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Golf Course (Naldehra)",
@@ -313,7 +313,7 @@ desc:"Historic golf course & meadows.",
 bestTime:"All year",
 timing:"8 AM – 5 PM",
 fee:"₹100+",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Oak Trail Shimla",
@@ -323,7 +323,7 @@ desc:"Forest path walk ideal for nature lovers.",
 bestTime:"Spring–Autumn",
 timing:"6 AM – 6 PM",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Railway Board Building",
@@ -333,7 +333,7 @@ desc:"Heritage building related to Shimla railway.",
 bestTime:"All year",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Scandal Point",
@@ -343,7 +343,7 @@ desc:"Popular viewpoint and meeting spot in Shimla.",
 bestTime:"All year",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Christ Church",
@@ -353,7 +353,7 @@ desc:"Iconic neo-Gothic church on The Ridge in Shimla.",
 bestTime:"All year",
 timing:"9 AM – 6 PM",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Indian Institute of Advanced Study",
@@ -363,7 +363,7 @@ desc:"Historic colonial building with gardens & tours.",
 bestTime:"All year",
 timing:"10 AM – 5 PM",
 fee:"₹60",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Lakkar Bazaar",
@@ -373,7 +373,7 @@ desc:"Famous market for wooden crafts and souvenirs.",
 bestTime:"All year",
 timing:"9 AM – 7 PM",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Himalayan Bird Park",
@@ -383,7 +383,7 @@ desc:"Bird watching park with Himalayan species.",
 bestTime:"Spring–Autumn",
 timing:"8 AM – 5 PM",
 fee:"₹50",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Toy Train (Kalka–Shimla Railway)",
@@ -393,7 +393,7 @@ desc:"Heritage narrow‑gauge railway with scenic views.",
 bestTime:"All year",
 timing:"Depends on schedule",
 fee:"Variable",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Tara Devi Temple",
@@ -403,7 +403,7 @@ desc:"Temple on Tara Hill with views of Shimla.",
 bestTime:"All year",
 timing:"6 AM – 6 PM",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Water Catchment Wildlife Sanctuary",
@@ -413,7 +413,7 @@ desc:"Sanctuary with diverse flora & fauna.",
 bestTime:"Spring–Autumn",
 timing:"10 AM – 4 PM",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Green Valley (on Kufri route)",
@@ -423,7 +423,7 @@ desc:"Scenic valley popular for photography.",
 bestTime:"All year",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Hip Hip Hurray Amusement Park",
@@ -433,7 +433,7 @@ desc:"Adventure park with rides & activities.",
 bestTime:"All year",
 timing:"8:30 AM – 7:30 PM",
 fee:"₹100+",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Shoghi",
@@ -443,7 +443,7 @@ desc:"Peaceful hill village with temples & forests.",
 bestTime:"All year",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Fagu",
@@ -453,7 +453,7 @@ desc:"Scenic village with apple orchards & views.",
 bestTime:"Summer–Autumn",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Craignano Nature Park",
@@ -463,7 +463,7 @@ desc:"Heritage garden area with paths & lawns.",
 bestTime:"Spring–Autumn",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Summer Hill",
@@ -473,7 +473,7 @@ desc:"Lush vantage point & quiet suburb.",
 bestTime:"All year",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Hatu Peak (near Narkanda)",
@@ -483,7 +483,7 @@ desc:"High peak with Himalayan vistas.",
 bestTime:"Summer–Autumn",
 timing:"Sunrise–Sunset",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Fagu Point View",
@@ -493,7 +493,7 @@ desc:"Scenic viewpoint over hills.",
 bestTime:"All year",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Mahasu Devta Temple (Mashobra)",
@@ -503,7 +503,7 @@ desc:"Historic temple in Mashobra forests.",
 bestTime:"All year",
 timing:"6 AM – 6 PM",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Golf Course (Naldehra)",
@@ -513,7 +513,7 @@ desc:"Historic golf course & meadows.",
 bestTime:"All year",
 timing:"8 AM – 5 PM",
 fee:"₹100+",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Oak Trail Shimla",
@@ -523,7 +523,7 @@ desc:"Forest path walk ideal for nature lovers.",
 bestTime:"Spring–Autumn",
 timing:"6 AM – 6 PM",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Railway Board Building",
@@ -533,7 +533,7 @@ desc:"Heritage building related to Shimla railway.",
 bestTime:"All year",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Annandale Grounds",
@@ -543,7 +543,7 @@ desc:"Army grounds and sports venue with scenic views.",
 bestTime:"All year",
 timing:"6 AM – 6 PM",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Chandigarh Viewpoint (near Shimla)",
@@ -553,7 +553,7 @@ desc:"Panoramic viewpoint for surrounding hills and valleys.",
 bestTime:"All year",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Shali Tibba Trek Point",
@@ -563,7 +563,7 @@ desc:"Trekking trail & scenic hilltop spot.",
 bestTime:"Spring–Autumn",
 timing:"6 AM – 6 PM",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Tanni Jubbar Lake",
@@ -573,7 +573,7 @@ desc:"Beautiful mountain lake for picnics and photos.",
 bestTime:"Summer–Autumn",
 timing:"Sunrise–Sunset",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Manjathal Sanctuary",
@@ -583,7 +583,7 @@ desc:"Wildlife sanctuary & trekking spot near Shimla.",
 bestTime:"Spring–Autumn",
 timing:"8 AM – 5 PM",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Kali Bari Temple",
@@ -593,7 +593,7 @@ desc:"Temple dedicated to Goddess Kali.",
 bestTime:"All year",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Mallital",
@@ -603,7 +603,7 @@ desc:"Area around Mall Road with gardens and restaurants.",
 bestTime:"All year",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Glen Forest",
@@ -613,7 +613,7 @@ desc:"Beautiful forest trail & picnic area.",
 bestTime:"Spring–Autumn",
 timing:"6 AM – 6 PM",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Bon Monastery",
@@ -623,7 +623,7 @@ desc:"Tibetan Buddhist monastery with beautiful architecture.",
 bestTime:"All year",
 timing:"8 AM – 5 PM",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Chini Bungalow Viewpoint",
@@ -633,7 +633,7 @@ desc:"Scenic viewpoint near Shimla.",
 bestTime:"All year",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Lohaghat Forest Trek",
@@ -643,7 +643,7 @@ desc:"Forest trek with waterfalls and greenery.",
 bestTime:"Spring–Autumn",
 timing:"6 AM – 6 PM",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Junga",
@@ -653,7 +653,7 @@ desc:"Hilly village with apple orchards and temples.",
 bestTime:"Spring–Autumn",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Naldehra Viewpoint",
@@ -663,7 +663,7 @@ desc:"Panoramic view over Naldehra meadows and golf course.",
 bestTime:"All year",
 timing:"Open all day",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 },
 {
 name:"Chini Lake",
@@ -673,19 +673,21 @@ desc:"Small lake surrounded by forest paths.",
 bestTime:"Spring–Autumn",
 timing:"6 AM – 6 PM",
 fee:"Free",
-hotels:"https://www.google.com/maps/search/hotels+near"
+hotels:"https://www.booking.com/searchresults.html?city=200883"
 }
-
-/* ------------------- Add 42 more places below with unique lat/lng, distance <=30 km ------------------- */
 ];
-let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-let userMarker;
 
-/* ---------- MAP ---------- */
+// ---------- FAVORITES ----------
+let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+// ---------- MAP ----------
 const map = L.map('map').setView([31.1048,77.1734],11);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 let markers = [];
+let userMarker;
+let userLat = null, userLng = null;
 
+// ---------- UPDATE MAP ----------
 function updateMap(filtered) {
     markers.forEach(m => map.removeLayer(m));
     markers = [];
@@ -697,50 +699,61 @@ function updateMap(filtered) {
     });
 }
 
-/* ---------- LOCATION ---------- */
-function getLocation() {
-    navigator.geolocation.getCurrentPosition(pos => {
-        let lat = pos.coords.latitude;
-        let lng = pos.coords.longitude;
-        if (userMarker) map.removeLayer(userMarker);
-        userMarker = L.marker([lat,lng])
-        .addTo(map)
-        .bindPopup("📍 You are here")
-        .openPopup();
-        map.setView([lat,lng],13);
-    });
+// ---------- CALCULATE DISTANCE ----------
+function calcDistance(lat1, lng1, lat2, lng2) {
+    const R = 6371; // km
+    const dLat = (lat2-lat1)*Math.PI/180;
+    const dLng = (lng2-lng1)*Math.PI/180;
+    const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return (R * c).toFixed(2);
 }
 
-/* ---------- RENDER ---------- */
-const cards = document.getElementById("cards");
+// ---------- LIVE LOCATION ----------
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(pos => {
+            userLat = pos.coords.latitude;
+            userLng = pos.coords.longitude;
+            if(userMarker) map.removeLayer(userMarker);
+            userMarker = L.marker([userLat,userLng]).addTo(map)
+                         .bindPopup("📍 You are here").openPopup();
+            map.setView([userLat,userLng],13);
+            render(); // update distances live
+        }, err => { console.log(err); }, { enableHighAccuracy: true, maximumAge: 0 });
+    } else { alert("Geolocation not supported."); }
+}
 
+// ---------- RENDER CARDS ----------
+const cards = document.getElementById("cards");
 function render() {
     cards.innerHTML = "";
     let search = document.getElementById("search").value.toLowerCase();
     let filter = document.getElementById("filter").value;
+
     let filtered = places.filter(p =>
-        p.name.toLowerCase().includes(search) &&
-        (filter==="all" || p.distance <= filter)
+        p.name.toLowerCase().includes(search)
     );
 
     filtered.forEach(p => {
+        // Calculate live distance
+        let dist = userLat && userLng ? calcDistance(userLat,userLng,p.lat,p.lng) : p.distance;
+
+        if(filter!=="all" && dist>filter) return;
+
         cards.innerHTML += `
         <div class="card">
             <img src="${p.img}">
             <div class="card-content">
                 <h3>${p.name}</h3>
-                <p><b>Distance:</b> ${p.distance} km</p>
+                <p><b>Distance:</b> ${dist} km</p>
                 <p><b>Description:</b> ${p.desc}</p>
                 <p>🕒 ${p.bestTime}</p>
                 <p>⏰ ${p.timing}</p>
                 <p>🎟️ ${p.fee}</p>
-                <button onclick="toggleFav('${p.name}')">
-                    ${favorites.includes(p.name) ? "❤️" : "🤍"}
-                </button>
-                <button onclick="navigateTo(${p.lat},${p.lng})">
-                    🧭 Route
-                </button>
-                <button onclick="window.open('https://www.google.com/maps/search/hotels+near+' + encodeURIComponent('${p.name} Shimla'), '_blank')">🏨 Nearby Hotels</button>
+                <button onclick="toggleFav('${p.name}')">${favorites.includes(p.name) ? "❤️":"🤍"}</button>
+                <button onclick="navigateTo(${p.lat},${p.lng})">🧭 Route</button>
+                <button onclick="window.open('https://www.google.com/maps/search/hotels+near+'+encodeURIComponent('${p.name} Shimla'),'_blank')">🏨 Nearby Hotels</button>
             </div>
         </div>`;
     });
@@ -748,24 +761,24 @@ function render() {
     updateMap(filtered);
 }
 
-/* ---------- FUNCTIONS ---------- */
-function toggleFav(name) {
-    favorites = favorites.includes(name)
-        ? favorites.filter(f => f !== name)
-        : [...favorites, name];
-    localStorage.setItem("favorites", JSON.stringify(favorites));
+// ---------- FUNCTIONS ----------
+function toggleFav(name){
+    favorites = favorites.includes(name) ? favorites.filter(f=>f!==name) : [...favorites,name];
+    localStorage.setItem("favorites",JSON.stringify(favorites));
     render();
 }
 
-function navigateTo(lat,lng) {
+function navigateTo(lat,lng){
     window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`);
 }
 
-/* ---------- EVENTS ---------- */
+// ---------- EVENTS ----------
 document.getElementById("search").addEventListener("input", render);
 document.getElementById("filter").addEventListener("change", render);
 
+// ---------- INIT ----------
 render();
+getLocation(); // starts live tracking
 </script>
 
 </body>
