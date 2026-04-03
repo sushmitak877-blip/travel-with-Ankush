@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tezpur Smart Travel Pro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins;}
+body{background:#f4f6f9;padding-bottom:120px;}
+
+header{
+background:linear-gradient(135deg,#11998e,#38ef7d);
+color:white;text-align:center;padding:18px;
+}
+
+.searchbar{
+position:sticky;top:10px;z-index:999;
+background:white;margin:10px;padding:12px;
+border-radius:15px;
+box-shadow:0 5px 20px rgba(0,0,0,0.2);
+display:flex;gap:10px;flex-wrap:wrap;
+}
+
+input,select{
+padding:10px;border-radius:10px;border:1px solid #ccc;
+}
+
+#map{height:280px;margin:10px;border-radius:15px;}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:15px;padding:15px;
+}
+
+.card{
+position:relative;
+background:white;border-radius:20px;
+overflow:hidden;
+box-shadow:0 15px 35px rgba(0,0,0,0.15);
+transition:0.3s;
+}
+.card:hover{transform:translateY(-8px) scale(1.02);}
+
+.highlight{
+border:3px solid #00ff88;
+box-shadow:0 0 20px #00ff88;
+}
+
+.card img{width:100%;height:170px;object-fit:cover;}
+.card-content{padding:12px;}
+
+.desc{font-size:14px;color:#444;margin-top:6px;}
+.info{font-size:13px;margin-top:6px;color:#333;}
+
+.btn-group{
+display:flex;flex-wrap:wrap;
+gap:8px;margin-top:12px;
+}
+
+.btn{
+flex:1 1 calc(50% - 8px);
+display:flex;
+align-items:center;
+justify-content:center;
+gap:6px;
+padding:10px;
+border:none;
+border-radius:12px;
+color:white;
+font-weight:600;
+cursor:pointer;
+font-size:13px;
+box-shadow:0 4px 10px rgba(0,0,0,0.15);
+transition:0.2s;
+}
+
+.btn:hover{
+transform:scale(1.05);
+opacity:0.9;
+}
+
+.btn.hotel{background:#ff7e5f;}
+.btn.food{background:#43cea2;}
+.btn.bus{background:#36d1dc;}
+.btn.train{background:#5b86e5;}
+.btn.direction{background:#333;}
+
+.bottom-nav{
+position:fixed;bottom:0;width:100%;
+background:white;display:flex;justify-content:space-around;
+padding:12px;
+box-shadow:0 -2px 15px rgba(0,0,0,0.2);
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h2>🚀 Tezpur Smart Travel Pro</h2>
+<p id="status">📍 Detecting location...</p>
+</header>
+
+<div class="searchbar">
+<input type="text" id="search" placeholder="Search place...">
+<select id="filter">
+<option value="all">All</option>
+<option value="temple">Temple</option>
+<option value="nature">Nature</option>
+<option value="wildlife">Wildlife</option>
+<option value="hill">Hill</option>
+<option value="lake">Lake</option>
+<option value="ghat">River/Ghat</option>
+<option value="heritage">Heritage</option>
+<option value="park">Park</option>
+<option value="museum">Museum</option>
+<option value="market">Market</option>
+<option value="picnic">Picnic</option>
+</select>
+</div>
+
+<div id="map"></div>
+<div class="cards" id="cards"></div>
+
+<div class="bottom-nav">
+<button onclick="render()">🏠</button>
+<button onclick="getLocation()">📍</button>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+let userLat=null,userLng=null,userMarker=null;
+let nearestPlaces=[];
+
+/* ROUTE DATA */
+function getRouteData(lat,lng){
+if(!userLat) return null;
+
+// Haversine Formula (fast distance calc)
+function getDistance(lat1, lon1, lat2, lon2){
+const R = 6371;
+const dLat = (lat2-lat1) * Math.PI/180;
+const dLon = (lon2-lon1) * Math.PI/180;
+
+const a =
+Math.sin(dLat/2) * Math.sin(dLat/2) +
+Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) *
+Math.sin(dLon/2) * Math.sin(dLon/2);
+
+const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+return R * c;
+}
+
+let dist = getDistance(userLat,userLng,lat,lng).toFixed(1);
+
+// assume avg speed 35 km/h
+let time = ((dist/35)*60).toFixed(0);
+
+return {dist,time};
+}
+
+/* MAP */
+const map=L.map('map').setView([26.63,92.79],12);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+/* LOCATION */
+function getLocation(){
+navigator.geolocation.watchPosition(pos=>{
+userLat=pos.coords.latitude;
+userLng=pos.coords.longitude;
+
+document.getElementById("status").innerText="📍 Live Location Active";
+
+if(userMarker) map.removeLayer(userMarker);
+userMarker=L.circleMarker([userLat,userLng],{radius:8,color:"blue"}).addTo(map);
+
+map.setView([userLat,userLng],13);
+render();
+});
+}
+
+/* OPEN/CLOSE LOGIC */
+function isOpenNow(timing){
+if(!timing || timing.includes("24")) return true;
+
+let now=new Date();
+let current=now.getHours()*60 + now.getMinutes();
+
+let parts=timing.split("-");
+if(parts.length<2) return true;
+
+function convert(t){
+let [time,ampm]=t.trim().split(" ");
+let [h,m]=time.split(":").map(Number);
+if(ampm==="PM" && h!==12) h+=12;
+if(ampm==="AM" && h===12) h=0;
+return h*60+m;
+}
+
+let start=convert(parts[0]);
+let end=convert(parts[1]);
+
+return current>=start && current<=end;
+}
+
+/* PLACES */
+const places = [
+{name:"Agnigarh Hill",lat:26.6336,lng:92.7925,img:"https://image2url.com/r2/default/images/1775233344818-624f4d04-c37a-45c1-be58-4e37c201a96b.jpg",desc:"Mythological hill with Brahmaputra views.",fare:"Free",type:"hill",time:"6:00 AM - 6:00 PM"},
+{name:"Mahabhairab Temple",lat:26.6415,lng:92.8000,img:"https://image2url.com/r2/default/images/1775233669938-81511476-447d-4e76-992e-3cb81e5a492f.jpg",desc:"Famous ancient Shiva temple.",fare:"Free",type:"temple",time:"5:00 AM - 9:00 PM"},
+{name:"Bamuni Hills",lat:26.6289,lng:92.7903,img:"https://image2url.com/r2/default/images/1775233746712-a153e5b7-9440-4c2f-9aea-1cf905c82c6d.jpg",desc:"Historic stone ruins site.",fare:"Free",type:"heritage",time:"6:00 AM - 6:00 PM"},
+{name:"Chitralekha Udyan",lat:26.6330,lng:92.7900,img:"https://source.unsplash.com/400x300/?park",desc:"Green park with boating.",fare:"₹20",type:"park",time:"8:00 AM - 6:00 PM"},
+{name:"Padum Pukhuri",lat:26.6380,lng:92.8005,img:"https://image2url.com/r2/default/images/1775233839168-6007bb26-b5a0-4634-9fc2-7ab44b68d2b6.jpg",desc:"Lake with fountain and rides.",fare:"₹30",type:"lake",time:"9:00 AM - 7:00 PM"},
+{name:"Bhairabi Temple",lat:26.6105,lng:92.7800,img:"https://source.unsplash.com/400x300/?temple",desc:"Peaceful hilltop Durga temple.",fare:"Free",type:"temple",time:"6:00 AM - 7:00 PM"},
+{name:"Dah Parbatia",lat:26.6355,lng:92.8100,img:"https://source.unsplash.com/400x300/?ancient",desc:"Ancient temple ruins.",fare:"Free",type:"heritage",time:"6:00 AM - 6:00 PM"},
+{name:"Ketakeshwar Dewalay",lat:26.6200,lng:92.8300,img:"https://source.unsplash.com/400x300/?shiva",desc:"Huge Shiva linga temple.",fare:"Free",type:"temple",time:"5:30 AM - 8:00 PM"},
+{name:"Rudrapada Temple",lat:26.6400,lng:92.8050,img:"https://source.unsplash.com/400x300/?temple",desc:"Sacred footprint site.",fare:"Free",type:"temple",time:"6:00 AM - 7:00 PM"},
+{name:"Ouguri Hill",lat:26.6200,lng:92.7850,img:"https://source.unsplash.com/400x300/?hill",desc:"Sunset viewpoint hill.",fare:"Free",type:"hill",time:"5:30 AM - 6:30 PM"},
+{name:"Ganesh Ghat",lat:26.6350,lng:92.8000,img:"https://image2url.com/r2/default/images/1775233966888-6ae2f6d1-3afb-4f01-83ff-f2bd8b5cc068.jfif",desc:"Peaceful riverside ghat.",fare:"Free",type:"ghat",time:"Open 24 hours"},
+{name:"Jahaj Ghat",lat:26.6400,lng:92.8100,img:"https://source.unsplash.com/400x300/?riverfront",desc:"Popular hangout spot.",fare:"Free",type:"ghat",time:"Open 24 hours"},
+{name:"Kolia Bhomora Bridge",lat:26.6245,lng:92.7805,img:"https://source.unsplash.com/400x300/?bridge",desc:"Scenic river bridge.",fare:"Free",type:"nature",time:"Open 24 hours"},
+{name:"Hazara Pukhuri",lat:26.6405,lng:92.7950,img:"https://source.unsplash.com/400x300/?pond",desc:"Historic pond area.",fare:"Free",type:"lake",time:"Open 24 hours"},
+{name:"Tezpur River Beach",lat:26.6400,lng:92.8000,img:"https://image2url.com/r2/default/images/1775234054707-65e5593b-50fd-4196-951a-7f51bb2484ef.jpg",desc:"Sandy riverbank beach.",fare:"Free",type:"nature",time:"Open 24 hours"},
+{name:"Nameri National Park",lat:27.0200,lng:92.9500,img:"https://source.unsplash.com/400x300/?forest",desc:"Wildlife park with rafting.",fare:"₹100",type:"wildlife",time:"7:00 AM - 5:00 PM"},
+{name:"Bura Chapori",lat:26.8000,lng:92.6000,img:"https://image2url.com/r2/default/images/1775233140579-0ea5db95-5e70-47bd-a24c-c90615cef929.jfif",desc:"Rhino sanctuary.",fare:"₹100",type:"wildlife",time:"7:00 AM - 5:00 PM"},
+{name:"Pakke Tiger Reserve",lat:27.0500,lng:92.8000,img:"https://source.unsplash.com/400x300/?tiger",desc:"Dense forest reserve.",fare:"₹200",type:"wildlife",time:"7:00 AM - 5:00 PM"},
+{name:"Balipara Tea Garden",lat:26.8400,lng:92.8000,img:"https://source.unsplash.com/400x300/?tea",desc:"Tea estate views.",fare:"Free",type:"nature",time:"6:00 AM - 5:00 PM"},
+{name:"Dolabari Picnic Spot",lat:26.7000,lng:92.8200,img:"https://source.unsplash.com/400x300/?forest",desc:"Forest picnic spot.",fare:"Free",type:"picnic",time:"6:00 AM - 6:00 PM"},
+{name:"Dekargaon Spot",lat:26.6000,lng:92.7800,img:"https://source.unsplash.com/400x300/?picnic",desc:"Quiet picnic area.",fare:"Free",type:"picnic",time:"Open 24 hours"},
+{name:"Tezpur Museum",lat:26.6300,lng:92.8000,img:"https://image2url.com/r2/default/images/1775234146207-547f1de7-92c6-4bfe-9af5-1c3f7aaa790b.jfif",desc:"History museum.",fare:"₹20",type:"museum",time:"10:00 AM - 5:00 PM"},
+{name:"Tezpur University",lat:26.7030,lng:92.8300,img:"https://image2url.com/r2/default/images/1775234279319-d07d735a-6b85-4d33-9fb4-e937d34ad245.png",desc:"Green campus area.",fare:"Free",type:"nature",time:"8:00 AM - 6:00 PM"},
+{name:"Mission Chariali",lat:26.6400,lng:92.7900,img:"https://source.unsplash.com/400x300/?market",desc:"Main market hub.",fare:"Free",type:"market",time:"10:00 AM - 9:00 PM"},
+{name:"Bhalukpong",lat:27.0100,lng:92.6200,img:"https://source.unsplash.com/400x300/?mountain",desc:"Hill town near Tezpur.",fare:"Free",type:"hill",time:"Open 24 hours"},
+{name:"Tipi Orchidarium",lat:27.0200,lng:92.6000,img:"https://source.unsplash.com/400x300/?orchid",desc:"Orchid garden.",fare:"₹20",type:"park",time:"8:00 AM - 5:00 PM"},
+{name:"Local Food Street",lat:26.641,lng:92.791,img:"https://source.unsplash.com/400x300/?food",desc:"Street food zone.",fare:"₹200",type:"market",time:"5:00 PM - 11:00 PM"},
+{name:"Sunset Point Tezpur",lat:26.62,lng:92.78,img:"https://image2url.com/r2/default/images/1775234439970-6a5318a5-c6cf-4580-a8f6-234e24c8e514.jpg",desc:"Beautiful sunset view.",fare:"Free",type:"hill",time:"5:00 AM - 7:00 PM"},
+{name:"Morning Walk Park",lat:26.63,lng:92.79,img:"https://source.unsplash.com/400x300/?park",desc:"Jogging park.",fare:"Free",type:"park",time:"5:00 AM - 9:00 AM"},
+{name:"River View Cafe Spot",lat:26.64,lng:92.80,img:"https://source.unsplash.com/400x300/?cafe",desc:"Cafe with river view.",fare:"₹300",type:"market",time:"9:00 AM - 10:00 PM"},
+{name:"Boat Ride Point",lat:26.63,lng:92.79,img:"https://source.unsplash.com/400x300/?boat",desc:"Boating area.",fare:"₹100",type:"lake",time:"9:00 AM - 6:00 PM"},
+{name:"Hilltop View Deck",lat:26.61,lng:92.78,img:"https://source.unsplash.com/400x300/?viewpoint",desc:"City view from hill.",fare:"Free",type:"hill",time:"6:00 AM - 6:00 PM"},
+{name:"Nature Trail Path",lat:26.65,lng:92.82,img:"https://source.unsplash.com/400x300/?forest",desc:"Walking trail.",fare:"Free",type:"nature",time:"6:00 AM - 6:00 PM"},
+{name:"Local Bazaar",lat:26.64,lng:92.79,img:"https://source.unsplash.com/400x300/?market",desc:"Shopping area.",fare:"Free",type:"market",time:"10:00 AM - 9:00 PM"},
+{name:"Temple Complex",lat:26.63,lng:92.80,img:"https://source.unsplash.com/400x300/?temple",desc:"Multiple temples.",fare:"Free",type:"temple",time:"5:00 AM - 8:00 PM"},
+{name:"Forest Camp",lat:26.70,lng:92.83,img:"https://source.unsplash.com/400x300/?camping",desc:"Camping site.",fare:"₹1500",type:"picnic",time:"Open 24 hours"},
+{name:"Bridge Viewpoint",lat:26.62,lng:92.78,img:"https://source.unsplash.com/400x300/?bridge",desc:"Bridge photography spot.",fare:"Free",type:"nature",time:"Open 24 hours"},
+{name:"Kids Park",lat:26.64,lng:92.80,img:"https://source.unsplash.com/400x300/?kids",desc:"Children play area.",fare:"₹10",type:"park",time:"8:00 AM - 7:00 PM"},
+{name:"Eco Garden",lat:26.66,lng:92.82,img:"https://source.unsplash.com/400x300/?garden",desc:"Eco-friendly garden.",fare:"₹20",type:"park",time:"8:00 AM - 6:00 PM"},
+{name:"Bird Watching Point",lat:26.67,lng:92.84,img:"https://source.unsplash.com/400x300/?birds",desc:"Birdwatching zone.",fare:"Free",type:"nature",time:"6:00 AM - 5:00 PM"},
+{name:"Fishing Spot",lat:26.65,lng:92.81,img:"https://source.unsplash.com/400x300/?fishing",desc:"Fishing zone.",fare:"Free",type:"lake",time:"Open 24 hours"},
+{name:"Evening Chill Spot",lat:26.63,lng:92.79,img:"https://source.unsplash.com/400x300/?night",desc:"Night hangout area.",fare:"Free",type:"market",time:"6:00 PM - 11:00 PM"},
+{name:"Photography Point",lat:26.62,lng:92.78,img:"https://source.unsplash.com/400x300/?camera",desc:"Photo spot.",fare:"Free",type:"nature",time:"6:00 AM - 6:00 PM"},
+{name:"Yoga Park",lat:26.64,lng:92.79,img:"https://source.unsplash.com/400x300/?yoga",desc:"Morning yoga park.",fare:"Free",type:"park",time:"5:00 AM - 9:00 AM"},
+{name:"Camping River Side",lat:26.68,lng:92.85,img:"https://source.unsplash.com/400x300/?camp",desc:"River camping.",fare:"₹1200",type:"picnic",time:"Open 24 hours"},
+{name:"Sunrise Point",lat:26.61,lng:92.77,img:"https://source.unsplash.com/400x300/?sunrise",desc:"Best sunrise view.",fare:"Free",type:"hill",time:"5:00 AM - 8:00 AM"},
+{name:"Night Market",lat:26.64,lng:92.79,img:"https://source.unsplash.com/400x300/?market-night",desc:"Night shopping.",fare:"Free",type:"market",time:"6:00 PM - 12:00 AM"},
+{name:"Lake Side Cafe",lat:26.63,lng:92.80,img:"https://source.unsplash.com/400x300/?cafe-lake",desc:"Cafe near lake.",fare:"₹300",type:"market",time:"10:00 AM - 10:00 PM"},
+{name:"Adventure Spot",lat:26.70,lng:92.85,img:"https://source.unsplash.com/400x300/?adventure",desc:"Outdoor activities.",fare:"₹500",type:"nature",time:"8:00 AM - 6:00 PM"},
+{name:"Hill Trek Point",lat:26.72,lng:92.87,img:"https://source.unsplash.com/400x300/?trek",desc:"Trekking start point.",fare:"Free",type:"hill",time:"6:00 AM - 4:00 PM"}
+
+];
+
+/* RENDER */
+async function render(){
+
+let search=document.getElementById("search").value.toLowerCase();
+let filter=document.getElementById("filter").value;
+
+let filtered=places.filter(p=>{
+return p.name.toLowerCase().includes(search) && (filter==="all"||p.type===filter);
+});
+
+let enriched=[];
+for(let p of filtered){
+let r=getRouteData(p.lat,p.lng);
+enriched.push({...p,dist:r?r.dist:null,travelTime:r?r.time:null});
+}
+
+enriched.sort((a,b)=>(a.dist||999)-(b.dist||999));
+nearestPlaces=enriched.slice(0,5).map(p=>p.name);
+
+function makeCard(p){
+
+let isNear=nearestPlaces.includes(p.name);
+let open=isOpenNow(p.time);
+
+return `
+<div class="card ${isNear?'highlight':''}">
+<img src="${p.img}">
+<div class="card-content">
+
+<h3>${isNear?'🔥 ':''}${p.name}</h3>
+<p class="desc">${p.desc}</p>
+
+<div class="info">
+📍 ${p.dist||"..."} km away<br>
+⏱ Travel Time: ${p.travelTime||"..."} min<br>
+💸 ${p.fare}<br>
+🕒 ${p.time}<br>
+${open ? "🟢 Open Now" : "🔴 Closed"}
+</div>
+
+<div class="btn-group">
+<button class="btn hotel" onclick="window.open('https://www.google.com/search?q=hotels+near+${p.name}')">🏨 Hotels</button>
+<button class="btn food" onclick="window.open('https://www.google.com/search?q=restaurants+near+${p.name}')">🍽️ Food</button>
+<button class="btn bus" onclick="window.open('https://www.google.com/search?q=bus+stop+near+${p.name}')">🚌 Bus</button>
+<button class="btn train" onclick="window.open('https://www.google.com/search?q=railway+station+near+${p.name}')">🚆 Train</button>
+<button class="btn direction" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}')">🗺️ Map</button>
+</div>
+
+</div>
+</div>`;
+}
+
+document.getElementById("cards").innerHTML=enriched.map(makeCard).join("");
+}
+
+document.getElementById("search").addEventListener("input",render);
+document.getElementById("filter").addEventListener("change",render);
+
+getLocation();
+</script>
+
+</body>
+</html>
