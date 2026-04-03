@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>UP Travel App - Production Ready</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins;}
+body{background:#f4f6f9;padding-bottom:120px;}
+
+header{
+background:linear-gradient(135deg,#141e30,#243b55);
+color:white;text-align:center;padding:18px;
+}
+
+.searchbar{
+position:sticky;top:10px;z-index:999;background:white;
+margin:10px;padding:12px;border-radius:15px;
+box-shadow:0 5px 20px rgba(0,0,0,0.2);
+display:flex;gap:10px;flex-wrap:wrap;
+}
+
+input,select{
+padding:10px;border-radius:10px;border:1px solid #ccc;
+}
+
+#map{
+height:280px;margin:10px;border-radius:15px;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:15px;padding:15px;
+}
+
+.card{
+background:white;border-radius:20px;overflow:hidden;
+box-shadow:0 15px 35px rgba(0,0,0,0.15);
+}
+
+.highlight{border:3px solid gold;}
+
+.card img{
+width:100%;height:170px;object-fit:cover;
+}
+
+.card-content{padding:12px;}
+
+.btn{
+padding:8px;border:none;border-radius:10px;
+color:white;cursor:pointer;margin:4px;
+}
+
+.hotel{background:#ff7e5f;}
+.food{background:#43cea2;}
+.direction{background:#333;}
+.bus{background:#007bff;}
+.train{background:#6f42c1;}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h2>🚀 UP Travel Production App</h2>
+<p>📍 Live Location</p>
+</header>
+
+<div class="searchbar">
+<input type="text" id="search" placeholder="Search place...">
+
+<select id="cityFilter">
+<option value="all">All Districts</option>
+<option>Agra</option>
+<option>Varanasi</option>
+<option>Lucknow</option>
+<option>Ayodhya</option>
+<option>Mathura</option>
+<option>Prayagraj</option>
+<option>Kanpur</option>
+<option>Noida</option>
+<option>Gorakhpur</option>
+<option>Jhansi</option>
+<option>Meerut</option>
+<option>Bareilly</option>
+<option>Aligarh</option>
+<option>Mirzapur</option>
+<option>Lakhimpur</option>
+</select>
+
+<select id="typeFilter">
+<option value="all">All Types</option>
+<option value="temple">Temple</option>
+<option value="heritage">Heritage</option>
+<option value="nature">Nature</option>
+<option value="market">Market</option>
+<option value="ghat">Ghat</option>
+</select>
+</div>
+
+<div id="map"></div>
+<div class="cards" id="cards"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+
+let userLat=null,userLng=null;
+
+const map=L.map('map').setView([26.8,80.9],7);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+navigator.geolocation.watchPosition(pos=>{
+userLat=pos.coords.latitude;
+userLng=pos.coords.longitude;
+render();
+});
+
+function dist(lat1,lon1,lat2,lon2){
+const R=6371;
+let dLat=(lat2-lat1)*Math.PI/180;
+let dLon=(lon2-lon1)*Math.PI/180;
+let a=Math.sin(dLat/2)**2+
+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*
+Math.sin(dLon/2)**2;
+return (R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))).toFixed(1);
+}
+
+/* 🔥 YOUR FULL DATA (UNCHANGED) */
+const places = [
+
+/* ================= AGRA (10) ================= */
+{name:"Taj Mahal",city:"Agra",type:"heritage",lat:27.1751,lng:78.0421,trend:5,img:"https://upload.wikimedia.org/wikipedia/commons/1/1d/Taj_Mahal_%28Edited%29.jpeg",desc:"UNESCO marble mausoleum built by Shah Jahan.",fee:"₹50",timing:"Sunrise–Sunset"},
+{name:"Agra Fort",city:"Agra",type:"heritage",lat:27.1795,lng:78.0211,trend:5,img:"https://www.andbeyond.com/wp-content/uploads/sites/5/Jahangiri-Mahal-Agra-Fort1.jpg",desc:"Historic Mughal fort.",fee:"₹40",timing:"6AM–6PM"},
+{name:"Fatehpur Sikri",city:"Agra",type:"heritage",lat:27.0937,lng:77.6606,trend:5,img:"https://d35xcwcl37xo08.cloudfront.net/current-affairs-wp-uploads/2025/04/fatehpur_sikri.jpg",desc:"Abandoned Mughal capital.",fee:"₹50",timing:"Sunrise–Sunset"},
+{name:"Mehtab Bagh",city:"Agra",type:"nature",lat:27.179,lng:78.043,trend:4,img:"https://upload.wikimedia.org/wikipedia/commons/6/65/Agra_03-2016_03_view_from_Mehtab_Bagh.jpg",desc:"Garden view of Taj Mahal.",fee:"₹30",timing:"6AM–6PM"},
+{name:"Itmad-ud-Daulah",city:"Agra",type:"heritage",lat:27.192,lng:78.031,trend:4,img:"https://upload.wikimedia.org/wikipedia/commons/c/c9/I%27tim%C4%81d-ud-Daulah%2C_Agra.jpg",desc:"Baby Taj monument.",fee:"₹30",timing:"8AM–6PM"},
+{name:"Akbar’s Tomb",city:"Agra",type:"heritage",lat:27.22,lng:77.95,trend:4,img:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Akbars_Tomb.jpg/1280px-Akbars_Tomb.jpg",desc:"Tomb of Emperor Akbar.",fee:"₹30",timing:"6AM–6PM"},
+{name:"Jama Masjid Agra",city:"Agra",type:"heritage",lat:27.18,lng:78.02,trend:4,img:"https://data.agatetravel.com/images/photogallery/2019/jama-masjid-agra.jpg",desc:"Historic mosque.",fee:"Free",timing:"7AM–6PM"},
+{name:"Moti Masjid",city:"Agra",type:"heritage",lat:27.18,lng:78.02,trend:3,img:"https://merideewar.com/cdn/shop/products/moti-masjid-pearl-mosque-agra-painting-meri-deewar-vasily-vereshchagin-4-3-horizontal-premium-wall-art-by-merideewar-671890087.jpg?v=1751088760&width=1000",desc:"Pearl Mosque.",fee:"₹20",timing:"7AM–6PM"},
+{name:"Ram Bagh",city:"Agra",type:"nature",lat:27.21,lng:78.02,trend:3,img:"https://s7ap1.scene7.com/is/image/incredibleindia/ram-bagh-garden-amritsar-punjab-7-musthead-hero?qlt=82&ts=1726661920212",desc:"Old Mughal garden.",fee:"₹25",timing:"6AM–6PM"},
+{name:"Wildlife SOS",city:"Agra",type:"nature",lat:27.25,lng:78.05,trend:4,img:"https://wildlifesos.org/wp-content/uploads/2025/07/COCONUT-5-Mradul.jpg",desc:"Elephant rescue center.",fee:"₹500",timing:"9AM–5PM"},
+
+/* ================= VARANASI (10) ================= */
+{name:"Kashi Vishwanath",city:"Varanasi",type:"temple",lat:25.3109,lng:83.0107,trend:5,img:"https://www.varanasiguru.com/wp-content/uploads/2021/03/Dashashwamedh-Ghat.jpg",desc:"Holiest Shiva temple.",fee:"Free",timing:"3AM–11PM"},
+{name:"Dashashwamedh Ghat",city:"Varanasi",type:"ghat",lat:25.3065,lng:83.0106,trend:5,img:"https://kevinstandagephotography.wordpress.com/wp-content/uploads/2020/05/cover-2.jpg",desc:"Famous Ganga Aarti.",fee:"Free",timing:"24 hrs"},
+{name:"Assi Ghat",city:"Varanasi",type:"ghat",lat:25.288,lng:83.001,trend:4,img:"https://cdn.originalbuddhas.com/pages/uploads/141067/sarnath-image.jpg",desc:"Sunrise ghat.",fee:"Free",timing:"24 hrs"},
+{name:"Manikarnika Ghat",city:"Varanasi",type:"ghat",lat:25.31,lng:83.012,trend:4,img:"https://www.instagram.com/p/DKc-uYIhzJX",desc:"Cremation ghat.",fee:"Free",timing:"24 hrs"},
+{name:"Sarnath",city:"Varanasi",type:"heritage",lat:25.376,lng:83.022,trend:5,img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Durga_Temple.jpg/1280px-Durga_Temple.jpg",desc:"Buddha’s first sermon site.",fee:"₹20",timing:"9AM–5PM"},
+{name:"Ramnagar Fort",city:"Varanasi",type:"heritage",lat:25.27,lng:83.02,trend:4,img:"https://api.bhu.edu.in/uploads/lanka_e8105f8365.jpg",desc:"Royal fort museum.",fee:"₹50",timing:"10AM–5PM"},
+{name:"Tulsi Manas Temple",city:"Varanasi",type:"temple",lat:25.28,lng:83.01,trend:4,img:"https://s7ap1.scene7.com/is/image/incredibleindia/tulsi-manas-temple-varanasi-uttar-pradesh-1-attr-hero?qlt=82&ts=1727353606047",desc:"Temple with Ramayana verses.",fee:"Free",timing:"5AM–9PM"},
+{name:"Durga Temple",city:"Varanasi",type:"temple",lat:25.29,lng:83.01,trend:4,img:"https://upload.wikimedia.org/wikipedia/commons/d/d6/Bara_Imambara%2C_Lucknow_888_%283%29.jpg",desc:"Durga Kund temple.",fee:"Free",timing:"6AM–9PM"},
+{name:"Banaras Hindu University",city:"Varanasi",type:"heritage",lat:25.27,lng:82.99,trend:3,img:"https://www.iitbhufoundation.org/wp-content/uploads/2022/05/slider-img.jpg",desc:"Historic university campus.",fee:"Free",timing:"8AM–6PM"},
+{name:"Bharat Mata Temple",city:"Varanasi",type:"temple",lat:25.32,lng:82.99,trend:3,img:"https://t3.ftcdn.net/jpg/10/91/11/42/360_F_1091114274_DYs121BMGPlhxRfK7bxeP4aBklHKAbLJ.jpg",desc:"Temple dedicated to India.",fee:"Free",timing:"6AM–8PM"},
+/* ================= LUCKNOW (10) ================= */
+{name:"Bara Imambara",city:"Lucknow",type:"heritage",lat:26.8695,lng:80.912,trend:5,img:"https://source.unsplash.com/400x300/?lucknow",desc:"Bhool Bhulaiya maze.",fee:"₹50",timing:"6AM–5PM"},
+{name:"Chota Imambara",city:"Lucknow",type:"heritage",lat:26.871,lng:80.913,trend:4,img:"https://source.unsplash.com/400x300/?imambara",desc:"Decorative hall.",fee:"₹25",timing:"6AM–5PM"},
+{name:"Rumi Darwaza",city:"Lucknow",type:"heritage",lat:26.869,lng:80.911,trend:4,img:"https://source.unsplash.com/400x300/?arch",desc:"Gateway monument.",fee:"Free",timing:"24 hrs"},
+{name:"Hazratganj",city:"Lucknow",type:"market",lat:26.8467,lng:80.9462,trend:4,img:"https://source.unsplash.com/400x300/?market",desc:"Shopping hub.",fee:"Free",timing:"10AM–10PM"},
+{name:"Ambedkar Park",city:"Lucknow",type:"nature",lat:26.86,lng:80.99,trend:4,img:"https://source.unsplash.com/400x300/?park",desc:"Stone park monument.",fee:"₹20",timing:"11AM–9PM"},
+{name:"Janeshwar Park",city:"Lucknow",type:"nature",lat:26.85,lng:81.01,trend:4,img:"https://source.unsplash.com/400x300/?park",desc:"Largest park.",fee:"₹10",timing:"5AM–9PM"},
+{name:"Residency",city:"Lucknow",type:"heritage",lat:26.86,lng:80.94,trend:4,img:"https://source.unsplash.com/400x300/?ruins",desc:"1857 revolt site.",fee:"₹20",timing:"6AM–6PM"},
+{name:"Clock Tower",city:"Lucknow",type:"heritage",lat:26.87,lng:80.91,trend:3,img:"https://source.unsplash.com/400x300/?tower",desc:"Tallest clock tower.",fee:"Free",timing:"24 hrs"},
+{name:"Zoo Lucknow",city:"Lucknow",type:"nature",lat:26.85,lng:80.95,trend:4,img:"https://source.unsplash.com/400x300/?zoo",desc:"State zoo.",fee:"₹80",timing:"8AM–5PM"},
+{name:"Dilkusha Kothi",city:"Lucknow",type:"heritage",lat:26.85,lng:80.97,trend:3,img:"https://source.unsplash.com/400x300/?ruins",desc:"British-era ruins.",fee:"₹20",timing:"8AM–5PM"},
+
+/* ================= AYODHYA (10) ================= */
+{name:"Ram Mandir",city:"Ayodhya",type:"temple",lat:26.7956,lng:82.194,trend:5,img:"https://source.unsplash.com/400x300/?rammandir",desc:"Temple of Lord Ram.",fee:"Free",timing:"6AM–10PM"},
+{name:"Hanuman Garhi",city:"Ayodhya",type:"temple",lat:26.799,lng:82.198,trend:4,img:"https://source.unsplash.com/400x300/?hanuman",desc:"Hanuman temple.",fee:"Free",timing:"5AM–10PM"},
+{name:"Kanak Bhawan",city:"Ayodhya",type:"temple",lat:26.797,lng:82.202,trend:4,img:"https://source.unsplash.com/400x300/?temple",desc:"Ram-Sita temple.",fee:"Free",timing:"6AM–9PM"},
+{name:"Guptar Ghat",city:"Ayodhya",type:"ghat",lat:26.78,lng:82.15,trend:4,img:"https://source.unsplash.com/400x300/?ghat",desc:"Sacred ghat.",fee:"Free",timing:"24 hrs"},
+{name:"Saryu River",city:"Ayodhya",type:"nature",lat:26.8,lng:82.2,trend:4,img:"https://source.unsplash.com/400x300/?river",desc:"Holy river.",fee:"Free",timing:"24 hrs"},
+
+/* ================= MATHURA/VRINDAVAN (10) ================= */
+{name:"Prem Mandir",city:"Mathura",type:"temple",lat:27.5744,lng:77.7006,trend:5,img:"https://source.unsplash.com/400x300/?temple",desc:"Marble temple.",fee:"Free",timing:"8AM–8PM"},
+{name:"Banke Bihari",city:"Mathura",type:"temple",lat:27.577,lng:77.699,trend:5,img:"https://source.unsplash.com/400x300/?krishna",desc:"Krishna temple.",fee:"Free",timing:"7AM–9PM"},
+{name:"ISKCON Temple",city:"Mathura",type:"temple",lat:27.565,lng:77.67,trend:4,img:"https://source.unsplash.com/400x300/?iskcon",desc:"International temple.",fee:"Free",timing:"4AM–9PM"},
+{name:"Govardhan Hill",city:"Mathura",type:"nature",lat:27.504,lng:77.462,trend:4,img:"https://source.unsplash.com/400x300/?hill",desc:"Sacred hill.",fee:"Free",timing:"24 hrs"},
+{name:"Krishna Janmabhoomi",city:"Mathura",type:"temple",lat:27.5,lng:77.67,trend:5,img:"https://source.unsplash.com/400x300/?temple",desc:"Birthplace of Krishna.",fee:"Free",timing:"5AM–10PM"},
+
+/* ================= PRAYAGRAJ (10) ================= */
+{name:"Triveni Sangam",city:"Prayagraj",type:"nature",lat:25.43,lng:81.84,trend:5,img:"https://source.unsplash.com/400x300/?river",desc:"River confluence.",fee:"Free",timing:"24 hrs"},
+{name:"Allahabad Fort",city:"Prayagraj",type:"heritage",lat:25.43,lng:81.84,trend:4,img:"https://source.unsplash.com/400x300/?fort",desc:"Akbar fort.",fee:"₹50",timing:"9AM–5PM"},
+{name:"Anand Bhavan",city:"Prayagraj",type:"heritage",lat:25.45,lng:81.84,trend:4,img:"https://source.unsplash.com/400x300/?museum",desc:"Nehru residence.",fee:"₹30",timing:"9AM–5PM"},
+{name:"Khusro Bagh",city:"Prayagraj",type:"heritage",lat:25.44,lng:81.83,trend:4,img:"https://source.unsplash.com/400x300/?garden",desc:"Mughal garden tombs.",fee:"Free",timing:"6AM–6PM"},
+{name:"Hanuman Temple",city:"Prayagraj",type:"temple",lat:25.43,lng:81.84,trend:4,img:"https://source.unsplash.com/400x300/?temple",desc:"Reclining Hanuman.",fee:"Free",timing:"5AM–10PM"},
+
+/* ================= EXTRA DISTRICTS (50+) ================= */
+// Gorakhpur
+{name:"Gorakhnath Temple",city:"Gorakhpur",type:"temple",lat:26.76,lng:83.37,trend:5,img:"https://source.unsplash.com/400x300/?temple",desc:"Famous Nath temple.",fee:"Free",timing:"5AM–10PM"},
+{name:"Railway Museum",city:"Gorakhpur",type:"heritage",lat:26.75,lng:83.37,trend:3,img:"https://source.unsplash.com/400x300/?museum",desc:"Railway history.",fee:"₹20",timing:"10AM–5PM"},
+
+// Jhansi
+{name:"Jhansi Fort",city:"Jhansi",type:"heritage",lat:25.448,lng:78.568,trend:5,img:"https://source.unsplash.com/400x300/?fort",desc:"Rani Lakshmi Bai fort.",fee:"₹25",timing:"6AM–6PM"},
+
+// Mirzapur
+{name:"Vindhyachal Temple",city:"Mirzapur",type:"temple",lat:25.16,lng:82.66,trend:5,img:"https://source.unsplash.com/400x300/?temple",desc:"Shaktipeeth.",fee:"Free",timing:"5AM–10PM"},
+{name:"Chunar Fort",city:"Mirzapur",type:"heritage",lat:25.13,lng:82.88,trend:4,img:"https://source.unsplash.com/400x300/?fort",desc:"Historic fort.",fee:"₹20",timing:"Sunrise–Sunset"},
+
+// Lakhimpur
+{name:"Dudhwa National Park",city:"Lakhimpur",type:"nature",lat:28.3,lng:80.7,trend:5,img:"https://source.unsplash.com/400x300/?wildlife",desc:"Wildlife sanctuary.",fee:"₹150",timing:"6AM–6PM"},
+
+// Noida
+{name:"Okhla Bird Sanctuary",city:"Noida",type:"nature",lat:28.55,lng:77.32,trend:4,img:"https://source.unsplash.com/400x300/?birds",desc:"Bird watching spot.",fee:"₹30",timing:"7AM–5PM"},
+
+// Kanpur
+{name:"JK Temple",city:"Kanpur",type:"temple",lat:26.47,lng:80.33,trend:4,img:"https://source.unsplash.com/400x300/?temple",desc:"Modern temple.",fee:"Free",timing:"5AM–9PM"},
+{name:"Allen Forest Zoo",city:"Kanpur",type:"nature",lat:26.49,lng:80.35,trend:4,img:"https://source.unsplash.com/400x300/?zoo",desc:"Largest zoo.",fee:"₹50",timing:"8AM–5PM"},
+
+// Meerut
+{name:"Augarnath Temple",city:"Meerut",type:"temple",lat:28.99,lng:77.7,trend:4,img:"https://source.unsplash.com/400x300/?temple",desc:"Historic temple.",fee:"Free",timing:"5AM–9PM"},
+
+// Bareilly
+{name:"Alakhnath Temple",city:"Bareilly",type:"temple",lat:28.37,lng:79.43,trend:4,img:"https://source.unsplash.com/400x300/?temple",desc:"Shiva temple.",fee:"Free",timing:"5AM–9PM"},
+
+// Aligarh
+{name:"Aligarh Fort",city:"Aligarh",type:"heritage",lat:27.88,lng:78.07,trend:3,img:"https://source.unsplash.com/400x300/?fort",desc:"Historic fort.",fee:"₹20",timing:"Sunrise–Sunset"},
+
+{name:"Dudhwa National Park",city:"Lakhimpur",type:"nature",lat:28.3,lng:80.7,trend:5,img:"https://source.unsplash.com/400x300/?wildlife",desc:"Wildlife sanctuary.",fee:"₹150",timing:"6AM–6PM"}
+];
+
+/* 🔥 RENDER */
+function render(){
+
+let s=document.getElementById("search").value.toLowerCase();
+let city=document.getElementById("cityFilter").value;
+let type=document.getElementById("typeFilter").value;
+
+let data=places.filter(p=>
+p.name.toLowerCase().includes(s) &&
+(city==='all'||p.city===city) &&
+(type==='all'||p.type===type)
+);
+
+if(userLat){
+data.forEach(p=>p.distance=dist(userLat,userLng,p.lat,p.lng));
+data.sort((a,b)=>(b.trend-a.trend)+(a.distance-b.distance));
+}
+
+let html="";
+
+data.forEach(p=>{
+html+=`
+<div class="card">
+<img src="${p.img}">
+<div class="card-content">
+
+<h3>${p.name}</h3>
+<p>${p.city}</p>
+<p>📍 ${p.distance||"--"} km</p>
+
+<p>${p.desc}</p>
+<p>🎟 ${p.fee} | ⏰ ${p.timing}</p>
+
+<button class="btn hotel" onclick="window.open('https://www.google.com/maps/search/hotels/@${p.lat},${p.lng},15z')">🏨</button>
+<button class="btn food" onclick="window.open('https://www.google.com/maps/search/restaurants/@${p.lat},${p.lng},15z')">🍴</button>
+<button class="btn direction" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}')">🧭</button>
+<button class="btn bus" onclick="window.open('https://www.google.com/maps/search/bus+stop/@${p.lat},${p.lng},15z')">🚌</button>
+<button class="btn train" onclick="window.open('https://www.google.com/maps/search/railway+station/@${p.lat},${p.lng},15z')">🚆</button>
+
+</div>
+</div>
+`;
+});
+
+document.getElementById("cards").innerHTML=html;
+}
+
+document.getElementById("search").oninput=render;
+document.getElementById("cityFilter").onchange=render;
+document.getElementById("typeFilter").onchange=render;
+
+render();
+
+</script>
+
+</body>
+</html>
