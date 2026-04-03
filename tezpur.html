@@ -304,11 +304,27 @@ ${open ? "🟢 Open Now" : "🔴 Closed"}
 </div>
 
 <div class="btn-group">
-<button class="btn hotel" onclick="window.open('https://www.google.com/search?q=hotels+near+${p.name}')">🏨 Hotels</button>
-<button class="btn food" onclick="window.open('https://www.google.com/search?q=restaurants+near+${p.name}')">🍽️ Food</button>
-<button class="btn bus" onclick="window.open('https://www.google.com/search?q=bus+stop+near+${p.name}')">🚌 Bus</button>
-<button class="btn train" onclick="window.open('https://www.google.com/search?q=railway+station+near+${p.name}')">🚆 Train</button>
-<button class="btn direction" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}')">🗺️ Map</button>
+
+<button class="btn hotel" 
+onclick="window.open('https://www.google.com/maps/search/hotels/@${p.lat},${p.lng},15z')">
+🏨 Hotels</button>
+
+<button class="btn food" 
+onclick="window.open('https://www.google.com/maps/search/restaurants/@${p.lat},${p.lng},15z')">
+🍽️ Food</button>
+
+<button class="btn bus" 
+onclick="window.open('https://www.google.com/maps/search/bus+stop/@${p.lat},${p.lng},15z')">
+🚌 Bus</button>
+
+<button class="btn train" 
+onclick="window.open('https://www.google.com/maps/search/railway+station/@${p.lat},${p.lng},15z')">
+🚆 Train</button>
+
+<button class="btn direction" 
+onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}')">
+🗺️ Map</button>
+
 </div>
 
 </div>
