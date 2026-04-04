@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>UP Travel App - Production Ready</title>
+<title>UP Travel By Ankur</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -67,7 +67,7 @@ color:white;cursor:pointer;margin:4px;
 <body>
 
 <header>
-<h2>🚀 UP Travel Production App</h2>
+<h2>🚀 UP Travel By Ankur </h2>
 <p>📍 Live Location</p>
 </header>
 
@@ -147,81 +147,81 @@ const places = [
 {name:"Wildlife SOS",city:"Agra",type:"nature",lat:27.25,lng:78.05,trend:4,img:"https://wildlifesos.org/wp-content/uploads/2025/07/COCONUT-5-Mradul.jpg",desc:"Elephant rescue center.",fee:"₹500",timing:"9AM–5PM"},
 
 /* ================= VARANASI (10) ================= */
-{name:"Kashi Vishwanath",city:"Varanasi",type:"temple",lat:25.3109,lng:83.0107,trend:5,img:"https://www.varanasiguru.com/wp-content/uploads/2021/03/Dashashwamedh-Ghat.jpg",desc:"Holiest Shiva temple.",fee:"Free",timing:"3AM–11PM"},
-{name:"Dashashwamedh Ghat",city:"Varanasi",type:"ghat",lat:25.3065,lng:83.0106,trend:5,img:"https://kevinstandagephotography.wordpress.com/wp-content/uploads/2020/05/cover-2.jpg",desc:"Famous Ganga Aarti.",fee:"Free",timing:"24 hrs"},
-{name:"Assi Ghat",city:"Varanasi",type:"ghat",lat:25.288,lng:83.001,trend:4,img:"https://cdn.originalbuddhas.com/pages/uploads/141067/sarnath-image.jpg",desc:"Sunrise ghat.",fee:"Free",timing:"24 hrs"},
-{name:"Manikarnika Ghat",city:"Varanasi",type:"ghat",lat:25.31,lng:83.012,trend:4,img:"https://www.instagram.com/p/DKc-uYIhzJX",desc:"Cremation ghat.",fee:"Free",timing:"24 hrs"},
+{name:"Kashi Vishwanath",city:"Varanasi",type:"temple",lat:25.3109,lng:83.0107,trend:5,img:"https://substackcdn.com/image/fetch/$s_!arev!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ff235bf3d-2b54-48cc-935e-d1607aae9978_1920x1080.webp",desc:"Holiest Shiva temple.",fee:"Free",timing:"3AM–11PM"},
+{name:"Dashashwamedh Ghat",city:"Varanasi",type:"ghat",lat:25.3065,lng:83.0106,trend:5,img:"https://www.varanasiguru.com/wp-content/uploads/2021/03/Dashashwamedh-Ghat.jpg",desc:"Famous Ganga Aarti.",fee:"Free",timing:"24 hrs"},
+{name:"Assi Ghat",city:"Varanasi",type:"ghat",lat:25.288,lng:83.001,trend:4,img:"https://vdavns.com/storage/upload/tourist_images/dgA91aK1rD13YGxS8dymE8dGfKq4pS6y4BeyZQ6E.jpg",desc:"Sunrise ghat.",fee:"Free",timing:"24 hrs"},
+{name:"Manikarnika Ghat",city:"Varanasi",type:"ghat",lat:25.31,lng:83.012,trend:4,img:"https://www.trawell.in/admin/images/upload/090544516Manikarnika_Ghat.jpg",desc:"Cremation ghat.",fee:"Free",timing:"24 hrs"},
 {name:"Sarnath",city:"Varanasi",type:"heritage",lat:25.376,lng:83.022,trend:5,img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Durga_Temple.jpg/1280px-Durga_Temple.jpg",desc:"Buddha’s first sermon site.",fee:"₹20",timing:"9AM–5PM"},
-{name:"Ramnagar Fort",city:"Varanasi",type:"heritage",lat:25.27,lng:83.02,trend:4,img:"https://api.bhu.edu.in/uploads/lanka_e8105f8365.jpg",desc:"Royal fort museum.",fee:"₹50",timing:"10AM–5PM"},
+{name:"Ramnagar Fort",city:"Varanasi",type:"heritage",lat:25.27,lng:83.02,trend:4,img:"https://www.trawell.in/admin/images/upload/9011096Ramnagar_Fort.jpg",desc:"Royal fort museum.",fee:"₹50",timing:"10AM–5PM"},
 {name:"Tulsi Manas Temple",city:"Varanasi",type:"temple",lat:25.28,lng:83.01,trend:4,img:"https://s7ap1.scene7.com/is/image/incredibleindia/tulsi-manas-temple-varanasi-uttar-pradesh-1-attr-hero?qlt=82&ts=1727353606047",desc:"Temple with Ramayana verses.",fee:"Free",timing:"5AM–9PM"},
 {name:"Durga Temple",city:"Varanasi",type:"temple",lat:25.29,lng:83.01,trend:4,img:"https://upload.wikimedia.org/wikipedia/commons/d/d6/Bara_Imambara%2C_Lucknow_888_%283%29.jpg",desc:"Durga Kund temple.",fee:"Free",timing:"6AM–9PM"},
 {name:"Banaras Hindu University",city:"Varanasi",type:"heritage",lat:25.27,lng:82.99,trend:3,img:"https://www.iitbhufoundation.org/wp-content/uploads/2022/05/slider-img.jpg",desc:"Historic university campus.",fee:"Free",timing:"8AM–6PM"},
 {name:"Bharat Mata Temple",city:"Varanasi",type:"temple",lat:25.32,lng:82.99,trend:3,img:"https://t3.ftcdn.net/jpg/10/91/11/42/360_F_1091114274_DYs121BMGPlhxRfK7bxeP4aBklHKAbLJ.jpg",desc:"Temple dedicated to India.",fee:"Free",timing:"6AM–8PM"},
 /* ================= LUCKNOW (10) ================= */
-{name:"Bara Imambara",city:"Lucknow",type:"heritage",lat:26.8695,lng:80.912,trend:5,img:"https://source.unsplash.com/400x300/?lucknow",desc:"Bhool Bhulaiya maze.",fee:"₹50",timing:"6AM–5PM"},
-{name:"Chota Imambara",city:"Lucknow",type:"heritage",lat:26.871,lng:80.913,trend:4,img:"https://source.unsplash.com/400x300/?imambara",desc:"Decorative hall.",fee:"₹25",timing:"6AM–5PM"},
-{name:"Rumi Darwaza",city:"Lucknow",type:"heritage",lat:26.869,lng:80.911,trend:4,img:"https://source.unsplash.com/400x300/?arch",desc:"Gateway monument.",fee:"Free",timing:"24 hrs"},
-{name:"Hazratganj",city:"Lucknow",type:"market",lat:26.8467,lng:80.9462,trend:4,img:"https://source.unsplash.com/400x300/?market",desc:"Shopping hub.",fee:"Free",timing:"10AM–10PM"},
-{name:"Ambedkar Park",city:"Lucknow",type:"nature",lat:26.86,lng:80.99,trend:4,img:"https://source.unsplash.com/400x300/?park",desc:"Stone park monument.",fee:"₹20",timing:"11AM–9PM"},
-{name:"Janeshwar Park",city:"Lucknow",type:"nature",lat:26.85,lng:81.01,trend:4,img:"https://source.unsplash.com/400x300/?park",desc:"Largest park.",fee:"₹10",timing:"5AM–9PM"},
-{name:"Residency",city:"Lucknow",type:"heritage",lat:26.86,lng:80.94,trend:4,img:"https://source.unsplash.com/400x300/?ruins",desc:"1857 revolt site.",fee:"₹20",timing:"6AM–6PM"},
-{name:"Clock Tower",city:"Lucknow",type:"heritage",lat:26.87,lng:80.91,trend:3,img:"https://source.unsplash.com/400x300/?tower",desc:"Tallest clock tower.",fee:"Free",timing:"24 hrs"},
-{name:"Zoo Lucknow",city:"Lucknow",type:"nature",lat:26.85,lng:80.95,trend:4,img:"https://source.unsplash.com/400x300/?zoo",desc:"State zoo.",fee:"₹80",timing:"8AM–5PM"},
-{name:"Dilkusha Kothi",city:"Lucknow",type:"heritage",lat:26.85,lng:80.97,trend:3,img:"https://source.unsplash.com/400x300/?ruins",desc:"British-era ruins.",fee:"₹20",timing:"8AM–5PM"},
+{name:"Bara Imambara",city:"Lucknow",type:"heritage",lat:26.8695,lng:80.912,trend:5,img:"https://img.atlasobscura.com/3Z-SwOcexnpb0d4La9PurfeGIEewN-KxxtWDemroQRg/rs:fill:780:520:1/g:ce/q:81/sm:1/scp:1/ar:1/aHR0cHM6Ly9hdGxh/cy1kZXYuczMuYW1h/em9uYXdzLmNvbS91/cGxvYWRzL3BsYWNl/X2ltYWdlcy8zOGUz/YTQ0NS0wYzY5LTRl/ODItYTAzYi03YjE5/NWVkNjlkOGNiODM0/ZTU4NzFmZDhkZDkz/Y2RfMTgzNnB4LU91/dGVyX3ByZW1pc2Vz/X29mX0JhcmFfSW1h/bWJhcmFfKEltYW1i/YXJhX29mX0FzYWYt/dWQtZGF1bGFfaW5f/THVja25vdylfb25f/YV9zdW1tZXJfYWZ0/ZXJub29uLmpwZw.jpg",desc:"Bhool Bhulaiya maze.",fee:"₹50",timing:"6AM–5PM"},
+{name:"Chota Imambara",city:"Lucknow",type:"heritage",lat:26.871,lng:80.913,trend:4,img:"https://cdn.s3waas.gov.in/s3310dcbbf4cce62f762a2aaa148d556bd/uploads/bfi_thumb/2018050223-olw811wubcb15mq5vd23pymrhrqliwomngtmocon0q.jpg",desc:"Decorative hall.",fee:"₹25",timing:"6AM–5PM"},
+{name:"Rumi Darwaza",city:"Lucknow",type:"heritage",lat:26.869,lng:80.911,trend:4,img:"https://upload.wikimedia.org/wikipedia/commons/a/a9/Rumi_Darwaza_-_DSC2797-01.jpg",desc:"Gateway monument.",fee:"Free",timing:"24 hrs"},
+{name:"Hazratganj",city:"Lucknow",type:"market",lat:26.8467,lng:80.9462,trend:4,img:"https://ldalucknow.in/wp-content/uploads/2025/04/hazratganj-a1-min-uai-1062x708.jpg",desc:"Shopping hub.",fee:"Free",timing:"10AM–10PM"},
+{name:"Ambedkar Park",city:"Lucknow",type:"nature",lat:26.86,lng:80.99,trend:4,img:"https://media.assettype.com/knocksense%2Fimport%2F25851272%2Forigin.jpg",desc:"Stone park monument.",fee:"₹20",timing:"11AM–9PM"},
+{name:"Janeshwar Park",city:"Lucknow",type:"nature",lat:26.85,lng:81.01,trend:4,img:"https://www.dronestagr.am/wp-content/uploads/2016/06/janeshwar_mishra_park_01-scaled.jpg",desc:"Largest park.",fee:"₹10",timing:"5AM–9PM"},
+{name:"Residency",city:"Lucknow",type:"heritage",lat:26.86,lng:80.94,trend:4,img:"https://s7ap1.scene7.com/is/image/incredibleindia/lucknow-residency-lucknow-uttar-pradesh-1-attr-hero?qlt=82&ts=1742156553058",desc:"1857 revolt site.",fee:"₹20",timing:"6AM–6PM"},
+{name:"Clock Tower",city:"Lucknow",type:"heritage",lat:26.87,lng:80.91,trend:3,img:"https://upload.wikimedia.org/wikipedia/commons/4/43/Elizabeth_Tower%2C_June_2022.jpg",desc:"Tallest clock tower.",fee:"Free",timing:"24 hrs"},
+{name:"Zoo Lucknow",city:"Lucknow",type:"nature",lat:26.85,lng:80.95,trend:4,img:"https://www.lucknowzoo.com/assets/Interpretation-Centre-img1.jpg",desc:"State zoo.",fee:"₹80",timing:"8AM–5PM"},
+{name:"Dilkusha Kothi",city:"Lucknow",type:"heritage",lat:26.85,lng:80.97,trend:3,img:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Dilkhusha_Palace.jpg/330px-Dilkhusha_Palace.jpg",desc:"British-era ruins.",fee:"₹20",timing:"8AM–5PM"},
 
 /* ================= AYODHYA (10) ================= */
-{name:"Ram Mandir",city:"Ayodhya",type:"temple",lat:26.7956,lng:82.194,trend:5,img:"https://source.unsplash.com/400x300/?rammandir",desc:"Temple of Lord Ram.",fee:"Free",timing:"6AM–10PM"},
-{name:"Hanuman Garhi",city:"Ayodhya",type:"temple",lat:26.799,lng:82.198,trend:4,img:"https://source.unsplash.com/400x300/?hanuman",desc:"Hanuman temple.",fee:"Free",timing:"5AM–10PM"},
-{name:"Kanak Bhawan",city:"Ayodhya",type:"temple",lat:26.797,lng:82.202,trend:4,img:"https://source.unsplash.com/400x300/?temple",desc:"Ram-Sita temple.",fee:"Free",timing:"6AM–9PM"},
-{name:"Guptar Ghat",city:"Ayodhya",type:"ghat",lat:26.78,lng:82.15,trend:4,img:"https://source.unsplash.com/400x300/?ghat",desc:"Sacred ghat.",fee:"Free",timing:"24 hrs"},
-{name:"Saryu River",city:"Ayodhya",type:"nature",lat:26.8,lng:82.2,trend:4,img:"https://source.unsplash.com/400x300/?river",desc:"Holy river.",fee:"Free",timing:"24 hrs"},
+{name:"Ram Mandir",city:"Ayodhya",type:"temple",lat:26.7956,lng:82.194,trend:5,img:"https://www.fairobserver.com/wp-content/uploads/2025/03/Ram-Mandir.jpg",desc:"Temple of Lord Ram.",fee:"Free",timing:"6AM–10PM"},
+{name:"Hanuman Garhi",city:"Ayodhya",type:"temple",lat:26.799,lng:82.198,trend:4,img:"https://s7ap1.scene7.com/is/image/incredibleindia/2-hanuman-garhi-ayodhya-uttar-pradesh-attr-hero?qlt=82&ts=1726649712726",desc:"Hanuman temple.",fee:"Free",timing:"5AM–10PM"},
+{name:"Kanak Bhawan",city:"Ayodhya",type:"temple",lat:26.797,lng:82.202,trend:4,img:"https://www.trawell.in/admin/images/upload/599531656Kanak_Bhawan.jpg",desc:"Ram-Sita temple.",fee:"Free",timing:"6AM–9PM"},
+{name:"Guptar Ghat",city:"Ayodhya",type:"ghat",lat:26.78,lng:82.15,trend:4,img:"https://s7ap1.scene7.com/is/image/incredibleindia/2-guptar-ghat-ayodhya-uttar-pradesh-attr-hero?qlt=82&ts=1726649747726",desc:"Sacred ghat.",fee:"Free",timing:"24 hrs"},
+{name:"Saryu River",city:"Ayodhya",type:"nature",lat:26.8,lng:82.2,trend:4,img:"https://d35xcwcl37xo08.cloudfront.net/current-affairs-wp-uploads/2025/04/saryu_river.webp",desc:"Holy river.",fee:"Free",timing:"24 hrs"},
 
 /* ================= MATHURA/VRINDAVAN (10) ================= */
-{name:"Prem Mandir",city:"Mathura",type:"temple",lat:27.5744,lng:77.7006,trend:5,img:"https://source.unsplash.com/400x300/?temple",desc:"Marble temple.",fee:"Free",timing:"8AM–8PM"},
-{name:"Banke Bihari",city:"Mathura",type:"temple",lat:27.577,lng:77.699,trend:5,img:"https://source.unsplash.com/400x300/?krishna",desc:"Krishna temple.",fee:"Free",timing:"7AM–9PM"},
-{name:"ISKCON Temple",city:"Mathura",type:"temple",lat:27.565,lng:77.67,trend:4,img:"https://source.unsplash.com/400x300/?iskcon",desc:"International temple.",fee:"Free",timing:"4AM–9PM"},
-{name:"Govardhan Hill",city:"Mathura",type:"nature",lat:27.504,lng:77.462,trend:4,img:"https://source.unsplash.com/400x300/?hill",desc:"Sacred hill.",fee:"Free",timing:"24 hrs"},
-{name:"Krishna Janmabhoomi",city:"Mathura",type:"temple",lat:27.5,lng:77.67,trend:5,img:"https://source.unsplash.com/400x300/?temple",desc:"Birthplace of Krishna.",fee:"Free",timing:"5AM–10PM"},
+{name:"Prem Mandir",city:"Mathura",type:"temple",lat:27.5744,lng:77.7006,trend:5,img:"https://cdn.abhibus.com/2024/02/Prem-Mandir-Vrindavan-History-Timings-How-to-Reach-696x392.jpg",desc:"Marble temple.",fee:"Free",timing:"8AM–8PM"},
+{name:"Banke Bihari",city:"Mathura",type:"temple",lat:27.577,lng:77.699,trend:5,img:"https://faujitoursandtravels.com/wp-content/uploads/2024/09/20240221_171024-768x576.jpg",desc:"Krishna temple.",fee:"Free",timing:"7AM–9PM"},
+{name:"ISKCON Temple",city:"Mathura",type:"temple",lat:27.565,lng:77.67,trend:4,img:"https://cdn.iskconvrindavan.com/page/about-us_6267ee89e0f375f.jpeg",desc:"International temple.",fee:"Free",timing:"4AM–9PM"},
+{name:"Govardhan Hill",city:"Mathura",type:"nature",lat:27.504,lng:77.462,trend:4,img:"https://www.holidify.com/images/cmsuploads/compressed/5395_20190319183709.jpg",desc:"Sacred hill.",fee:"Free",timing:"24 hrs"},
+{name:"Krishna Janmabhoomi",city:"Mathura",type:"temple",lat:27.5,lng:77.67,trend:5,img:"https://www.templestiming.in/wp-content/uploads/2025/08/ChatGPT-Image-Aug-1-2025-03_02_27-PM.webp",desc:"Birthplace of Krishna.",fee:"Free",timing:"5AM–10PM"},
 
 /* ================= PRAYAGRAJ (10) ================= */
-{name:"Triveni Sangam",city:"Prayagraj",type:"nature",lat:25.43,lng:81.84,trend:5,img:"https://source.unsplash.com/400x300/?river",desc:"River confluence.",fee:"Free",timing:"24 hrs"},
-{name:"Allahabad Fort",city:"Prayagraj",type:"heritage",lat:25.43,lng:81.84,trend:4,img:"https://source.unsplash.com/400x300/?fort",desc:"Akbar fort.",fee:"₹50",timing:"9AM–5PM"},
-{name:"Anand Bhavan",city:"Prayagraj",type:"heritage",lat:25.45,lng:81.84,trend:4,img:"https://source.unsplash.com/400x300/?museum",desc:"Nehru residence.",fee:"₹30",timing:"9AM–5PM"},
-{name:"Khusro Bagh",city:"Prayagraj",type:"heritage",lat:25.44,lng:81.83,trend:4,img:"https://source.unsplash.com/400x300/?garden",desc:"Mughal garden tombs.",fee:"Free",timing:"6AM–6PM"},
-{name:"Hanuman Temple",city:"Prayagraj",type:"temple",lat:25.43,lng:81.84,trend:4,img:"https://source.unsplash.com/400x300/?temple",desc:"Reclining Hanuman.",fee:"Free",timing:"5AM–10PM"},
+{name:"Triveni Sangam",city:"Prayagraj",type:"nature",lat:25.43,lng:81.84,trend:5,img:"https://englishpunjabkesari.imagibyte.sortdcdn.net/wp-content/uploads/2025/09/2188_triveni-sangam-prayagraj.webp",desc:"River confluence.",fee:"Free",timing:"24 hrs"},
+{name:"Allahabad Fort",city:"Prayagraj",type:"heritage",lat:25.43,lng:81.84,trend:4,img:"https://upload.wikimedia.org/wikipedia/commons/0/06/Akbar_Fort_Allahabad.jpg",desc:"Akbar fort.",fee:"₹50",timing:"9AM–5PM"},
+{name:"Anand Bhavan",city:"Prayagraj",type:"heritage",lat:25.45,lng:81.84,trend:4,img:"https://s7ap1.scene7.com/is/image/incredibleindia/anand-bhawan-prayagraj-uttar-pradesh-2.jpg-attr-hero?qlt=82&ts=1742192953844",desc:"Nehru residence.",fee:"₹30",timing:"9AM–5PM"},
+{name:"Khusro Bagh",city:"Prayagraj",type:"heritage",lat:25.44,lng:81.83,trend:4,img:"https://www.trawell.in/admin/images/upload/630209249Allahabad_Khusro_Bagh_Main.jpg",desc:"Mughal garden tombs.",fee:"Free",timing:"6AM–6PM"},
+{name:"Hanuman Temple",city:"Prayagraj",type:"temple",lat:25.43,lng:81.84,trend:4,img:"https://www.tourmyindia.com/states/uttarpradesh/images/lord-hanuman-mandir-prayagraj.jpg",desc:"Reclining Hanuman.",fee:"Free",timing:"5AM–10PM"},
 
 /* ================= EXTRA DISTRICTS (50+) ================= */
 // Gorakhpur
-{name:"Gorakhnath Temple",city:"Gorakhpur",type:"temple",lat:26.76,lng:83.37,trend:5,img:"https://source.unsplash.com/400x300/?temple",desc:"Famous Nath temple.",fee:"Free",timing:"5AM–10PM"},
-{name:"Railway Museum",city:"Gorakhpur",type:"heritage",lat:26.75,lng:83.37,trend:3,img:"https://source.unsplash.com/400x300/?museum",desc:"Railway history.",fee:"₹20",timing:"10AM–5PM"},
+{name:"Gorakhnath Temple",city:"Gorakhpur",type:"temple",lat:26.76,lng:83.37,trend:5,img:"https://substack-video.s3.amazonaws.com/video_upload/post/161940721/9ef2d3ea-ca2d-4ace-8da3-8ed68fb0506a/transcoded-1745380938.png",desc:"Famous Nath temple.",fee:"Free",timing:"5AM–10PM"},
+{name:"Railway Museum",city:"Gorakhpur",type:"heritage",lat:26.75,lng:83.37,trend:3,img:"https://www.tourmyindia.com/states/uttarpradesh/images/railway-museum-gorakhpur.jpg",desc:"Railway history.",fee:"₹20",timing:"10AM–5PM"},
 
 // Jhansi
-{name:"Jhansi Fort",city:"Jhansi",type:"heritage",lat:25.448,lng:78.568,trend:5,img:"https://source.unsplash.com/400x300/?fort",desc:"Rani Lakshmi Bai fort.",fee:"₹25",timing:"6AM–6PM"},
+{name:"Jhansi Fort",city:"Jhansi",type:"heritage",lat:25.448,lng:78.568,trend:5,img:"https://www.tourmyindia.com/socialimg/jhansi-fort.jpg",desc:"Rani Lakshmi Bai fort.",fee:"₹25",timing:"6AM–6PM"},
 
 // Mirzapur
-{name:"Vindhyachal Temple",city:"Mirzapur",type:"temple",lat:25.16,lng:82.66,trend:5,img:"https://source.unsplash.com/400x300/?temple",desc:"Shaktipeeth.",fee:"Free",timing:"5AM–10PM"},
-{name:"Chunar Fort",city:"Mirzapur",type:"heritage",lat:25.13,lng:82.88,trend:4,img:"https://source.unsplash.com/400x300/?fort",desc:"Historic fort.",fee:"₹20",timing:"Sunrise–Sunset"},
+{name:"Vindhyachal Temple",city:"Mirzapur",type:"temple",lat:25.16,lng:82.66,trend:5,img:"https://temple.yatradham.org/public/Product/temple/temple_Klmue7RQ_202408131457590.webp",desc:"Shaktipeeth.",fee:"Free",timing:"5AM–10PM"},
+{name:"Chunar Fort",city:"Mirzapur",type:"heritage",lat:25.13,lng:82.88,trend:4,img:"https://s7ap1.scene7.com/is/image/incredibleindia/chunar-fort-varanasi-1-attr-hero?qlt=82&ts=1727353274712",desc:"Historic fort.",fee:"₹20",timing:"Sunrise–Sunset"},
 
 // Lakhimpur
-{name:"Dudhwa National Park",city:"Lakhimpur",type:"nature",lat:28.3,lng:80.7,trend:5,img:"https://source.unsplash.com/400x300/?wildlife",desc:"Wildlife sanctuary.",fee:"₹150",timing:"6AM–6PM"},
+{name:"Dudhwa National Park",city:"Lakhimpur",type:"nature",lat:28.3,lng:80.7,trend:5,img:"https://www.naturesafariindia.com/wp-content/uploads/2019/06/Dudhwa-National-Park-Tigers-vs-Elephants-1-930x600.jpg",desc:"Wildlife sanctuary.",fee:"₹150",timing:"6AM–6PM"},
 
 // Noida
-{name:"Okhla Bird Sanctuary",city:"Noida",type:"nature",lat:28.55,lng:77.32,trend:4,img:"https://source.unsplash.com/400x300/?birds",desc:"Bird watching spot.",fee:"₹30",timing:"7AM–5PM"},
+{name:"Okhla Bird Sanctuary",city:"Noida",type:"nature",lat:28.55,lng:77.32,trend:4,img:"https://www.hoteldekho.com/storage/img/tourattraction/1650717680okhla%20bird%20sanctuary%20noida.jpg",desc:"Bird watching spot.",fee:"₹30",timing:"7AM–5PM"},
 
 // Kanpur
-{name:"JK Temple",city:"Kanpur",type:"temple",lat:26.47,lng:80.33,trend:4,img:"https://source.unsplash.com/400x300/?temple",desc:"Modern temple.",fee:"Free",timing:"5AM–9PM"},
-{name:"Allen Forest Zoo",city:"Kanpur",type:"nature",lat:26.49,lng:80.35,trend:4,img:"https://source.unsplash.com/400x300/?zoo",desc:"Largest zoo.",fee:"₹50",timing:"8AM–5PM"},
+{name:"JK Temple",city:"Kanpur",type:"temple",lat:26.47,lng:80.33,trend:4,img:"https://media.assettype.com/knocksense%2Fimport%2F27269521%2Forigin.jpg",desc:"Modern temple.",fee:"Free",timing:"5AM–9PM"},
+{name:"Allen Forest Zoo",city:"Kanpur",type:"nature",lat:26.49,lng:80.35,trend:4,img:"https://hblimg.mmtcdn.com/content/hubble/img/kanpur/mmt/activities/m_Allen%20Forest%20Zoo-1_l_316_422.jpg?im=Resize=(412,347.56)",desc:"Largest zoo.",fee:"₹50",timing:"8AM–5PM"},
 
 // Meerut
-{name:"Augarnath Temple",city:"Meerut",type:"temple",lat:28.99,lng:77.7,trend:4,img:"https://source.unsplash.com/400x300/?temple",desc:"Historic temple.",fee:"Free",timing:"5AM–9PM"},
+{name:"Augarnath Temple",city:"Meerut",type:"temple",lat:28.99,lng:77.7,trend:4,img:"https://www.tourmyindia.com/socialimg/augarnath-temple-meerut.jpg",desc:"Historic temple.",fee:"Free",timing:"5AM–9PM"},
 
 // Bareilly
-{name:"Alakhnath Temple",city:"Bareilly",type:"temple",lat:28.37,lng:79.43,trend:4,img:"https://source.unsplash.com/400x300/?temple",desc:"Shiva temple.",fee:"Free",timing:"5AM–9PM"},
+{name:"Alakhnath Temple",city:"Bareilly",type:"temple",lat:28.37,lng:79.43,trend:4,img:"https://temple.yatradham.org/public/Product/temple/temple_CMa3ul8M_202409061648320.jpg",desc:"Shiva temple.",fee:"Free",timing:"5AM–9PM"},
 
 // Aligarh
-{name:"Aligarh Fort",city:"Aligarh",type:"heritage",lat:27.88,lng:78.07,trend:3,img:"https://source.unsplash.com/400x300/?fort",desc:"Historic fort.",fee:"₹20",timing:"Sunrise–Sunset"},
+{name:"Aligarh Fort",city:"Aligarh",type:"heritage",lat:27.88,lng:78.07,trend:3,img:"https://holaciti.com/assets/place/1766076929place.webp",desc:"Historic fort.",fee:"₹20",timing:"Sunrise–Sunset"},
 
-{name:"Dudhwa National Park",city:"Lakhimpur",type:"nature",lat:28.3,lng:80.7,trend:5,img:"https://source.unsplash.com/400x300/?wildlife",desc:"Wildlife sanctuary.",fee:"₹150",timing:"6AM–6PM"}
+{name:"Dudhwa National Park",city:"Lakhimpur",type:"nature",lat:28.3,lng:80.7,trend:5,img:"https://upecotourism.in/images/destination/dudhwa/dudhwa-left.jpg",desc:"Wildlife sanctuary.",fee:"₹150",timing:"6AM–6PM"}
 ];
 
 /* 🔥 RENDER */
