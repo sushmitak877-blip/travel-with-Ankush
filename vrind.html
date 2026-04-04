@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Vrindavan, Mathura, Barsana, Govardhan Travel App</title>
+<title>Braj Region Travel App</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
 <style>
@@ -95,9 +96,10 @@ box-shadow:0 -2px 15px rgba(0,0,0,0.2);
 
 <div style="padding:10px;">
 <span style="cursor:pointer;color:#007bff;font-weight:600;" onclick="goBack()">⬅ Back</span>
-</div
+</div>
 
 <body>
+
 <header>
 <h2>Braj Region Travel App 🌸</h2>
 <p id="status">📍 Detecting location...</p>
@@ -108,10 +110,7 @@ box-shadow:0 -2px 15px rgba(0,0,0,0.2);
 <select id="filter">
 <option value="all">All</option>
 <option value="temple">Temple</option>
-<option value="restaurant">Restaurant</option>
-<option value="ghat">Ghat</option>
-<option value="cafe">Café</option>
-<option value="adventure">Adventure</option>
+<option value="restaurant">Food</option>
 </select>
 </div>
 
@@ -134,42 +133,40 @@ let userLat=null,userLng=null,userMarker=null;
 
 const places=[
 /* ========== Vrindavan Temples ========== */
-{name:"Banke Bihari Temple",town:"Vrindavan",lat:27.5728,lng:77.6788,img:"https://source.unsplash.com/400x300/?temple,krishna",desc:"Famous Krishna temple in Vrindavan.",fare:"Free",travel:"Auto ₹30 / Cab ₹150",type:"temple",timing:"06:00 AM - 09:00 PM"},
-{name:"ISKCON Temple",town:"Vrindavan",lat:27.5715,lng:77.6820,img:"https://source.unsplash.com/400x300/?iskcon",desc:"International Krishna Consciousness temple.",fare:"Free",travel:"Auto ₹40 / Cab ₹150",type:"temple",timing:"05:30 AM - 08:30 PM"},
-{name:"Prem Mandir",town:"Vrindavan",lat:27.5800,lng:77.6850,img:"https://source.unsplash.com/400x300/?premmandir",desc:"Beautiful marble temple dedicated to Radha Krishna.",fare:"Free",travel:"Auto ₹50 / Cab ₹150",type:"temple",timing:"07:00 AM - 09:30 PM"},
-{name:"Radha Raman Temple",town:"Vrindavan",lat:27.5735,lng:77.6775,img:"https://source.unsplash.com/400x300/?radharaman",desc:"Historical temple of Radha Krishna.",fare:"Free",travel:"Auto ₹30",type:"temple",timing:"06:00 AM - 09:00 PM"},
-{name:"Nidhivan Temple",town:"Vrindavan",lat:27.5690,lng:77.6780,img:"https://source.unsplash.com/400x300/?nidhivan",desc:"Sacred forest temple.",fare:"Free",travel:"Auto ₹40",type:"temple",timing:"05:30 AM - 08:30 PM"},
-
-/* ========== Vrindavan Cafés ========== */
-{name:"Vishnu Café",town:"Vrindavan",lat:27.5730,lng:77.6805,img:"https://source.unsplash.com/400x300/?cafe,vrindavan",desc:"Cozy café with snacks & tea.",fare:"₹150 avg",travel:"Walk",type:"cafe",timing:"08:00 AM - 09:00 PM"},
+{name:"Banke Bihari Temple",town:"Vrindavan",lat:27.5728,lng:77.6788,img:"https://static.wixstatic.com/media/d61bdf_16fd8552a8814f4285342d35da08cbdd~mv2.jpg/v1/fill/w_980,h_515,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/d61bdf_16fd8552a8814f4285342d35da08cbdd~mv2.jpg",desc:"Famous Krishna temple in Vrindavan.",fare:"Free",travel:"Auto ₹30 / Cab ₹150",type:"temple",timing:"06:00 AM - 09:00 PM"},
+{name:"ISKCON Temple",town:"Vrindavan",lat:27.5715,lng:77.6820,img:"https://mathuravrindavantourism.co.in/images/places-to-visit/headers/krishna-balaram-mandir-iskcon-vrindavan-mathura-indian-tourism-header-small.jpg",desc:"International Krishna Consciousness temple.",fare:"Free",travel:"Auto ₹40 / Cab ₹150",type:"temple",timing:"05:30 AM - 08:30 PM"},
+{name:"Prem Mandir",town:"Vrindavan",lat:27.5800,lng:77.6850,img:"https://d34vm3j4h7f97z.cloudfront.net/optimized/4X/c/f/2/cf293bd7dfd3abfbc657907fe0ebf8aca779dbfa_2_683x500.jpeg",desc:"Beautiful marble temple dedicated to Radha Krishna.",fare:"Free",travel:"Auto ₹50 / Cab ₹150",type:"temple",timing:"07:00 AM - 09:30 PM"},
+{name:"Radha Raman Temple",town:"Vrindavan",lat:27.5735,lng:77.6775,img:"https://upload.wikimedia.org/wikipedia/commons/c/ce/Radha_Raman_Temple_2.jpg",desc:"Historical temple of Radha Krishna.",fare:"Free",travel:"Auto ₹30",type:"temple",timing:"06:00 AM - 09:00 PM"},
+{name:"Nidhivan Temple",town:"Vrindavan",lat:27.5690,lng:77.6780,img:"https://shrimathuraji.com/wp-content/uploads/2024/04/nidhivan-temples-vrindavan.jpg",desc:"Sacred forest temple.",fare:"Free",travel:"Auto ₹40",type:"temple",timing:"05:30 AM - 08:30 PM"},
+{name:"Chandra Udyog Mandir",town:"Vrindavan",lat:27.5705,lng:77.6765,img:"https://english.cdn.zeenews.com/sites/default/files/2024/11/20/1585845-vrindavanchandrodayamandir.jpg",desc:"Historic industrial temple in Vrindavan.",fare:"Free",travel:"Auto ₹40",type:"temple",timing:"06:00 AM - 09:00 PM"},
 
 /* ========== Mathura Temples ========== */
-{name:"Shri Krishna Janmabhoomi",town:"Mathura",lat:27.4920,lng:77.6737,img:"https://source.unsplash.com/400x300/?mathura,temple",desc:"Birthplace of Lord Krishna.",fare:"Free",travel:"Auto ₹50",type:"temple",timing:"04:30 AM - 08:00 PM"},
-{name:"Dwarkadhish Temple",town:"Mathura",lat:27.4940,lng:77.6720,img:"https://source.unsplash.com/400x300/?dwarkadhish",desc:"Famous temple dedicated to Krishna.",fare:"Free",travel:"Auto ₹50",type:"temple",timing:"05:00 AM - 08:30 PM"},
-{name:"Vishram Ghat",town:"Mathura",lat:27.4924,lng:77.6737,img:"https://source.unsplash.com/400x300/?ganga,ghat",desc:"Pilgrimage ghat on Ganga.",fare:"Free",travel:"Walk / Auto ₹30",type:"ghat",timing:"05:00 AM - 08:00 PM"},
-{name:"Radha Kund",town:"Mathura",lat:27.4980,lng:77.6750,img:"https://source.unsplash.com/400x300/?radhakund",desc:"Sacred kund for devotees.",fare:"Free",travel:"Auto ₹50",type:"ghat",timing:"05:00 AM - 07:00 PM"},
-{name:"Mathura Food Court",town:"Mathura",lat:27.4950,lng:77.6750,img:"https://source.unsplash.com/400x300/?food,mathura",desc:"Popular local food spot.",fare:"₹300 avg",travel:"Walk / Auto ₹20",type:"restaurant",timing:"10:00 AM - 10:30 PM"},
+{name:"Shri Krishna Janmabhoomi",town:"Mathura",lat:27.4920,lng:77.6737,img:"https://www.trawell.in/admin/images/upload/103055465Mathura_Krishna_Janmabhoomi_Temple_Main.jpg",desc:"Birthplace of Lord Krishna.",fare:"Free",travel:"Auto ₹50",type:"temple",timing:"04:30 AM - 08:00 PM"},
+{name:"Dwarkadhish Temple",town:"Mathura",lat:27.4940,lng:77.6720,img:"https://www.astroved.com/astropedia/assets/images/temples/dwarkadhish.jpg",desc:"Famous temple dedicated to Krishna.",fare:"Free",travel:"Auto ₹50",type:"temple",timing:"05:00 AM - 08:30 PM"},
+{name:"Vishram Ghat",town:"Mathura",lat:27.4924,lng:77.6737,img:"https://s7ap1.scene7.com/is/image/incredibleindia/vishram-ghat-mathura-uttar-pradesh-3-attr-hero?qlt=82&ts=1726649181536",desc:"Pilgrimage ghat on Ganga.",fare:"Free",travel:"Walk / Auto ₹30",type:"temple",timing:"05:00 AM - 08:00 PM"},
+{name:"Radha Kund",town:"Mathura",lat:27.4980,lng:77.6750,img:"https://upload.wikimedia.org/wikipedia/commons/2/29/Radha_Kund_3.jpg",desc:"Sacred kund for devotees.",fare:"Free",travel:"Auto ₹50",type:"temple",timing:"05:00 AM - 07:00 PM"},
 
-/* ========== Govardhan Temples & Adventure ========== */
-{name:"Govardhan Hill & Temple",town:"Govardhan",lat:27.6370,lng:77.6930,img:"https://source.unsplash.com/400x300/?govardhan,temple",desc:"Sacred hill of Lord Krishna.",fare:"Free",travel:"Auto ₹80",type:"temple",timing:"05:00 AM - 07:30 PM"},
-{name:"Radha Kund Govardhan",town:"Govardhan",lat:27.6380,lng:77.6940,img:"https://source.unsplash.com/400x300/?govardhan,radhakund",desc:"Sacred pond near Govardhan.",fare:"Free",travel:"Walk / Auto ₹40",type:"ghat",timing:"05:30 AM - 08:00 PM"},
-{name:"Govardhan Parikrama Trail",town:"Govardhan",lat:27.6390,lng:77.6950,img:"https://source.unsplash.com/400x300/?hiking,govardhan",desc:"Walking trail around Govardhan Hill.",fare:"Free",travel:"Walk",type:"adventure",timing:"05:00 AM - 07:00 PM"},
-{name:"Govardhan Adventure Camp",town:"Govardhan",lat:27.6400,lng:77.6960,img:"https://source.unsplash.com/400x300/?adventure,govardhan",desc:"Outdoor activities & camping.",fare:"₹500 per person",travel:"Auto ₹50",type:"adventure",timing:"07:00 AM - 06:00 PM"},
-{name:"Govardhan Restaurant",town:"Govardhan",lat:27.6385,lng:77.6950,img:"https://source.unsplash.com/400x300/?restaurant,govardhan",desc:"Tasty food near temple.",fare:"₹350 avg",travel:"Walk / Auto ₹30",type:"restaurant",timing:"09:00 AM - 09:00 PM"},
+/* ========== Govardhan Temples ========== */
+{name:"Govardhan Hill & Temple",town:"Govardhan",lat:27.6370,lng:77.6930,img:"https://mathuravrindavancity.com/wp-content/uploads/2025/06/Agra-Taj-Mahal-Timings-4.webp",desc:"Sacred hill of Lord Krishna.",fare:"Free",travel:"Auto ₹80",type:"temple",timing:"05:00 AM - 07:30 PM"},
+{name:"Radha Kund Govardhan",town:"Govardhan",lat:27.6380,lng:77.6940,img:"https://cdn1.tripoto.com/media/filter/nl/img/2380291/Image/1702207157_kusum_sarovar_3.jpeg.webp",desc:"Sacred pond near Govardhan.",fare:"Free",travel:"Walk / Auto ₹40",type:"temple",timing:"05:30 AM - 08:00 PM"},
 
-/* ========== Barsana Temples & Food ========== */
-{name:"Barsana Radha Rani Temple",town:"Barsana",lat:27.6660,lng:77.7040,img:"https://source.unsplash.com/400x300/?barsana,temple",desc:"Temple dedicated to Radha.",fare:"Free",travel:"Auto ₹70",type:"temple",timing:"06:00 AM - 08:00 PM"},
-{name:"Chaturbhuj Temple",town:"Barsana",lat:27.6670,lng:77.7050,img:"https://source.unsplash.com/400x300/?chaturbhuj,barsana",desc:"Famous temple in Barsana.",fare:"Free",travel:"Auto ₹70",type:"temple",timing:"06:00 AM - 08:30 PM"},
-{name:"Barsana Food Point",town:"Barsana",lat:27.6675,lng:77.7060,img:"https://source.unsplash.com/400x300/?restaurant,barsana",desc:"Local vegetarian food.",fare:"₹250 avg",travel:"Walk / Auto ₹30",type:"restaurant",timing:"09:00 AM - 09:30 PM"},
+/* ========== Barsana Temples ========== */
+{name:"Barsana Radha Rani Temple",town:"Barsana",lat:27.6660,lng:77.7040,img:"https://touristdestinationoffbeat.wordpress.com/wp-content/uploads/2021/09/images-2021-09-13t102044.972-01.jpeg?w=678",desc:"Temple dedicated to Radha.",fare:"Free",travel:"Auto ₹70",type:"temple",timing:"06:00 AM - 08:00 PM"},
+{name:"Chaturbhuj Temple",town:"Barsana",lat:27.6670,lng:77.7050,img:"https://upload.wikimedia.org/wikipedia/commons/4/48/Chaturbhuj_Temple%2C_Orchha.jpg",desc:"Famous temple in Barsana.",fare:"Free",travel:"Auto ₹70",type:"temple",timing:"06:00 AM - 08:30 PM"},
 
-/* Additional places can be added similarly to reach 50+ entries */
+/* ========== Food / Restaurants ========== */
+{name:"Local Restaurant, Vrindavan",town:"Vrindavan",lat:27.5720,lng:77.6800,img:"https://content.jdmagicbox.com/v2/comp/mumbai/d2/022pxx22.xx22.231212195715.g8d2/catalogue/vrindavan-pure-veg-dombivli-east-thane-restaurants-8noaadt8qu.jpg",desc:"Local food spot.",fare:"₹250 avg",travel:"Walk",type:"restaurant",timing:"10:00 AM - 10:00 PM"},
+{name:"Mathura Food Court",town:"Mathura",lat:27.4950,lng:77.6750,img:"https://mathuravrindavancity.com/wp-content/uploads/2025/06/Famous-Food-in-Mathura-Vrindavan.webp",desc:"Popular local food spot.",fare:"₹300 avg",travel:"Walk / Auto ₹20",type:"restaurant",timing:"10:00 AM - 10:30 PM"},
+{name:"Govardhan Restaurant",town:"Govardhan",lat:27.6385,lng:77.6950,img:"https://content.jdmagicbox.com/comp/kumta/v1/9999p8386.8386.211220001513.l6v1/catalogue/govardhan-restaurant-and-lodge-kumta-ho-kumta-zkecsxx9al.jpg",desc:"Tasty food near temple.",fare:"₹350 avg",travel:"Walk / Auto ₹30",type:"restaurant",timing:"09:00 AM - 09:00 PM"},
+{name:"Barsana Food Point",town:"Barsana",lat:27.6675,lng:77.7060,img:"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2f/3f/2a/b4/wonderful-place.jpg?w=900&h=500&s=1",desc:"Local vegetarian food.",fare:"₹250 avg",travel:"Walk / Auto ₹30",type:"restaurant",timing:"09:00 AM - 09:30 PM"},
+
+/* Add more temples / ghats / restaurants to reach 50+ entries (you can expand similarly) */
 ];
 
-/* Initialize Map */
 const map=L.map('map').setView([27.57,77.68],13);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-/* Live Location */
+/* 📍 LIVE LOCATION */
 function getLocation(){
 navigator.geolocation.watchPosition(pos=>{
 userLat=pos.coords.latitude;
@@ -187,7 +184,7 @@ render();
 });
 }
 
-/* Distance Calculation */
+/* 🌐 DISTANCE CALCULATION */
 function getDistance(lat1, lng1, lat2, lng2){
     const R = 6371;
     const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -200,11 +197,12 @@ function getDistance(lat1, lng1, lat2, lng2){
     return (R * c).toFixed(2);
 }
 
-/* Favorites */
+/* ❤️ FAVORITES */
 function toggleFav(name){
 let favs=JSON.parse(localStorage.getItem("favs"))||[];
-if(favs.includes(name)){favs=favs.filter(f=>f!==name);}
-else{favs.push(name);}
+if(favs.includes(name)){
+favs=favs.filter(f=>f!==name);
+}else{favs.push(name);}
 localStorage.setItem("favs",JSON.stringify(favs));
 render();
 }
@@ -213,26 +211,27 @@ let favs=JSON.parse(localStorage.getItem("favs"))||[];
 return favs.includes(name);
 }
 
-/* Rating */
+/* ⭐ RATING */
 function rate(name,val){
 localStorage.setItem(name,val);
 render();
 }
 
-/* Trip */
+/* 🧭 TRIP */
 function addToTrip(name){
 let trip=JSON.parse(localStorage.getItem("trip"))||[];
 trip.push(name);
 localStorage.setItem("trip",JSON.stringify(trip));
 alert("Added to Trip");
 }
+
 function showTrip(){
 let trip=JSON.parse(localStorage.getItem("trip"))||[];
 document.getElementById("tripBox").innerHTML=
 "<h3>🧭 Trip Plan</h3>"+trip.map(t=>"<p>"+t+"</p>").join("");
 }
 
-/* Render Cards */
+/* RENDER */
 function render(){
 let cards=document.getElementById("cards");
 cards.innerHTML="";
@@ -281,7 +280,8 @@ ${[1,2,3,4,5].map(n=>`<span class="star ${n<=rating?'active':''}" onclick="rate(
 
 </div>
 </div>
-`});
+`;
+});
 }
 
 document.getElementById("search").addEventListener("input",render);
@@ -290,5 +290,6 @@ document.getElementById("filter").addEventListener("change",render);
 getLocation();
 render();
 </script>
+
 </body>
 </html>
