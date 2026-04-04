@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Jyotirlinga Ancient Guide 🚩</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins', sans-serif;}
+body {
+  background: url('https://i.ibb.co/2sF6vBd/ancient-temple-bg.jpg') repeat;
+  background-size: cover;
+  padding-bottom:80px;
+}
+header{
+  background: linear-gradient(135deg,#FF9933,#FF6600);
+  color:white;text-align:center;padding:18px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.3);
+}
+header h2{
+  font-family:'Georgia',serif;
+  font-weight:bold;
+  text-shadow:2px 2px 5px #000;
+}
+header #status{
+  font-size:14px;
+  margin-top:5px;
+}
+.searchbar{
+  position:sticky;top:10px;z-index:999;
+  background:white;margin:10px;padding:12px;
+  border-radius:15px;
+  box-shadow:0 5px 20px rgba(0,0,0,0.2);
+  display:flex;gap:10px;
+}
+input,select{
+  padding:10px;border-radius:10px;border:1px solid #ccc;flex:1;
+}
+#map{height:400px;margin:10px;border-radius:15px;}
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:15px;padding:15px;
+}
+.card{
+  background:linear-gradient(to bottom,#fff8f0,#ffe6cc);
+  border-radius:15px;overflow:hidden;
+  box-shadow:0 10px 25px rgba(0,0,0,0.15);
+  transition:0.3s;
+}
+.card.highlight{
+  border:3px solid orange;
+  box-shadow:0 0 20px orange;
+}
+.card:hover{transform:translateY(-6px) scale(1.02);}
+.card img{width:100%;height:180px;object-fit:cover;}
+.card-content{padding:12px;}
+.card-content h3{margin-top:5px;}
+.card-content p{margin:4px 0;font-size:14px;color:#333;line-height:1.5;font-family:'Georgia',serif;}
+.btn-group{
+  display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;
+}
+.btn{
+  flex:1 1 calc(50% - 10px);
+  padding:10px;border:none;border-radius:12px;
+  color:white;font-weight:600;
+  cursor:pointer;transition:0.3s;
+}
+.btn.hotel{background:linear-gradient(135deg,#ff7e5f,#feb47b);}
+.btn.food{background:linear-gradient(135deg,#43cea2,#185a9d);}
+.btn.bus{background:linear-gradient(135deg,#ffcc33,#ff9900);}
+.btn.rail{background:linear-gradient(135deg,#6699ff,#3366cc);}
+.btn.direction{background:linear-gradient(135deg,#36d1dc,#5b86e5);}
+.btn:hover{transform:scale(1.05);}
+.bottom-nav{
+  position:fixed;bottom:0;width:100%;
+  background:white;display:flex;justify-content:space-around;
+  padding:12px;box-shadow:0 -2px 10px rgba(0,0,0,0.2);
+}
+</style>
+</head>
+<body>
+
+<header>
+<h2>Jyotirlinga Ancient Guide 🚩</h2>
+<p> Ankush Singh <p>
+<p id="status">📍 Detecting location...</p>
+</header>
+
+<div class="searchbar">
+  <input type="text" id="search" placeholder="Search Jyotirlinga..." />
+  <select id="filter">
+    <option value="all">All</option>
+    <option value="temple">Temple</option>
+  </select>
+</div>
+
+<div id="map"></div>
+<div class="cards" id="cards"></div>
+
+<div class="bottom-nav">
+<button onclick="window.scrollTo({top:0,behavior:'smooth'})">🏠</button>
+<button onclick="getLocation()">📍</button>
+<button onclick="document.getElementById('search').focus()">🔍</button>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+let map=L.map('map').setView([20.5937,78.9629],5);
+let userMarker=null;
+let userLat=null,userLng=null;
+let polyLines=[];
+
+// Jyotirlinga Data
+const jyotirlingas=[
+{name:"Somnath",state:"Gujarat",lat:20.8987,lng:70.4033,img:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Somanath_Temple.jpg/500px-Somanath_Temple.jpg",desc:"Located in Prabhas Patan, this is the first and most prominent Jyotirlinga. It has been rebuilt several times after being plundered, yet it stands as a symbol of resilience and faith.",fare:"Free Entry",open:"5:00 AM - 9:00 PM",type:"temple"},
+{name:"Mallikarjuna",state:"Andhra Pradesh",lat:16.0731,lng:79.0489,img:"https://static.toiimg.com/thumb/46918850/POI-2-Srisilam-Mallikarjunam_ed.jpg?width=1200&height=900",desc:"Found in Srisailam, this temple is a confluence of Shaivism and Shaktism, located on the banks of the Krishna River and surrounded by forested hills.",fare:"₹50",open:"6:00 AM - 8:00 PM",type:"temple"},
+{name:"Mahakaleshwar",state:"Madhya Pradesh",lat:23.2603,lng:75.1500,img:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Mahakaleshwar_Temple%2C_Ujjain.jpg/1280px-Mahakaleshwar_Temple%2C_Ujjain.jpg",desc:"Situated in Ujjain, this is the only south-facing Jyotirlinga, which is said to protect devotees from untimely death. It’s one of the most visited temples in central India.",fare:"₹40",open:"6:00 AM - 8:00 PM",type:"temple"},
+{name:"Omkareshwar",state:"Madhya Pradesh",lat:22.2500,lng:75.8900,img:"https://www.indiantempletour.com/wp-content/uploads/2018/12/one-day-omkareshwar-jyotirlinga-sightseeing-tour-package-private-cab-one-day-travel-small.jpg",desc:"On an island shaped like the sacred Om symbol, this temple lies on the Narmada River and is a favourite among meditators and seekers of peace.",fare:"₹30",open:"5:30 AM - 8:30 PM",type:"temple"},
+{name:"Kedarnath",state:"Uttarakhand",lat:30.7352,lng:79.0660,img:"https://backpackclan.com/wp-content/uploads/2025/03/Ek-Dham.jpg",desc:"Perched high in the Garhwal Himalayas, Kedarnath is a difficult but spiritually rewarding trek, open only for six months due to extreme weather.",fare:"Free",open:"4:00 AM - 9:00 PM",type:"temple"},
+{name:"Bhimashankar",state:"Maharashtra",lat:19.2372,lng:73.5397,img:"https://www.yourvacationtrip.com/wp-content/uploads/2023/12/bhimashankar-jyotirlinga-travellersofindia.com_.jpg",desc:"Located amidst dense forests near Pune, this is one of the key spiritual places to visit in India where mythology and natural beauty merge. It’s also a hotspot for biodiversity and a top mention when exploring Jyotirlinga in Maharashtra.",fare:"₹20",open:"5:00 AM - 7:00 PM",type:"temple"},
+{name:"Kashi Vishwanath",state:"Uttar Pradesh",lat:25.3100,lng:83.0100,img:"https://substackcdn.com/image/fetch/$s_!arev!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ff235bf3d-2b54-48cc-935e-d1607aae9978_1920x1080.webp",desc:"One of the most revered temples in Varanasi, this Jyotirlinga is believed to grant moksha (liberation). It’s a must-visit for any spiritual itinerary.",fare:"₹25",open:"6:00 AM - 8:30 PM",type:"temple"},
+{name:"Trimbakeshwar",state:"Maharashtra",lat:19.9191,lng:73.5941,img:"https://temple.yatradham.org/public/Product/temple/temple_pH7z7Mka_202506241436590.webp",desc:"Located near Nashik, it’s unique for housing three lingas representing Brahma, Vishnu,and Shiva — symbolising the trinity of creation.",fare:"₹30",open:"5:00 AM - 8:00 PM",type:"temple"},
+{name:"Vaidyanath",state:"Jharkhand",lat:24.2080,lng:86.6760,img:"https://holaciti.com/assets/Articles/1766544982_s3TuC0aZSf.webp",desc:"Also known as Baidyanath Dham, this temple is associated with healing and wellness. Pilgrims often walk barefoot for days to reach here during the Shravana month.",fare:"₹10",open:"5:30 AM - 8:30 PM",type:"temple"},
+{name:"Nageshwar",state:"Gujarat",lat:22.2167,lng:70.0500,img:"https://hblimg.mmtcdn.com/content/hubble/img/dwarka/mmt/activities/m_activities_dwarka_nageshwar_jyotirlinga_l_501_751.jpg",desc:"Near Dwarka, this Jyotirlinga represents protection from all physical and metaphorical poisons. The temple features a massive Shiva statue that’s hard to miss.",fare:"Free Entry",open:"6:00 AM - 8:00 PM",type:"temple"},
+{name:"Rameshwaram",state:"Tamil Nadu",lat:9.2885,lng:79.3129,img:"https://www.sanatan.org/en/wp-content/uploads/sites/6/2017/12/Rameshwaram_600.jpg",desc:"This coastal temple in southern India is closely linked to the Ramayana. It’s also one of the four sacred Char Dhams of Hinduism and one of the most serene spiritual places to visit in India.",fare:"₹50",open:"5:00 AM - 7:00 PM",type:"temple"},
+{name:"Grishneshwar",state:"Maharashtra",lat:20.0014,lng:75.7745,img:"https://s7ap1.scene7.com/is/image/incredibleindia/grishneshwar-temple-chhatrapati-sambhaji-nagar-maharashtra-grishneshwar-temple1-attr-hero?qlt=82&ts=1727010624846",desc:"Just a few kilometres from the Ellora caves, this is the twelfth and final Jyotirlinga, known for its red sandstone structure and spiritual tranquillity. Add it to your list when exploring how to visit Jyotirlinga in Maharashtra",fare:"₹20",open:"6:00 AM - 8:00 PM",type:"temple"}
+];
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+function haversineDistance(lat1, lon1, lat2, lon2){
+    const R = 6371;
+    const dLat=(lat2-lat1)*Math.PI/180;
+    const dLon=(lon2-lon1)*Math.PI/180;
+    const a=Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+    const c=2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R*c;
+}
+
+function render(){
+    const cards=document.getElementById("cards");
+    cards.innerHTML="";
+    let search=document.getElementById("search").value.toLowerCase();
+    let filter=document.getElementById("filter").value;
+
+    // compute distance from live location
+    let distances=[];
+    jyotirlingas.forEach(p=>{
+        let dist=userLat?haversineDistance(userLat,userLng,p.lat,p.lng).toFixed(1):'...';
+        distances.push({name:p.name,dist:dist});
+    });
+
+    let nearestTop=distances.reduce((prev,curr)=>{
+        if(prev.dist==='...' || curr.dist==='...') return prev;
+        return Number(curr.dist)<Number(prev.dist)?curr:prev;
+    },distances[0]);
+
+    // clear old polylines
+    polyLines.forEach(line=>map.removeLayer(line));
+    polyLines=[];
+
+    jyotirlingas.filter(p=>p.name.toLowerCase().includes(search) && (filter==='all'||p.type===filter))
+    .forEach(p=>{
+        let dist=userLat?haversineDistance(userLat,userLng,p.lat,p.lng).toFixed(1):'...';
+        let highlight=(nearestTop.name===p.name)?'highlight':'';
+        cards.innerHTML+=`
+        <div class="card ${highlight}">
+          <img src="${p.img}">
+          <div class="card-content">
+            <h3>${p.name}</h3>
+            <p><b>State:</b> ${p.state}</p>
+            <p><b>Distance:</b> ${dist} km</p>
+            <p><b>Fare:</b> ${p.fare}</p>
+            <p><b>Open Timing:</b> ${p.open}</p>
+            <p class="desc"><b>Description:</b> ${p.desc}</p>
+            <div class="btn-group">
+              <button class="btn hotel" onclick="window.open('https://www.google.com/search?q=hotels+near+${p.name}')">🏨 Hotel</button>
+              <button class="btn food" onclick="window.open('https://www.google.com/search?q=restaurants+near+${p.name}')">🍽️ Food</button>
+              <button class="btn bus" onclick="window.open('https://www.google.com/search?q=bus+stop+near+${p.name}')">🚌 Bus Stop</button>
+              <button class="btn rail" onclick="window.open('https://www.google.com/search?q=railway+station+near+${p.name}')">🛤️ Railway</button>
+              <button class="btn direction" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}')">🧭 Directions</button>
+            </div>
+          </div>
+        </div>`;
+        if(userLat){
+            let line=L.polyline([[userLat,userLng],[p.lat,p.lng]],{color:(highlight?'orange':'blue'),weight:2,opacity:0.5}).addTo(map);
+            polyLines.push(line);
+        }
+    });
+}
+
+function getLocation(){
+    if(navigator.geolocation){
+        navigator.geolocation.watchPosition(pos=>{
+            userLat=pos.coords.latitude;
+            userLng=pos.coords.longitude;
+            document.getElementById("status").innerText=`📍 Live Location Active: ${userLat.toFixed(4)}, ${userLng.toFixed(4)}`;
+
+            if(userMarker) userMarker.setLatLng([userLat,userLng]);
+            else userMarker=L.marker([userLat,userLng],{icon:L.icon({iconUrl:'https://cdn-icons-png.flaticon.com/512/64/64113.png',iconSize:[30,30]})}).addTo(map).bindPopup("You are here").openPopup();
+
+            map.setView([userLat,userLng],6);
+            render();
+        });
+    }else{
+        document.getElementById("status").innerText="⚠️ Geolocation not supported";
+    }
+}
+
+document.getElementById("search").addEventListener("input",render);
+document.getElementById("filter").addEventListener("change",render);
+
+getLocation();
+render();
+</script>
+</body>
+</html>
