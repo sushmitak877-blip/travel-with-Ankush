@@ -3,84 +3,51 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="google-site-verification" content="IeXNXS5j1IXc7ObZnnRG5pekD4sqrTBoztCeobZ8vfY" />
 <title>Travel With Ankur</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins;}
+
+body{
+  background: linear-gradient(rgba(10,15,25,0.7), rgba(10,15,25,0.9)),
+  url('https://image2url.com/r2/default/images/1775671877256-112e9310-af8e-4988-b901-edae930a62f4.png');
+  background-size:cover;
+  color:#fff;
+}
+
+/* HEADER */
 .header{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:20px 40px;
+  padding:15px 20px;
   background: rgba(0,0,0,0.5);
-  backdrop-filter: blur(10px);
-}
-
-.title{
-  text-align:center;
-  flex:1;
-  color:white;
 }
 
 .logo{
-  width:60px;
-  height:60px;
-  border-radius:50%;
-  object-fit:cover;
-  border:3px solid #00d4ff;
-  box-shadow:0 0 10px rgba(0,212,255,0.6);
+  width:50px;height:50px;border-radius:50%;
 }
 
-.left-logo{
-  margin-right:20px;
-}
+.title{flex:1;text-align:center;}
+.title h1{color:#00f2fe;font-size:24px;}
 
-.right-logo{
-  margin-left:20px;
-}
-*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins;}
+#userSection{text-align:right;}
 
-body{
-  background:
-    linear-gradient(rgba(10,15,25,0.7), rgba(10,15,25,0.9)),
-    url('https://image2url.com/r2/default/images/1775671877256-112e9310-af8e-4988-b901-edae930a62f4.png');
-  background-size:cover;
-  background-position:center;
-  background-attachment:fixed;
-  color:#eaf3ff;
-}
-
-header{
-  padding:30px 20px;
-  text-align:center;
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(15px);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-}
-
-header h1{
-  font-size:38px;
-  background: linear-gradient(90deg,#00f2fe,#4facfe);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-
-header p{font-size:15px;color:#cfd9ff;}
-
+/* SEARCH */
 .search-box{text-align:center;padding:15px;}
 .search-box input{
-  width:60%;padding:14px;border-radius:30px;border:none;
-  background: rgba(255,255,255,0.08);color:#fff;
-}
-.btn{
-  padding:12px 18px;border:none;border-radius:30px;
-  background: linear-gradient(45deg,#4facfe,#00f2fe);
-  color:#fff;cursor:pointer;margin-left:10px;
+  width:60%;padding:12px;border-radius:20px;border:none;
 }
 
+/* BUTTON */
+.btn{
+  padding:10px 15px;border:none;border-radius:20px;
+  background:#00f2fe;color:#000;cursor:pointer;margin-top:5px;
+}
+
+/* CARDS */
 .container{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
@@ -88,503 +55,45 @@ header p{font-size:15px;color:#cfd9ff;}
 }
 
 .card{
-  background: rgba(30,42,56,0.7);
-  border-radius:15px;
+  background:rgba(0,0,0,0.6);
+  border-radius:10px;
   overflow:hidden;
   transition:0.3s;
 }
+
 .card:hover{transform:scale(1.03);}
-.card img{width:100%;height:200px;object-fit:cover;}
-.card-content{padding:15px;}
+
+.card img{width:100%;height:180px;object-fit:cover;}
+.card-content{padding:10px;}
 
 .highlight{
   border:2px solid #00ffcc;
-  box-shadow:0 0 20px #00ffcc;
-}
-
-.distance{font-size:14px;margin-top:5px;}
-.weather{font-size:14px;margin-top:3px;color:#aeefff;}
-/* 🔍 SEARCH BOX HIGHLIGHT */
-.search-box input:focus{
-  outline:none;
-  border:2px solid #00f2fe;
-  box-shadow:0 0 15px #00f2fe, 0 0 30px rgba(0,242,254,0.5);
-  background: rgba(255,255,255,0.12);
-  transition:0.3s;
-}
-
-/* 🧭 BUTTON HIGHLIGHT */
-.btn{
-  position:relative;
-  overflow:hidden;
-  transition:0.3s;
-}
-
-.btn:hover{
-  transform:scale(1.05);
-  box-shadow:0 0 15px #00f2fe, 0 0 25px rgba(0,242,254,0.6);
-}
-
-/* glowing animation */
-.btn::before{
-  content:"";
-  position:absolute;
-  top:0;
-  left:-100%;
-  width:100%;
-  height:100%;
-  background:linear-gradient(120deg,transparent,rgba(255,255,255,0.4),transparent);
-  transition:0.5s;
-}
-
-.btn:hover::before{
-  left:100%;
-}
-
-/* 🌀 LOGO HIGHLIGHT ANIMATION */
-.logo{
-  transition:0.4s;
-}
-
-.logo:hover{
-  transform:scale(1.1) rotate(5deg);
-  box-shadow:0 0 20px #00f2fe, 0 0 40px rgba(0,242,254,0.7);
-}
-
-/* optional glowing pulse */
-@keyframes glowPulse{
-  0%{box-shadow:0 0 10px #00d4ff;}
-  50%{box-shadow:0 0 25px #00f2fe;}
-  100%{box-shadow:0 0 10px #00d4ff;}
-}
-
-.left-logo, .right-logo{
-  animation:glowPulse 2s infinite;
-}
-/* 🔍 ALWAYS HIGHLIGHT SEARCH BOX */
-.search-box input{
-  border:2px solid #00f2fe;
-  box-shadow:0 0 15px #00f2fe, 0 0 30px rgba(0,242,254,0.6);
-  background: rgba(255,255,255,0.12);
-  transition:0.3s;
-}
-
-/* optional stronger glow on focus */
-.search-box input:focus{
-  box-shadow:0 0 20px #00f2fe, 0 0 40px rgba(0,242,254,0.9);
-}
-
-/* 🌀 ALWAYS HIGHLIGHT LOGOS */
-.logo{
-  border:3px solid #00f2fe;
-  box-shadow:0 0 20px #00f2fe, 0 0 40px rgba(0,242,254,0.7);
-  animation:logoGlow 2s infinite alternate;
-}
-
-/* 🔥 glowing animation */
-@keyframes logoGlow{
-  0%{
-    box-shadow:0 0 10px #00d4ff, 0 0 20px rgba(0,212,255,0.5);
-  }
-  100%{
-    box-shadow:0 0 25px #00f2fe, 0 0 50px rgba(0,242,254,0.9);
-  }
-}
-/* ✨ GLOWING TITLE (Eat With Travel) */
-.title h1{
-  font-size:38px;
-  background: linear-gradient(90deg,#00f2fe,#4facfe,#00f2fe);
-  background-size:200% auto;
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-
-  /* glow effect */
-  text-shadow:0 0 10px rgba(0,242,254,0.8),
-              0 0 20px rgba(0,242,254,0.6),
-              0 0 40px rgba(0,242,254,0.5);
-
-  animation:titleGlow 3s linear infinite;
-}
-
-/* moving gradient animation */
-@keyframes titleGlow{
-  0%{background-position:0% center;}
-  100%{background-position:200% center;}
-}
-/* 📱 MOBILE RESPONSIVE FIX */
-@media (max-width: 768px){
-
-  .header{
-    flex-direction:column;
-    text-align:center;
-    gap:10px;
-    padding:15px;
-  }
-
-  /* logos smaller on mobile */
-  .logo{
-    width:45px;
-    height:45px;
-  }
-
-  /* remove side spacing */
-  .left-logo,
-  .right-logo{
-    margin:0;
-  }
-
-  /* title adjust */
-  .title h1{
-    font-size:26px;
-    line-height:1.2;
-  }
-
-  .title p{
-    font-size:13px;
-  }
-
-  /* search box full width */
-  .search-box input{
-    width:90%;
-  }
-
-  /* buttons spacing */
-  .btn{
-    margin-top:10px;
-  }
-}
-/* 📱 FINAL MOBILE FIX (DO NOT CHANGE EXISTING CODE) */
-@media screen and (max-width: 600px){
-
-  /* make logos small on phone */
-  .logo{
-    width:35px !important;
-    height:35px !important;
-  }
-
-  /* reduce title size */
-  .title h1{
-    font-size:22px !important;
-  }
-
-  /* adjust header spacing */
-  .header{
-    padding:10px 15px !important;
-  }
-
-  /* reduce logo spacing */
-  .left-logo{
-    margin-right:8px !important;
-  }
-
-  .right-logo{
-    margin-left:8px !important;
-  }
-
-  /* search full width */
-  .search-box input{
-    width:90% !important;
-  }
-
-}
-/* 📱 MOBILE CLEAN HEADER (ONLY ONE LOGO + LESS SPACE) */
-@media screen and (max-width: 600px){
-
-  /* hide right logo */
-  .right-logo{
-    display:none !important;
-  }
-
-  /* keep only left logo small */
-  .logo{
-    width:35px !important;
-    height:35px !important;
-  }
-
-  /* reduce header height */
-  header{
-    padding:10px 10px !important;
-  }
-
-  .header{
-    padding:8px 10px !important;
-  }
-
-  /* reduce title size */
-  .title h1{
-    font-size:20px !important;
-  }
-
-  .title p{
-    font-size:12px !important;
-  }
-
-  /* reduce gap below header */
-  .search-box{
-    padding:8px !important;
-  }
-
-  /* move search up */
-  .search-box input{
-    width:90% !important;
-  }
-
-}
-/* 📱 MOBILE SIDE-BY-SIDE HEADER (LOGO + TITLE INLINE) */
-@media screen and (max-width: 600px){
-
-  /* hide right logo */
-  .right-logo{
-    display:none !important;
-  }
-
-  /* make header in one line */
-  .header{
-    display:flex;
-    align-items:center;
-    justify-content:flex-start;
-    padding:8px 10px !important;
-    gap:10px;
-  }
-
-  /* small logo */
-  .logo{
-    width:32px !important;
-    height:32px !important;
-    margin:0 !important;
-  }
-
-  /* title next to logo */
-  .title{
-    text-align:left !important;
-  }
-
-  .title h1{
-    font-size:18px !important;
-    line-height:1.2;
-  }
-
-  .title p{
-    font-size:11px !important;
-  }
-
-  /* reduce header space */
-  header{
-    padding:8px 10px !important;
-  }
-
-  /* reduce gap below */
-  .search-box{
-    padding:8px !important;
-  }
-
-  /* search full width */
-  .search-box input{
-    width:90% !important;
-  }
-
-}
-/* 📱 PERFECT INLINE HEADER (LOGO + TITLE SAME LINE) */
-@media screen and (max-width: 600px){
-
-  /* hide right logo */
-  .right-logo{
-    display:none !important;
-  }
-
-  /* make header horizontal */
-  .header{
-    display:flex;
-    align-items:center;
-    justify-content:flex-start;
-    gap:8px;
-    padding:8px 10px !important;
-  }
-
-  /* remove center behavior */
-  .title{
-    flex:none !important;
-    text-align:left !important;
-  }
-
-  /* keep title in ONE LINE */
-  .title h1{
-    font-size:18px !important;
-    white-space:nowrap;   /* 🔥 IMPORTANT */
-    line-height:1;
-  }
-
-  /* optional: hide subtitle for space */
-  .title p{
-    display:none;
-  }
-
-  /* small logo */
-  .logo{
-    width:32px !important;
-    height:32px !important;
-    margin:0 !important;
-  }
-
-  /* reduce header spacing */
-  header{
-    padding:8px !important;
-  }
-
-  .search-box{
-    padding:8px !important;
-  }
-
-}
-/* 📱 SEARCH + BUTTON MOBILE FIX */
-@media screen and (max-width: 600px){
-
-  /* stack search + button */
-  .search-box{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:10px;
-    padding:8px !important;
-  }
-
-  /* full width search */
-  .search-box input{
-    width:95% !important;
-    margin:0;
-  }
-
-  /* button full width */
-  .search-box .btn{
-    width:95%;
-    margin:0;
-    text-align:center;
-  }
-
-}
-/* 📱 HIDE PLAN TRIP BUTTON ON MOBILE */
-@media screen and (max-width: 600px){
-  .search-box .btn{
-    display:none !important;
-  }
-}
-/* 📱 FORCE INLINE HEADER (FINAL FIX) */
-@media screen and (max-width: 600px){
-
-  /* remove vertical stacking completely */
-  .header{
-    display:flex !important;
-    flex-direction:row !important;   /* 🔥 force horizontal */
-    align-items:center;
-    justify-content:flex-start;
-    gap:10px;
-    padding:8px 10px !important;
-  }
-
-  /* hide right logo */
-  .right-logo{
-    display:none !important;
-  }
-
-  /* fix title behavior */
-  .title{
-    flex:none !important;
-    text-align:left !important;
-  }
-
-  /* keep text in one line */
-  .title h1{
-    font-size:18px !important;
-    white-space:nowrap;   /* 🔥 MOST IMPORTANT */
-    margin:0;
-  }
-
-  /* remove subtitle (extra space) */
-  .title p{
-    display:none;
-  }
-
-  /* logo small */
-  .logo{
-    width:32px !important;
-    height:32px !important;
-    margin:0 !important;
-  }
-
-}
-/* 📱 CENTER-BALANCED HEADER */
-@media screen and (max-width: 600px){
-
-  .header{
-    display:flex !important;
-    flex-direction:row !important;
-    align-items:center;
-    justify-content:center;   /* 🔥 center everything */
-    gap:10px;
-    padding:8px 10px !important;
-  }
-
-  /* hide right logo */
-  .right-logo{
-    display:none !important;
-  }
-
-  /* title fix */
-  .title{
-    flex:none !important;
-    text-align:left;
-  }
-
-  .title h1{
-    font-size:18px !important;
-    white-space:nowrap;
-    margin:0;
-  }
-
-  .title p{
-    display:none;
-  }
-
-  /* logo size */
-  .logo{
-    width:32px !important;
-    height:32px !important;
-    margin:0 !important;
-  }
-
 }
 </style>
 </head>
+
 <body>
 
-<header>
-
+<!-- HEADER -->
 <div class="header">
-  
-  <!-- LEFT LOGO -->
-  <img src="https://image2url.com/r2/default/images/1775671877256-112e9310-af8e-4988-b901-edae930a62f4.png" class="logo left-logo">
+<img src="https://image2url.com/r2/default/images/1775671877256-112e9310-af8e-4988-b901-edae930a62f4.png" class="logo">
 
-  <!-- TITLE -->
-  <div class="title">
-    <h1>Eat With Travel</h1>
-    <p>Turn your location into your next adventure</p>
-  </div>
-
-  <!-- RIGHT LOGO -->
-  <img src="https://image2url.com/r2/default/images/1775671877256-112e9310-af8e-4988-b901-edae930a62f4.png" class="logo right-logo">
-
+<div class="title">
+<h1>Eat With Travel</h1>
 </div>
 
-</header>
+<div id="userSection">
+<button class="btn" onclick="login()">Login</button>
+</div>
+</div>
 
+<!-- SEARCH -->
 <div class="search-box">
 <input type="text" id="search" placeholder="Search places..." onkeyup="filterPlaces()">
-<button class="btn" onclick="openPlan()">🧠 Plan Trip</button>
 </div>
 
-<div id="places" class="container">
-
-<!-- SAME CARDS (ONLY WEATHER ADDED) -->
+<!-- CARDS -->
+<div class="container" id="places">
 
 <div class="card" data-name="rishikesh" data-lat="30.0869" data-lng="78.2676">
 <img src="https://image2url.com/r2/default/images/1774727323903-1783ba6e-b91f-4119-9d8f-64af497cad5e.jpg">
@@ -606,133 +115,22 @@ header p{font-size:15px;color:#cfd9ff;}
 </div>
 </div>
 
-<div class="card" data-name="shimla" data-lat="31.1048" data-lng="77.1734">
-<img src="https://image2url.com/r2/default/images/1774727094251-c65f7679-fafb-4192-953c-9d4534b3e1d3.jpg">
-<div class="card-content">
-<h2>Shimla</h2>
-<p class="distance">📍 Calculating...</p>
-<p class="weather">🌦️ Loading...</p>
-<button class="btn" onclick="goDetails('shimla.html')">View Details</button>
-</div>
-</div>
-
 <div class="card" data-name="delhi" data-lat="28.6139" data-lng="77.2090">
 <img src="https://image2url.com/r2/default/images/1775121272893-8e4fa1a4-25b0-48a7-b02e-bcda2bba78b6.jpg">
 <div class="card-content">
 <h2>Delhi</h2>
 <p class="distance">📍 Calculating...</p>
 <p class="weather">🌦️ Loading...</p>
-<div class="btn" onclick="window.location.href='delhi.html'">View Details</div>
-</div>
-</div>
-
-<div class="card" data-name="vrindavan mathura" data-lat="27.4924" data-lng="77.6737">
-<img src="https://image2url.com/r2/default/images/1775121221830-808a5fb8-7d65-4302-82bc-726ef57af638.jfif">
-<div class="card-content">
-<h2>Vrindavan & Mathura</h2>
-<p class="distance">📍 Calculating...</p>
-<p class="weather">🌦️ Loading...</p>
-<button class="btn" onclick="goDetails('vrind.html')">View Details</button>
-</div>
-</div>
-
-<div class="card" data-name="varanasi up" data-lat="25.3176" data-lng="82.9739">
-<img src="https://www.varanasiguru.com/wp-content/uploads/2021/03/Dashashwamedh-Ghat.jpg">
-<div class="card-content">
-<h2>Varanasi, UP</h2>
-<p class="distance">📍 Calculating...</p>
-<p class="weather">🌦️ Loading...</p>
-<button class="btn" onclick="goDetails('varanasi.html')">View Details</button>
-</div>
-</div>
-
-<div class="card" data-name="DwadashJyoti" data-lat="25.3176" data-lng="82.9739">
-<img src="https://image2url.com/r2/default/images/1775319455655-f2f907f7-00a3-4617-af41-bf34a922e204.png" alt="DwadashJyoti Image">
-<div class="card-content">
-<h2>DwadashJyoti</h2>
-<p class="distance">📍 Calculating...</p>
-<p class="weather">🌦️ Loading...</p>
-<button class="btn" onclick="goDetails('jyoti.html')">View Details</button>
-</div>
-</div>
-
-<div class="card" data-name="tezpur assam" data-lat="26.6528" data-lng="92.7926">
- <img src="https://image2url.com/r2/default/images/1775230618032-62f4baeb-08c1-46b0-81df-454ee9646a76.png">
-<div class="card-content">
-<h2>Tezpur</h2>
-<p class="distance">📍 Calculating...</p>
-<p class="weather">🌦️ Loading...</p>
-<button class="btn" onclick="goDetails('tezpur.html')">View Details</button>
+<button class="btn" onclick="goDetails('delhi.html')">View Details</button>
 </div>
 </div>
 
 </div>
 
-<script>
-
-// WEATHER
-async function getWeather(lat,lng){
-  try{
-    let res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true`);
-    let data = await res.json();
-    return `🌤️ ${data.current_weather.temperature}°C`;
-  }catch{
-    return "N/A";
-  }
-}
-
-// FILTER
-function filterPlaces(){
-  let input=document.getElementById("search").value.toLowerCase();
-  document.querySelectorAll(".card").forEach(c=>{
-    c.style.display=c.dataset.name.includes(input)?"block":"none";
-  });
-}
-
-// LOCATION
-navigator.geolocation.getCurrentPosition(async pos=>{
-  let uLat=pos.coords.latitude;
-  let uLng=pos.coords.longitude;
-
-  let cards=document.querySelectorAll(".card");
-  let arr=[];
-
-  for(let c of cards){
-    let lat=parseFloat(c.dataset.lat);
-    let lng=parseFloat(c.dataset.lng);
-
-    let d=getDistance(uLat,uLng,lat,lng);
-
-    c.querySelector(".distance").innerText=`📍 ${d.toFixed(0)} km`;
-
-    let weather=await getWeather(lat,lng);
-    c.querySelector(".weather").innerText=weather;
-
-    arr.push({card:c,dist:d});
-  }
-
-  arr.sort((a,b)=>a.dist-b.dist);
-
-  let container=document.getElementById("places");
-  arr.forEach(p=>container.appendChild(p.card));
-
-  arr[0].card.classList.add("highlight");
-});
-
-// DISTANCE
-function getDistance(lat1,lon1,lat2,lon2){
-  let R=6371;
-  let dLat=(lat2-lat1)*Math.PI/180;
-  let dLon=(lon2-lon1)*Math.PI/180;
-  let a=Math.sin(dLat/2)**2+
-    Math.cos(lat1*Math.PI/180)*
-    Math.cos(lat2*Math.PI/180)*
-    Math.sin(dLon/2)**2;
-  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
-}
-  <!-- FIREBASE SCRIPT -->
+<!-- SCRIPT -->
 <script type="module">
 
+/* ================= FIREBASE ================= */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -754,7 +152,7 @@ window.login = async ()=>{
   const provider = new GoogleAuthProvider();
   const result = await signInWithPopup(auth, provider);
   saveUser(result.user);
-}
+};
 
 // LOGOUT
 window.logout = ()=> signOut(auth);
@@ -796,7 +194,68 @@ onAuthStateChanged(auth, async user=>{
   }
 });
 
-// PROTECT PAGE
+/* ================= WEATHER ================= */
+async function getWeather(lat,lng){
+  try{
+    let res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true`);
+    let data = await res.json();
+    return `🌤️ ${data.current_weather.temperature}°C`;
+  }catch{
+    return "N/A";
+  }
+}
+
+/* ================= DISTANCE ================= */
+function getDistance(lat1,lon1,lat2,lon2){
+  let R=6371;
+  let dLat=(lat2-lat1)*Math.PI/180;
+  let dLon=(lon2-lon1)*Math.PI/180;
+  let a=Math.sin(dLat/2)**2+
+    Math.cos(lat1*Math.PI/180)*
+    Math.cos(lat2*Math.PI/180)*
+    Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+/* ================= LOCATION ================= */
+navigator.geolocation.getCurrentPosition(async pos=>{
+  let uLat=pos.coords.latitude;
+  let uLng=pos.coords.longitude;
+
+  let cards=document.querySelectorAll(".card");
+  let arr=[];
+  let promises=[];
+
+  cards.forEach(c=>{
+    let lat=parseFloat(c.dataset.lat);
+    let lng=parseFloat(c.dataset.lng);
+
+    let d=getDistance(uLat,uLng,lat,lng);
+    c.querySelector(".distance").innerText=`📍 ${d.toFixed(0)} km`;
+
+    promises.push(
+      getWeather(lat,lng).then(w=>{
+        c.querySelector(".weather").innerText=w;
+      })
+    );
+
+    arr.push({card:c,dist:d});
+  });
+
+  await Promise.all(promises);
+
+  arr.sort((a,b)=>a.dist-b.dist);
+
+  let container=document.getElementById("places");
+  arr.forEach(p=>container.appendChild(p.card));
+
+  arr[0].card.classList.add("highlight");
+
+}, ()=>{
+  alert("Location permission denied ❌");
+});
+
+/* ================= PROTECT ================= */
 window.goDetails = function(page){
   if(auth.currentUser){
     window.location.href = page;
@@ -805,12 +264,13 @@ window.goDetails = function(page){
   }
 };
 
-// SEARCH
+/* ================= SEARCH ================= */
 window.filterPlaces = function(){
   let input=document.getElementById("search").value.toLowerCase();
   document.querySelectorAll(".card").forEach(c=>{
     c.style.display=c.dataset.name.includes(input)?"block":"none";
   });
+};
 
 </script>
 
