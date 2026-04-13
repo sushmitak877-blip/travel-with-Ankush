@@ -592,7 +592,7 @@ header p{font-size:15px;color:#cfd9ff;}
 <h2>Rishikesh</h2>
 <p class="distance">📍 Calculating...</p>
 <p class="weather">🌦️ Loading...</p>
-<div class="btn" onclick="window.location.href='risk.html'">View Details</div>
+<button class="btn" onclick="goDetails('risk.html')">View Details</button>
 </div>
 </div>
 
@@ -602,7 +602,7 @@ header p{font-size:15px;color:#cfd9ff;}
 <h2>Manali</h2>
 <p class="distance">📍 Calculating...</p>
 <p class="weather">🌦️ Loading...</p>
-<div class="btn" onclick="window.location.href='manali.html'">View Details</div>
+<button class="btn" onclick="goDetails('manali.html')">View Details</button>
 </div>
 </div>
 
@@ -612,7 +612,7 @@ header p{font-size:15px;color:#cfd9ff;}
 <h2>Shimla</h2>
 <p class="distance">📍 Calculating...</p>
 <p class="weather">🌦️ Loading...</p>
-<div class="btn" onclick="window.location.href='shimla.html'">View Details</div>
+<button class="btn" onclick="goDetails('shimla.html')">View Details</button>
 </div>
 </div>
 
@@ -632,7 +632,7 @@ header p{font-size:15px;color:#cfd9ff;}
 <h2>Vrindavan & Mathura</h2>
 <p class="distance">📍 Calculating...</p>
 <p class="weather">🌦️ Loading...</p>
-<div class="btn" onclick="window.location.href='vrind.html'">View Details</div>
+<button class="btn" onclick="goDetails('vrind.html')">View Details</button>
 </div>
 </div>
 
@@ -642,7 +642,7 @@ header p{font-size:15px;color:#cfd9ff;}
 <h2>Varanasi, UP</h2>
 <p class="distance">📍 Calculating...</p>
 <p class="weather">🌦️ Loading...</p>
-<div class="btn" onclick="window.location.href='varanasi.html'">View Details</div>
+<button class="btn" onclick="goDetails('varanasi.html')">View Details</button>
 </div>
 </div>
 
@@ -652,7 +652,7 @@ header p{font-size:15px;color:#cfd9ff;}
 <h2>DwadashJyoti</h2>
 <p class="distance">📍 Calculating...</p>
 <p class="weather">🌦️ Loading...</p>
-<div class="btn" onclick="window.location.href='jyoti.html'">Lord Shiva in 12 forms</div>
+<button class="btn" onclick="goDetails('jyoti.html')">View Details</button>
 </div>
 </div>
 
@@ -662,7 +662,7 @@ header p{font-size:15px;color:#cfd9ff;}
 <h2>Tezpur</h2>
 <p class="distance">📍 Calculating...</p>
 <p class="weather">🌦️ Loading...</p>
-<div class="btn" onclick="window.location.href='tezpur.html'">View Details</div>
+<button class="btn" onclick="goDetails('tezpur.html')">View Details</button>
 </div>
 </div>
 
@@ -730,6 +730,87 @@ function getDistance(lat1,lon1,lat2,lon2){
     Math.sin(dLon/2)**2;
   return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
+  <!-- FIREBASE SCRIPT -->
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, increment } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDOVKe2NJN1ULlQpKKP7AC848psUkzXwXQ",
+  authDomain: "travel-with-ankur.firebaseapp.com",
+  projectId: "travel-with-ankur",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// LOGIN
+window.login = async ()=>{
+  const provider = new GoogleAuthProvider();
+  const result = await signInWithPopup(auth, provider);
+  saveUser(result.user);
+}
+
+// LOGOUT
+window.logout = ()=> signOut(auth);
+
+// SAVE USER
+async function saveUser(user){
+  const ref = doc(db,"users",user.uid);
+  const snap = await getDoc(ref);
+
+  if(!snap.exists()){
+    await setDoc(ref,{
+      name:user.displayName,
+      email:user.email,
+      visits:1
+    });
+  }else{
+    await updateDoc(ref,{
+      visits: increment(1)
+    });
+  }
+}
+
+// SHOW USER
+onAuthStateChanged(auth, async user=>{
+  const section = document.getElementById("userSection");
+
+  if(user){
+    const ref = doc(db,"users",user.uid);
+    const snap = await getDoc(ref);
+    const data = snap.data();
+
+    section.innerHTML = `
+      👋 ${data.name}<br>
+      Visits: ${data.visits}<br>
+      <button class="btn" onclick="logout()">Logout</button>
+    `;
+  }else{
+    section.innerHTML = `<button class="btn" onclick="login()">Login</button>`;
+  }
+});
+
+// PROTECT PAGE
+window.goDetails = function(page){
+  if(auth.currentUser){
+    window.location.href = page;
+  }else{
+    alert("Please login first 🔐");
+  }
+};
+
+// SEARCH
+window.filterPlaces = function(){
+  let input=document.getElementById("search").value.toLowerCase();
+  document.querySelectorAll(".card").forEach(c=>{
+    c.style.display=c.dataset.name.includes(input)?"block":"none";
+  });
 
 </script>
 
