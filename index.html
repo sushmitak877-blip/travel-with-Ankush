@@ -951,13 +951,17 @@
    Firebase Console → Project Settings → General → Your apps → Web app
    ══════════════════════════════════════════════════════════════════════════ */
 const firebaseConfig = {
-  apiKey:            "AIzaSyDOVKe2NJN1ULlQpKKP7AC848psUkzXwXQ",
-  authDomain:        "travel-with-ankur.firebaseapp.com",
-  projectId:         "travel-with-ankur",
-  storageBucket:     "travel-with-ankur.firebasestorage.app",
-  messagingSenderId: "74770087453",
-  appId:             "1:74770087453:web:d0d7431fd0a69b2cbb10f4",
-  measurementId:     "G-JRQH3W2E6L"
+  type: "service_account",
+  project_id: "eatwithtravel",
+  "private_key_id": "a5163196ca010604fded7bc09be21451125a54c1",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCwuGXog4eEw6H4\n7vkYcwjyrhG0B4i6BpAUD2GApAWJ03U3yK2IuABSo+IzVBgSzS+8oWLXXryiCXfy\nAT4hG3XIsJgM9vXnyjKYO/rk3QKkHBnThxov6N6Ni+HhVX+7tCVW9mOQ/Fj4TOGd\nKoULyG+erbZX7SHLda7lZflx8DzQ8/5uQN0Ud0oAPcyHM/WT/jW/DRMbx9SigHNS\nZ8xFs/JQk70XTCCBfCOAGLp529DcZYew0mPC99vRNob7NUGz1QwJp3QaljEWPIs6\nqOo4rLxFb3mV73OJtz8VL/Ch8TjF/JsYo38l3EWqfevqjq2vBlUSW4Vriyl0MbZF\n4oIy/3N5AgMBAAECggEABG/HXzGuJ/nMCeE2BRRzl7l3CFCyxg4pdSzNrdpwU9LT\nO+CgkAYj5pnmsT3d54WZ5TUdXiWAEYawqYq5HJZWkVXy+0sCnBx0w2L+HDDQQtPR\nx4Bkz+nGF0JOcXHMEHz9Uv7skP9E3IxRkw3g4+LW/+IslG3c+KwDsA6srIeeKetr\niDjqJaH2jrN3JVQkQeOCYoqZ45ql051Wj7bADV1VB2LY3rkRsNT7RToWoMHGCGaa\ndQix+rgFc+NwD7bknZ+j51cocmjed0qUryDj2/P0bSEqKozlQMJBrr3pLLZOqAzx\n2i+/P3JhBtWhJP06vTUBFRnr69mDcldk85zMRxWq4QKBgQDnPA7vUdbWgQsSEsGG\nz0I1CRQM6qwd7NjYS3XIa6no0ySPVg9Qba2sgQZdK5K4wzPP5XsIKidVmnXY7xju\nrvbpcHGZdr7NoMHRwC00zHYs5UIGaqHstwJyQ5ym9OC+9jdLq4W1pZO24UcSbD61\nBvTEFWcB8GYD3xdIcHPpkUeoPwKBgQDDpa2eUsqI+AmSf/fJhoi3/WQ2L5KSDYnO\n70yAg7rU5Fn6efxv7+p0lAVRPt8QtOTt/yEoclTaqYtfI4IiL8Vq85l3O352Gt2v\nQTAlHCoNwToBvECx7IHNFAY7KTQMh9iD1xWuPg859JL2i2145lheCpg+iaa1XyNA\njjXFQL22RwKBgQDQ+JLarxBD3Gz/0Vl6FnZT7bdkEPSpOrGhj1iLXtk3oxFoRDMk\n0Wnh+tygeM9pEGgTmuT8NPRFRYj5GuNiWValEsxnD0xSEtT2VQHFtH2cBzgLCnT5\ns06PqxC4RZeSnHrOdN0qks+St7Z+LLri6L1tM5Zax0G6f/PPsGjgjT3ACwKBgHzf\nMQodI4H6dfmYTanFgVuVkjF3eaBYnb2DRJu9+DBLMxbIZxN22HjhxOcPLsZ1/qvc\nq+gp2PjbP8ZQXo29Wc6ifi/4vAVbrmReQgFdkYXH72MOKWimYE5pWnTGHp9k0Q+M\n5xyYJZXDAU30vcFtm7ciIfvAVbPrbg+U9MLaSHufAoGAVzlE/H7EvRJ4D93FkYMp\n5nSkHBq9xiGZkxj2byTjim+vJzIMoAnA62mPFquNMeFU6ofz3K+WCkuFM0YZ0fUV\nMYVElmjvWUbkfB7I9OAqx1siI97uSUCGsdt8o23d8QkmlpsF/2Cye4gJuDy1xA5y\n0A2kvCuQRBcC5ZFSr/6M3Zc=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@eatwithtravel.iam.gserviceaccount.com",
+  "client_id": "100884947980896042678",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40eatwithtravel.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
 };
 
 /* Initialise Firebase */
