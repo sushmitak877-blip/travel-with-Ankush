@@ -1,267 +1,1228 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Travel With Ankur</title>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DS1Z5VXD2L"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-DS1Z5VXD2L');
+  </script>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="IeXNXS5j1IXc7ObZnnRG5pekD4sqrTBoztCeobZ8vfY" />
+  <title>Travel With Ankur</title>
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins;}
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 
-body{
-  background: linear-gradient(rgba(10,15,25,0.7), rgba(10,15,25,0.9)),
-  url('https://image2url.com/r2/default/images/1775671877256-112e9310-af8e-4988-b901-edae930a62f4.png');
-  background-size:cover;
-  color:#fff;
-}
+  <style>
+    /* ─── RESET & BASE ─── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:15px;
-  background: rgba(0,0,0,0.6);
-}
+    :root {
+      --cyan:    #00f2fe;
+      --blue:    #4facfe;
+      --dark:    #0a0f19;
+      --glass:   rgba(20, 30, 50, 0.65);
+      --glass2:  rgba(255,255,255,0.06);
+      --border:  rgba(0, 242, 254, 0.25);
+      --text:    #eaf3ff;
+      --muted:   #8ba3c7;
+      --success: #00ffaa;
+      --error:   #ff4d6d;
+    }
 
-.logo{width:45px;border-radius:50%;}
-.title{flex:1;text-align:center;color:#00f2fe;}
+    body {
+      font-family: 'Poppins', sans-serif;
+      background:
+        linear-gradient(rgba(10,15,25,0.75), rgba(10,15,25,0.92)),
+        url('https://image2url.com/r2/default/images/1775671877256-112e9310-af8e-4988-b901-edae930a62f4.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: var(--text);
+      min-height: 100vh;
+    }
 
-#userSection{text-align:right;}
+    /* ─── HEADER ─── */
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 40px;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
 
-.search-box{text-align:center;padding:10px;}
-.search-box input{
-  width:60%;
-  padding:10px;
-  border-radius:20px;
-  border:none;
-}
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
 
-.btn{
-  padding:8px 12px;
-  border:none;
-  border-radius:20px;
-  background:#00f2fe;
-  color:#000;
-  cursor:pointer;
-}
+    .logo {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--cyan);
+      box-shadow: 0 0 18px rgba(0,242,254,0.55);
+      animation: logoPulse 2.5s ease-in-out infinite alternate;
+      transition: transform 0.3s;
+    }
+    .logo:hover { transform: scale(1.1) rotate(5deg); }
 
-.container{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:20px;
-  padding:20px;
-}
+    @keyframes logoPulse {
+      from { box-shadow: 0 0 10px rgba(0,212,255,0.4); }
+      to   { box-shadow: 0 0 28px rgba(0,242,254,0.85); }
+    }
 
-.card{
-  background:rgba(0,0,0,0.6);
-  border-radius:10px;
-  overflow:hidden;
-}
+    .brand-text h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 26px;
+      background: linear-gradient(90deg, var(--cyan), var(--blue), var(--cyan));
+      background-size: 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 3s linear infinite;
+    }
+    .brand-text p { font-size: 12px; color: var(--muted); margin-top: 1px; }
 
-.card img{width:100%;height:180px;object-fit:cover;}
-.card-content{padding:10px;}
+    @keyframes shimmer {
+      from { background-position: 0% center; }
+      to   { background-position: 200% center; }
+    }
 
-.highlight{border:2px solid #00ffcc;}
-</style>
+    /* ─── USER STATUS BAR ─── */
+    .auth-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    #user-info {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      background: var(--glass2);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 6px 16px;
+      font-size: 13px;
+      color: var(--cyan);
+    }
+    #user-info.visible { display: flex; }
+
+    #user-info .user-icon { font-size: 16px; }
+
+    .btn-logout {
+      background: transparent;
+      border: 1px solid rgba(255,77,109,0.5);
+      color: #ff4d6d;
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.25s;
+      font-family: 'Poppins', sans-serif;
+    }
+    .btn-logout:hover {
+      background: rgba(255,77,109,0.15);
+      box-shadow: 0 0 12px rgba(255,77,109,0.35);
+    }
+
+    /* ─── SEARCH ─── */
+    .search-section {
+      text-align: center;
+      padding: 24px 20px 10px;
+    }
+
+    .search-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .search-section input {
+      width: 360px;
+      padding: 13px 22px;
+      border-radius: 30px;
+      border: 2px solid var(--border);
+      background: rgba(255,255,255,0.07);
+      color: #fff;
+      font-size: 14px;
+      font-family: 'Poppins', sans-serif;
+      outline: none;
+      box-shadow: 0 0 12px rgba(0,242,254,0.3);
+      transition: 0.3s;
+    }
+    .search-section input::placeholder { color: var(--muted); }
+    .search-section input:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 22px rgba(0,242,254,0.6);
+    }
+
+    .btn-primary {
+      padding: 12px 22px;
+      border: none;
+      border-radius: 30px;
+      background: linear-gradient(45deg, var(--blue), var(--cyan));
+      color: #fff;
+      font-size: 14px;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      transition: 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-primary:hover {
+      transform: scale(1.04);
+      box-shadow: 0 0 20px rgba(0,242,254,0.6);
+    }
+    .btn-primary::before {
+      content: "";
+      position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
+      transition: 0.5s;
+    }
+    .btn-primary:hover::before { left: 100%; }
+
+    /* ─── CARDS GRID ─── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 22px;
+      padding: 20px 30px 40px;
+    }
+
+    .card {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(0,242,254,0.18);
+    }
+    .card.highlight {
+      border-color: #00ffcc;
+      box-shadow: 0 0 24px rgba(0,255,204,0.4);
+    }
+
+    .card img {
+      width: 100%; height: 190px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-content { padding: 14px 16px 16px; }
+    .card-content h2 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+
+    .card-meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .card-meta span { font-size: 12px; color: var(--muted); }
+    .card-meta .weather { color: #aeefff; }
+
+    /* ─── VIEW DETAILS BUTTON ─── */
+    .btn-view {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(45deg, var(--blue), var(--cyan));
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: 0.3s;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+    }
+    .btn-view:hover {
+      box-shadow: 0 0 16px rgba(0,242,254,0.5);
+      transform: scale(1.02);
+    }
+
+    /* ─── LOGIN MODAL OVERLAY ─── */
+    #login-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 10, 20, 0.82);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    #login-overlay.active { display: flex; }
+
+    /* ─── LOGIN MODAL BOX ─── */
+    .login-modal {
+      background: linear-gradient(135deg, rgba(12,22,40,0.95), rgba(5,15,30,0.98));
+      border: 1px solid rgba(0,242,254,0.3);
+      border-radius: 24px;
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 420px;
+      position: relative;
+      box-shadow:
+        0 0 0 1px rgba(0,242,254,0.08),
+        0 30px 80px rgba(0,0,0,0.7),
+        0 0 60px rgba(0,242,254,0.08);
+      animation: modalIn 0.35s cubic-bezier(0.34,1.4,0.64,1);
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.88) translateY(20px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* decorative corner glow */
+    .login-modal::before {
+      content: "";
+      position: absolute;
+      top: -1px; left: -1px; right: -1px; bottom: -1px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(0,242,254,0.15), transparent 50%, rgba(79,172,254,0.1));
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 18px;
+      background: none; border: none;
+      color: var(--muted);
+      font-size: 22px;
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--cyan); }
+
+    .modal-icon {
+      text-align: center;
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    .modal-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 26px;
+      text-align: center;
+      background: linear-gradient(90deg, var(--cyan), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .modal-subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    /* ─── STEPS ─── */
+    .step { display: none; }
+    .step.active { display: block; }
+
+    /* ─── FORM FIELDS ─── */
+    .field-group { margin-bottom: 20px; }
+
+    .field-label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 7px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .field-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .field-prefix {
+      position: absolute;
+      left: 16px;
+      font-size: 14px;
+      color: var(--cyan);
+      font-weight: 600;
+      pointer-events: none;
+    }
+
+    .field-input {
+      width: 100%;
+      padding: 13px 16px 13px 56px;
+      border-radius: 12px;
+      border: 1.5px solid rgba(0,242,254,0.2);
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      font-size: 16px;
+      font-family: 'Poppins', sans-serif;
+      outline: none;
+      transition: 0.3s;
+      letter-spacing: 1px;
+    }
+    .field-input.no-prefix { padding-left: 16px; text-align: center; letter-spacing: 6px; font-size: 20px; }
+    .field-input::placeholder { color: rgba(139,163,199,0.5); letter-spacing: 1px; }
+    .field-input:focus {
+      border-color: var(--cyan);
+      background: rgba(0,242,254,0.04);
+      box-shadow: 0 0 0 3px rgba(0,242,254,0.12);
+    }
+
+    /* ─── MODAL BUTTONS ─── */
+    .btn-modal {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(45deg, var(--blue), var(--cyan));
+      color: #fff;
+      font-size: 15px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-modal:hover:not(:disabled) {
+      box-shadow: 0 0 28px rgba(0,242,254,0.5);
+      transform: translateY(-1px);
+    }
+    .btn-modal:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    /* loading spinner inside button */
+    .btn-modal .spinner {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── STATUS MESSAGES ─── */
+    .msg {
+      margin-top: 14px;
+      padding: 11px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      text-align: center;
+      display: none;
+    }
+    .msg.show { display: block; }
+    .msg.success {
+      background: rgba(0,255,170,0.1);
+      border: 1px solid rgba(0,255,170,0.3);
+      color: var(--success);
+    }
+    .msg.error {
+      background: rgba(255,77,109,0.1);
+      border: 1px solid rgba(255,77,109,0.3);
+      color: var(--error);
+    }
+
+    /* ─── RESEND LINK ─── */
+    .resend-row {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .resend-btn {
+      background: none;
+      border: none;
+      color: var(--cyan);
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      text-decoration: underline;
+    }
+    .resend-btn:disabled { color: var(--muted); cursor: not-allowed; text-decoration: none; }
+
+    #resend-timer { color: var(--muted); font-size: 12px; margin-top: 4px; }
+
+    /* ─── SUCCESS SCREEN ─── */
+    .success-screen {
+      text-align: center;
+      padding: 10px 0;
+    }
+    .success-screen .big-tick {
+      font-size: 64px;
+      animation: tickPop 0.5s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes tickPop {
+      from { transform: scale(0); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+    .success-screen h3 {
+      font-size: 22px;
+      color: var(--success);
+      margin: 12px 0 8px;
+    }
+    .success-screen p { color: var(--muted); font-size: 14px; }
+
+    /* ─── OTP BOXES (optional fancy 6-box layout) ─── */
+    .otp-boxes {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+    .otp-box {
+      width: 48px; height: 56px;
+      border-radius: 10px;
+      border: 1.5px solid rgba(0,242,254,0.2);
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      font-size: 22px;
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      outline: none;
+      transition: 0.25s;
+    }
+    .otp-box:focus {
+      border-color: var(--cyan);
+      background: rgba(0,242,254,0.05);
+      box-shadow: 0 0 0 3px rgba(0,242,254,0.15);
+    }
+
+    /* ─── MOBILE RESPONSIVE ─── */
+    @media (max-width: 600px) {
+      .site-header { padding: 12px 16px; }
+      .brand-text h1 { font-size: 20px; }
+      .brand-text p { display: none; }
+      .logo { width: 38px; height: 38px; }
+      .logo.right-logo { display: none; }
+      .cards-grid { padding: 12px 14px 30px; gap: 14px; }
+      .search-section input { width: 90%; }
+      .login-modal { margin: 10px; padding: 28px 22px; }
+      .otp-box { width: 40px; height: 48px; font-size: 18px; }
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="header">
-<img src="https://image2url.com/r2/default/images/1775671877256-112e9310-af8e-4988-b901-edae930a62f4.png" class="logo">
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header class="site-header">
+  <div class="header-brand">
+    <img src="https://image2url.com/r2/default/images/1775671877256-112e9310-af8e-4988-b901-edae930a62f4.png"
+         class="logo" alt="Logo">
+    <div class="brand-text">
+      <h1>Eat With Travel</h1>
+      <p>Turn your location into your next adventure</p>
+    </div>
+  </div>
 
-<div class="title">
-<h2>Eat With Travel</h2>
+  <div class="auth-bar">
+    <div id="user-info">
+      <span class="user-icon">👤</span>
+      <span id="user-phone-display"></span>
+    </div>
+    <button class="btn-logout" id="btn-logout" style="display:none" onclick="logout()">Logout</button>
+  </div>
+</header>
+
+<!-- ═══════════════════ SEARCH ═══════════════════ -->
+<div class="search-section">
+  <div class="search-wrap">
+    <input type="text" id="search" placeholder="🔍  Search places..." oninput="filterPlaces()">
+    <button class="btn-primary" onclick="openPlan()">🧠 Plan Trip</button>
+  </div>
 </div>
 
-<div id="userSection">
-<button class="btn" onclick="login()">Login</button>
-</div>
-</div>
+<!-- ═══════════════════ CARDS ═══════════════════ -->
+<div id="places" class="cards-grid">
 
-<div class="search-box">
-<input type="text" id="search" placeholder="Search..." onkeyup="filterPlaces()">
-</div>
+  <div class="card" data-name="rishikesh" data-lat="30.0869" data-lng="78.2676">
+    <img src="https://image2url.com/r2/default/images/1774727323903-1783ba6e-b91f-4119-9d8f-64af497cad5e.jpg" alt="Rishikesh">
+    <div class="card-content">
+      <h2>Rishikesh</h2>
+      <div class="card-meta">
+        <span class="distance">📍 Calculating...</span>
+        <span class="weather">🌦️ Loading...</span>
+      </div>
+      <button class="btn-view" onclick="gotoPage('risk.html')">View Details →</button>
+    </div>
+  </div>
 
-<div class="container" id="places">
+  <div class="card" data-name="manali" data-lat="32.2432" data-lng="77.1892">
+    <img src="https://image2url.com/r2/default/images/1774727231220-ae00ef34-fde1-41a4-80b4-fa4ff2e40bfa.jfif" alt="Manali">
+    <div class="card-content">
+      <h2>Manali</h2>
+      <div class="card-meta">
+        <span class="distance">📍 Calculating...</span>
+        <span class="weather">🌦️ Loading...</span>
+      </div>
+      <button class="btn-view" onclick="gotoPage('manali.html')">View Details →</button>
+    </div>
+  </div>
 
-<div class="card" data-name="rishikesh" data-lat="30.0869" data-lng="78.2676">
-<img src="https://image2url.com/r2/default/images/1774727323903-1783ba6e-b91f-4119-9d8f-64af497cad5e.jpg">
-<div class="card-content">
-<h3>Rishikesh</h3>
-<p class="distance">📍 Calculating...</p>
-<p class="weather">🌦️ Loading...</p>
-<button class="btn" onclick="goDetails('risk.html')">View Details</button>
-</div>
-</div>
+  <div class="card" data-name="shimla" data-lat="31.1048" data-lng="77.1734">
+    <img src="https://image2url.com/r2/default/images/1774727094251-c65f7679-fafb-4192-953c-9d4534b3e1d3.jpg" alt="Shimla">
+    <div class="card-content">
+      <h2>Shimla</h2>
+      <div class="card-meta">
+        <span class="distance">📍 Calculating...</span>
+        <span class="weather">🌦️ Loading...</span>
+      </div>
+      <button class="btn-view" onclick="gotoPage('shimla.html')">View Details →</button>
+    </div>
+  </div>
 
-<div class="card" data-name="manali" data-lat="32.2432" data-lng="77.1892">
-<img src="https://image2url.com/r2/default/images/1774727231220-ae00ef34-fde1-41a4-80b4-fa4ff2e40bfa.jfif">
-<div class="card-content">
-<h3>Manali</h3>
-<p class="distance">📍 Calculating...</p>
-<p class="weather">🌦️ Loading...</p>
-<button class="btn" onclick="goDetails('manali.html')">View Details</button>
-</div>
-</div>
+  <div class="card" data-name="delhi" data-lat="28.6139" data-lng="77.2090">
+    <img src="https://image2url.com/r2/default/images/1775121272893-8e4fa1a4-25b0-48a7-b02e-bcda2bba78b6.jpg" alt="Delhi">
+    <div class="card-content">
+      <h2>Delhi</h2>
+      <div class="card-meta">
+        <span class="distance">📍 Calculating...</span>
+        <span class="weather">🌦️ Loading...</span>
+      </div>
+      <button class="btn-view" onclick="gotoPage('delhi.html')">View Details →</button>
+    </div>
+  </div>
 
-</div>
+  <div class="card" data-name="vrindavan mathura" data-lat="27.4924" data-lng="77.6737">
+    <img src="https://image2url.com/r2/default/images/1775121221830-808a5fb8-7d65-4302-82bc-726ef57af638.jfif" alt="Vrindavan">
+    <div class="card-content">
+      <h2>Vrindavan &amp; Mathura</h2>
+      <div class="card-meta">
+        <span class="distance">📍 Calculating...</span>
+        <span class="weather">🌦️ Loading...</span>
+      </div>
+      <button class="btn-view" onclick="gotoPage('vrind.html')">View Details →</button>
+    </div>
+  </div>
 
-<script type="module">
+  <div class="card" data-name="varanasi up" data-lat="25.3176" data-lng="82.9739">
+    <img src="https://www.varanasiguru.com/wp-content/uploads/2021/03/Dashashwamedh-Ghat.jpg" alt="Varanasi">
+    <div class="card-content">
+      <h2>Varanasi, UP</h2>
+      <div class="card-meta">
+        <span class="distance">📍 Calculating...</span>
+        <span class="weather">🌦️ Loading...</span>
+      </div>
+      <button class="btn-view" onclick="gotoPage('varanasi.html')">View Details →</button>
+    </div>
+  </div>
 
-// FIREBASE
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged } 
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, increment } 
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  <div class="card" data-name="DwadashJyoti" data-lat="25.3176" data-lng="82.9739">
+    <img src="https://image2url.com/r2/default/images/1775319455655-f2f907f7-00a3-4617-af41-bf34a922e204.png" alt="DwadashJyoti">
+    <div class="card-content">
+      <h2>DwadashJyoti</h2>
+      <div class="card-meta">
+        <span class="distance">📍 Calculating...</span>
+        <span class="weather">🌦️ Loading...</span>
+      </div>
+      <button class="btn-view" onclick="gotoPage('jyoti.html')">Lord Shiva in 12 forms →</button>
+    </div>
+  </div>
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDOVKe2NJN1ULlQpKKP7AC848psUkzXwXQ",
-  authDomain: "travel-with-ankur.firebaseapp.com",
-  projectId: "travel-with-ankur",
-};
+  <div class="card" data-name="uttarakhand" data-lat="30.0869" data-lng="78.2676">
+    <img src="https://devbhoomitrek.com/wp-content/uploads/2024/02/Untitled-design-2.jpg" alt="Uttarakhand">
+    <div class="card-content">
+      <h2>Uttarakhand</h2>
+      <div class="card-meta">
+        <span class="distance">📍 Calculating...</span>
+        <span class="weather">🌦️ Loading...</span>
+      </div>
+      <button class="btn-view" onclick="gotoPage('dave.html')">View Details →</button>
+    </div>
+  </div>
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+  <div class="card" data-name="tezpur assam" data-lat="26.6528" data-lng="92.7926">
+    <img src="https://image2url.com/r2/default/images/1775230618032-62f4baeb-08c1-46b0-81df-454ee9646a76.png" alt="Tezpur">
+    <div class="card-content">
+      <h2>Tezpur</h2>
+      <div class="card-meta">
+        <span class="distance">📍 Calculating...</span>
+        <span class="weather">🌦️ Loading...</span>
+      </div>
+      <button class="btn-view" onclick="gotoPage('tezpur.html')">View Details →</button>
+    </div>
+  </div>
 
-// LOGIN (FIXED)
-window.login = async ()=>{
-  const provider = new GoogleAuthProvider();
-  try{
-    await signInWithPopup(auth, provider);
-  }catch(e){
-    await signInWithRedirect(auth, provider);
+</div><!-- /cards-grid -->
+
+
+<!-- ═══════════════════ LOGIN MODAL ═══════════════════ -->
+<div id="login-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-heading">
+
+  <div class="login-modal">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
+
+    <div class="modal-icon">🌏</div>
+    <h2 class="modal-title" id="modal-heading">Unlock Your Journey</h2>
+    <p class="modal-subtitle">Login with your WhatsApp number to explore travel destinations</p>
+
+    <!-- ── STEP 1: Enter Phone ── -->
+    <div class="step active" id="step-phone">
+      <div class="field-group">
+        <label class="field-label" for="phone-input">WhatsApp Mobile Number</label>
+        <div class="field-input-wrap">
+          <span class="field-prefix">+91</span>
+          <input
+            class="field-input"
+            type="tel"
+            id="phone-input"
+            placeholder="98765 43210"
+            maxlength="10"
+            inputmode="numeric"
+            pattern="[0-9]{10}"
+            autocomplete="tel"
+          >
+        </div>
+      </div>
+
+      <button class="btn-modal" id="send-otp-btn" onclick="sendOTP()">
+        📲 Send OTP on WhatsApp
+      </button>
+
+      <div class="msg" id="phone-msg"></div>
+    </div><!-- /step-phone -->
+
+    <!-- ── STEP 2: Enter OTP ── -->
+    <div class="step" id="step-otp">
+      <p style="text-align:center; font-size:13px; color:var(--muted); margin-bottom:20px;">
+        A 6-digit OTP was sent to your WhatsApp<br>
+        <strong id="otp-sent-to" style="color:var(--cyan);"></strong>
+      </p>
+
+      <!-- 6 individual OTP boxes -->
+      <div class="field-group">
+        <label class="field-label" style="text-align:center; display:block;">Enter OTP</label>
+        <div class="otp-boxes">
+          <input class="otp-box" type="text" maxlength="1" inputmode="numeric" id="otp0">
+          <input class="otp-box" type="text" maxlength="1" inputmode="numeric" id="otp1">
+          <input class="otp-box" type="text" maxlength="1" inputmode="numeric" id="otp2">
+          <input class="otp-box" type="text" maxlength="1" inputmode="numeric" id="otp3">
+          <input class="otp-box" type="text" maxlength="1" inputmode="numeric" id="otp4">
+          <input class="otp-box" type="text" maxlength="1" inputmode="numeric" id="otp5">
+        </div>
+      </div>
+
+      <button class="btn-modal" id="verify-otp-btn" onclick="verifyOTP()">
+        ✅ Verify OTP
+      </button>
+
+      <div class="msg" id="otp-msg"></div>
+
+      <div class="resend-row">
+        <button class="resend-btn" id="resend-btn" onclick="resendOTP()" disabled>Resend OTP</button>
+        <div id="resend-timer"></div>
+      </div>
+
+      <div style="text-align:center; margin-top:14px;">
+        <button onclick="goBackToPhone()" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;font-family:Poppins,sans-serif;">
+          ← Change number
+        </button>
+      </div>
+    </div><!-- /step-otp -->
+
+    <!-- ── STEP 3: Success ── -->
+    <div class="step" id="step-success">
+      <div class="success-screen">
+        <div class="big-tick">✅</div>
+        <h3>Verified!</h3>
+        <p>You're now logged in. Redirecting to your destination...</p>
+      </div>
+    </div><!-- /step-success -->
+
+  </div><!-- /login-modal -->
+
+</div><!-- /login-overlay -->
+
+
+<!-- ═══════════════════ JAVASCRIPT ═══════════════════ -->
+<script>
+
+/* ──────────────────────────────────────────────────────────
+   CONFIG — change BACKEND_URL to your deployed server URL
+   ────────────────────────────────────────────────────────── */
+const BACKEND_URL = 'http://localhost:3000';   // ← Replace with your Render/Railway URL when deployed
+
+/* ──────────────────────────────────────────────────────────
+   STATE
+   ────────────────────────────────────────────────────────── */
+let pendingPage  = null;   // the page user wanted to visit before login
+let currentPhone = '';     // phone number in current flow
+let resendCountdown = null;
+
+/* ──────────────────────────────────────────────────────────
+   AUTH HELPERS (localStorage-based session)
+   ────────────────────────────────────────────────────────── */
+function isLoggedIn() {
+  const token = localStorage.getItem('auth_token');
+  const phone = localStorage.getItem('auth_phone');
+  // simple existence check; for full security, validate JWT on server
+  return !!(token && phone);
+}
+
+function setSession(token, phone) {
+  localStorage.setItem('auth_token', token);
+  localStorage.setItem('auth_phone', phone);
+}
+
+function clearSession() {
+  localStorage.removeItem('auth_token');
+  localStorage.removeItem('auth_phone');
+}
+
+function logout() {
+  clearSession();
+  updateAuthUI();
+  showToast('👋 Logged out successfully');
+}
+
+function updateAuthUI() {
+  const logged = isLoggedIn();
+  const phone  = localStorage.getItem('auth_phone') || '';
+
+  document.getElementById('user-info').classList.toggle('visible', logged);
+  document.getElementById('btn-logout').style.display = logged ? 'block' : 'none';
+  if (logged) document.getElementById('user-phone-display').textContent = '+91 ' + phone;
+}
+
+/* ──────────────────────────────────────────────────────────
+   PAGE ROUTING
+   ────────────────────────────────────────────────────────── */
+function gotoPage(page) {
+  if (isLoggedIn()) {
+    window.location.href = page;   // already logged in → go directly
+  } else {
+    pendingPage = page;            // remember destination
+    openModal();
   }
-};
+}
 
-// HANDLE REDIRECT
-getRedirectResult(auth).then(res=>{
-  if(res?.user){
-    saveUser(res.user);
+function openPlan() {
+  if (isLoggedIn()) {
+    alert('🧠 Plan Trip feature coming soon!');
+  } else {
+    pendingPage = null;
+    openModal();
   }
+}
+
+/* ──────────────────────────────────────────────────────────
+   MODAL CONTROL
+   ────────────────────────────────────────────────────────── */
+function openModal() {
+  resetModal();
+  document.getElementById('login-overlay').classList.add('active');
+  setTimeout(() => document.getElementById('phone-input').focus(), 200);
+}
+
+function closeModal() {
+  document.getElementById('login-overlay').classList.remove('active');
+}
+
+function resetModal() {
+  showStep('step-phone');
+  document.getElementById('phone-input').value = '';
+  clearOTPBoxes();
+  hideMsg('phone-msg');
+  hideMsg('otp-msg');
+}
+
+// Close overlay when clicking outside modal box
+document.getElementById('login-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
 });
 
-// LOGOUT
-window.logout = ()=> signOut(auth);
+// ESC key closes modal
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
 
-// SAVE USER
-async function saveUser(user){
-  const ref = doc(db,"users",user.uid);
-  const snap = await getDoc(ref);
+/* ──────────────────────────────────────────────────────────
+   STEP NAVIGATION
+   ────────────────────────────────────────────────────────── */
+function showStep(id) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
 
-  if(!snap.exists()){
-    await setDoc(ref,{
-      name:user.displayName,
-      email:user.email,
-      visits:1
+function goBackToPhone() {
+  clearResendTimer();
+  showStep('step-phone');
+}
+
+/* ──────────────────────────────────────────────────────────
+   OTP BOX HELPERS
+   ────────────────────────────────────────────────────────── */
+function clearOTPBoxes() {
+  for (let i = 0; i < 6; i++) {
+    const el = document.getElementById('otp' + i);
+    if (el) el.value = '';
+  }
+}
+
+function getOTPValue() {
+  let val = '';
+  for (let i = 0; i < 6; i++) val += (document.getElementById('otp' + i)?.value || '');
+  return val;
+}
+
+// Auto-jump between OTP boxes
+document.addEventListener('DOMContentLoaded', () => {
+  for (let i = 0; i < 6; i++) {
+    const box = document.getElementById('otp' + i);
+    if (!box) continue;
+
+    box.addEventListener('input', function() {
+      // Allow only numbers
+      this.value = this.value.replace(/\D/g, '');
+      if (this.value && i < 5) document.getElementById('otp' + (i+1)).focus();
     });
-  }else{
-    await updateDoc(ref,{ visits: increment(1) });
-  }
-}
 
-// SHOW USER
-onAuthStateChanged(auth, async user=>{
-  const section = document.getElementById("userSection");
+    box.addEventListener('keydown', function(e) {
+      if (e.key === 'Backspace' && !this.value && i > 0) {
+        document.getElementById('otp' + (i-1)).focus();
+      }
+    });
 
-  if(user){
-    await saveUser(user);
-
-    const snap = await getDoc(doc(db,"users",user.uid));
-    const data = snap.data();
-
-    section.innerHTML = `
-      👋 ${data.name}<br>
-      Visits: ${data.visits}<br>
-      <button class="btn" onclick="logout()">Logout</button>
-    `;
-  }else{
-    section.innerHTML = `<button class="btn" onclick="login()">Login</button>`;
+    // Handle paste of full OTP
+    box.addEventListener('paste', function(e) {
+      e.preventDefault();
+      const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'');
+      for (let j = 0; j < 6 && j < pasted.length; j++) {
+        const target = document.getElementById('otp' + j);
+        if (target) target.value = pasted[j];
+      }
+      // focus last filled box
+      const last = Math.min(pasted.length - 1, 5);
+      document.getElementById('otp' + last)?.focus();
+    });
   }
 });
 
-// WEATHER
-async function getWeather(lat,lng){
-  try{
-    let res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true`);
-    let data = await res.json();
-    return `🌤️ ${data.current_weather.temperature}°C`;
-  }catch{
-    return "N/A";
+/* ──────────────────────────────────────────────────────────
+   VALIDATION
+   ────────────────────────────────────────────────────────── */
+function validateIndianPhone(phone) {
+  // Indian mobile: 10 digits, starts with 6-9
+  return /^[6-9]\d{9}$/.test(phone);
+}
+
+/* ──────────────────────────────────────────────────────────
+   SEND OTP
+   ────────────────────────────────────────────────────────── */
+async function sendOTP() {
+  const phone = document.getElementById('phone-input').value.trim();
+
+  if (!validateIndianPhone(phone)) {
+    showMsg('phone-msg', '❌ Please enter a valid 10-digit Indian mobile number', 'error');
+    return;
+  }
+
+  currentPhone = phone;
+  const btn = document.getElementById('send-otp-btn');
+
+  setButtonLoading(btn, true, 'Sending OTP...');
+  hideMsg('phone-msg');
+
+  try {
+    const res  = await fetch(`${BACKEND_URL}/send-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone })
+    });
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      // Move to OTP step
+      document.getElementById('otp-sent-to').textContent = '+91 ' + phone;
+      showStep('step-otp');
+      startResendTimer(30);
+      setTimeout(() => document.getElementById('otp0').focus(), 100);
+    } else {
+      showMsg('phone-msg', '❌ ' + (data.message || 'Failed to send OTP. Try again.'), 'error');
+    }
+  } catch (err) {
+    showMsg('phone-msg', '❌ Cannot reach server. Is the backend running?', 'error');
+  } finally {
+    setButtonLoading(btn, false, '📲 Send OTP on WhatsApp');
   }
 }
 
-// DISTANCE
-function getDistance(lat1,lon1,lat2,lon2){
-  let R=6371;
-  let dLat=(lat2-lat1)*Math.PI/180;
-  let dLon=(lon2-lon1)*Math.PI/180;
-  let a=Math.sin(dLat/2)**2+
-    Math.cos(lat1*Math.PI/180)*
-    Math.cos(lat2*Math.PI/180)*
-    Math.sin(dLon/2)**2;
-  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+/* ──────────────────────────────────────────────────────────
+   VERIFY OTP
+   ────────────────────────────────────────────────────────── */
+async function verifyOTP() {
+  const otp = getOTPValue();
+
+  if (otp.length !== 6) {
+    showMsg('otp-msg', '❌ Please enter all 6 digits of the OTP', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('verify-otp-btn');
+  setButtonLoading(btn, true, 'Verifying...');
+  hideMsg('otp-msg');
+
+  try {
+    const res  = await fetch(`${BACKEND_URL}/verify-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: currentPhone, otp })
+    });
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      // Save session
+      setSession(data.token, currentPhone);
+      clearResendTimer();
+
+      // Show success screen
+      showStep('step-success');
+      updateAuthUI();
+
+      // Redirect or close after short delay
+      setTimeout(() => {
+        closeModal();
+        if (pendingPage) {
+          window.location.href = pendingPage;
+          pendingPage = null;
+        }
+      }, 1800);
+    } else {
+      showMsg('otp-msg', '❌ ' + (data.message || 'Wrong OTP. Please try again.'), 'error');
+      // Shake OTP boxes
+      document.querySelector('.otp-boxes').style.animation = 'shake 0.4s ease';
+      setTimeout(() => document.querySelector('.otp-boxes').style.animation = '', 400);
+    }
+  } catch (err) {
+    showMsg('otp-msg', '❌ Cannot reach server. Is the backend running?', 'error');
+  } finally {
+    setButtonLoading(btn, false, '✅ Verify OTP');
+  }
 }
 
-// LOCATION + WEATHER FAST
-navigator.geolocation.getCurrentPosition(async pos=>{
-  let uLat=pos.coords.latitude;
-  let uLng=pos.coords.longitude;
+/* ──────────────────────────────────────────────────────────
+   RESEND OTP
+   ────────────────────────────────────────────────────────── */
+async function resendOTP() {
+  const btn = document.getElementById('resend-btn');
+  btn.disabled = true;
+  hideMsg('otp-msg');
+  clearOTPBoxes();
+  document.getElementById('otp0').focus();
 
-  let cards=document.querySelectorAll(".card");
-  let arr=[];
-  let promises=[];
+  try {
+    const res  = await fetch(`${BACKEND_URL}/send-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: currentPhone })
+    });
+    const data = await res.json();
 
-  cards.forEach(c=>{
-    let lat=parseFloat(c.dataset.lat);
-    let lng=parseFloat(c.dataset.lng);
+    if (res.ok && data.success) {
+      showMsg('otp-msg', '✅ New OTP sent to WhatsApp!', 'success');
+      startResendTimer(30);
+    } else {
+      showMsg('otp-msg', '❌ ' + (data.message || 'Failed to resend OTP.'), 'error');
+      btn.disabled = false;
+    }
+  } catch {
+    showMsg('otp-msg', '❌ Server error. Try again.', 'error');
+    btn.disabled = false;
+  }
+}
 
-    let d=getDistance(uLat,uLng,lat,lng);
-    c.querySelector(".distance").innerText=`📍 ${d.toFixed(0)} km`;
+/* ──────────────────────────────────────────────────────────
+   RESEND COUNTDOWN
+   ────────────────────────────────────────────────────────── */
+function startResendTimer(seconds) {
+  clearResendTimer();
+  let remaining = seconds;
+  const btn     = document.getElementById('resend-btn');
+  const timerEl = document.getElementById('resend-timer');
 
-    promises.push(
-      getWeather(lat,lng).then(w=>{
-        c.querySelector(".weather").innerText=w;
-      })
-    );
+  btn.disabled = true;
+  timerEl.textContent = `Resend available in ${remaining}s`;
 
-    arr.push({card:c,dist:d});
+  resendCountdown = setInterval(() => {
+    remaining--;
+    if (remaining <= 0) {
+      clearResendTimer();
+      btn.disabled = false;
+      timerEl.textContent = '';
+    } else {
+      timerEl.textContent = `Resend available in ${remaining}s`;
+    }
+  }, 1000);
+}
+
+function clearResendTimer() {
+  if (resendCountdown) { clearInterval(resendCountdown); resendCountdown = null; }
+  document.getElementById('resend-timer').textContent = '';
+}
+
+/* ──────────────────────────────────────────────────────────
+   UI HELPERS
+   ────────────────────────────────────────────────────────── */
+function showMsg(id, text, type) {
+  const el = document.getElementById(id);
+  el.textContent = text;
+  el.className = `msg show ${type}`;
+}
+
+function hideMsg(id) {
+  const el = document.getElementById(id);
+  el.className = 'msg';
+}
+
+function setButtonLoading(btn, loading, text) {
+  btn.disabled = loading;
+  btn.innerHTML = loading
+    ? `<span class="spinner"></span> ${text}`
+    : text;
+}
+
+function showToast(msg) {
+  // simple toast notification
+  const t = document.createElement('div');
+  t.textContent = msg;
+  Object.assign(t.style, {
+    position:'fixed', bottom:'24px', left:'50%', transform:'translateX(-50%)',
+    background:'rgba(0,255,170,0.15)', border:'1px solid rgba(0,255,170,0.4)',
+    color:'#00ffaa', padding:'10px 24px', borderRadius:'30px',
+    fontFamily:'Poppins,sans-serif', fontSize:'14px',
+    backdropFilter:'blur(10px)', zIndex:'9999',
+    animation:'fadeInUp 0.3s ease'
   });
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
 
-  await Promise.all(promises);
+/* ──────────────────────────────────────────────────────────
+   SEARCH / FILTER
+   ────────────────────────────────────────────────────────── */
+function filterPlaces() {
+  const q = document.getElementById('search').value.toLowerCase();
+  document.querySelectorAll('.card').forEach(c => {
+    c.style.display = c.dataset.name.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
 
-  arr.sort((a,b)=>a.dist-b.dist);
-  let container=document.getElementById("places");
-  arr.forEach(p=>container.appendChild(p.card));
+/* ──────────────────────────────────────────────────────────
+   WEATHER
+   ────────────────────────────────────────────────────────── */
+async function getWeather(lat, lng) {
+  try {
+    const res  = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true`);
+    const data = await res.json();
+    const temp = data.current_weather.temperature;
+    const code = data.current_weather.weathercode;
+    const icon = code <= 1 ? '☀️' : code <= 3 ? '⛅' : code <= 67 ? '🌧️' : '❄️';
+    return `${icon} ${temp}°C`;
+  } catch {
+    return '🌦️ N/A';
+  }
+}
 
-  arr[0].card.classList.add("highlight");
+/* ──────────────────────────────────────────────────────────
+   DISTANCE (Haversine)
+   ────────────────────────────────────────────────────────── */
+function getDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
 
-}, ()=>{
-  alert("Location permission denied ❌");
+/* ──────────────────────────────────────────────────────────
+   ON LOAD — geolocation + auth state
+   ────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  updateAuthUI();
+
+  // Geolocation for distance + sort
+  navigator.geolocation.getCurrentPosition(async pos => {
+    const uLat = pos.coords.latitude;
+    const uLng = pos.coords.longitude;
+    const cards = [...document.querySelectorAll('.card')];
+    const arr = [];
+
+    for (const c of cards) {
+      const lat = parseFloat(c.dataset.lat);
+      const lng = parseFloat(c.dataset.lng);
+      const d   = getDistance(uLat, uLng, lat, lng);
+
+      c.querySelector('.distance').textContent = `📍 ${d.toFixed(0)} km away`;
+
+      const weather = await getWeather(lat, lng);
+      c.querySelector('.weather').textContent = weather;
+
+      arr.push({ card: c, dist: d });
+    }
+
+    // Sort by distance
+    arr.sort((a, b) => a.dist - b.dist);
+    const container = document.getElementById('places');
+    arr.forEach(p => container.appendChild(p.card));
+
+    // Highlight closest
+    if (arr.length > 0) arr[0].card.classList.add('highlight');
+
+  }, () => {
+    // Geolocation denied — just fetch weather
+    document.querySelectorAll('.card').forEach(async c => {
+      c.querySelector('.distance').textContent = '📍 Location unavailable';
+      const weather = await getWeather(parseFloat(c.dataset.lat), parseFloat(c.dataset.lng));
+      c.querySelector('.weather').textContent = weather;
+    });
+  });
 });
 
-// PROTECT
-window.goDetails = function(page){
-  if(auth.currentUser){
-    window.location.href = page;
-  }else{
-    alert("Login first 🔐");
+// Shake animation for wrong OTP
+const shakeStyle = document.createElement('style');
+shakeStyle.textContent = `
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    25%{transform:translateX(-8px)}
+    75%{transform:translateX(8px)}
   }
-};
-
-// SEARCH
-window.filterPlaces = function(){
-  let input=document.getElementById("search").value.toLowerCase();
-  document.querySelectorAll(".card").forEach(c=>{
-    c.style.display=c.dataset.name.includes(input)?"block":"none";
-  });
-};
+  @keyframes fadeInUp {
+    from{opacity:0;transform:translateX(-50%) translateY(10px)}
+    to{opacity:1;transform:translateX(-50%) translateY(0)}
+  }
+`;
+document.head.appendChild(shakeStyle);
 
 </script>
-
 </body>
 </html>
